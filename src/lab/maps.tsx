@@ -39,9 +39,6 @@ function Scene({ v }: { v: Record<string, string | number | boolean> }) {
         center={[-73.585, 45.521]}
         zoom={13.2}
         className="lab-map-view"
-        // The CDN that serves the basemap answers no CORS header to github.io yet: the lab draws on the bare paper (krizaka-motion#25).
-        world={null}
-        region={null}
         fallback={<StaticMap label={label} center={[-73.585, 45.521]} zoom={13.2} places={STOPS.map((s) => ({ position: s.position, label: s.label }))} />}
       >
         <Route
