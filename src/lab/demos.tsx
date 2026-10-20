@@ -339,7 +339,7 @@ export const DEMOS: Record<TabId, Demo> = {
   figures: { Preview: () => <div className="lab-g-col"><Stat label="Raised" value={<NumberTicker value={3150} />} /></div>, Stage: FiguresStage, lab: false },
   overlays: { Preview: () => <div className="lab-g-col"><Chip>Sheet</Chip></div>, Stage: OverlaysStage, lab: false },
   transitions: { Preview: () => <div className="lab-g-col"><Chip>Fade · slide · reveal</Chip></div>, Stage: TransitionsStage, lab: false },
-  data: { Preview: () => <div className="lab-g-col kz-grow"><Sparkline data={[12, 18, 15, 26, 31, 29, 44, 52]} width={220} height={64} variant="area" title="Plays" trendTone /></div>, Stage: DataStage, lab: false },
+  data: { Preview: () => <div className="lab-g-col lab-grow"><Sparkline data={[12, 18, 15, 26, 31, 29, 44, 52]} width={220} height={64} variant="area" title="Plays" trendTone /></div>, Stage: DataStage, lab: false },
   "kz-ui": { Preview: () => <Flow compact={false} particles="photons" />, Stage: Gallery, lab: false },
   architecture: { Preview: () => null, Stage: SpecsStage, lab: false },
 };

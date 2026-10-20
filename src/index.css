@@ -107,6 +107,24 @@ body { margin: 0; background: var(--kz-surface-0); color: var(--kz-text-primary)
 @media (max-width: 640px) { .lab-map-view { height: 20rem; } }
 .lab-data { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 .lab-data-table { min-width: 0; overflow: hidden; border-radius: 14px; }
+/* A row arrives: slides down into place / fades in / flashes the accent — once, by the fresh cell's row. */
+.lab-data tr:has(.lab-arrive[data-fresh]) { animation: lab-row-slide 520ms var(--kz-ease, ease-out) both; }
+.lab-data[data-arrival="fade"] tr:has(.lab-arrive[data-fresh]) { animation-name: lab-row-fade; }
+.lab-data[data-arrival="flash"] tr:has(.lab-arrive[data-fresh]) { animation-name: lab-row-flash; animation-duration: 1100ms; }
+@keyframes lab-row-slide { from { opacity: 0; translate: 0 -14px; } to { opacity: 1; translate: 0 0; } }
+@keyframes lab-row-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes lab-row-flash { 0% { background: color-mix(in oklab, var(--kz-accent) 28%, transparent); } 100% { background: transparent; } }
+/* A sparkline grows: its stroke draws itself (pathLength 1), its fill rises. */
+.lab-grow svg path[stroke]:not([stroke="none"]) { stroke-dasharray: 1; stroke-dashoffset: 1; animation: lab-draw var(--lab-grow, 900ms) var(--lab-ease, ease-out) forwards; }
+.lab-grow svg path[fill]:not([fill="none"]) { animation: lab-rise var(--lab-grow, 900ms) var(--lab-ease, ease-out) backwards; transform-box: fill-box; transform-origin: bottom; }
+@keyframes lab-draw { to { stroke-dashoffset: 0; } }
+@keyframes lab-rise { from { opacity: 0; scale: 1 0.2; } to { opacity: 1; scale: 1 1; } }
+[data-offscreen] .lab-data *, [data-offscreen] .lab-grow * { animation-play-state: paused !important; }
+@media (prefers-reduced-motion: reduce) {
+  .lab-data tr, .lab-grow svg path { animation: none !important; }
+  .lab-grow svg path[stroke]:not([stroke="none"]) { stroke-dashoffset: 0; }
+}
+
 /* Conversation, journey, figures */
 .lab-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .lab-chat { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; max-width: 36rem; }

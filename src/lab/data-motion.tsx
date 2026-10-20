@@ -1,6 +1,6 @@
 /* The Data demo: Krizaka UI's DataTable with rows that arrive (and sort), Sparkline that grows, NumberTicker that climbs.
    English only. Arrival and growth are the lab's CSS over the components' own markup (see the ADR: they are candidates
-   for @krizaka/ui/motion — now shipped there). */
+   for @krizaka/ui/motion). */
 
 import { Sparkline } from "@krizaka/charts/sparkline";
 import { Badge } from "@krizaka/ui/badge";
@@ -56,9 +56,9 @@ function Scene({ v }: { v: Record<string, string | number | boolean> }) {
     return () => clearInterval(timer);
   }, [v.stream, v.interval, visible, reduce]);
   const total = rows.reduce((sum, r) => sum + r.plays, 0);
-  const style = { "--kz-grow-duration": `${v.grow}ms`, "--kz-grow-ease": v.easing as string } as React.CSSProperties;
+  const style = { "--lab-grow": `${v.grow}ms`, "--lab-ease": v.easing as string } as React.CSSProperties;
   return (
-    <div ref={host} className="lab-data" data-kz-arrival={v.arrival as string} style={style} data-motion-scope="">
+    <div ref={host} className="lab-data" data-arrival={v.arrival as string} style={style} data-motion-scope="">
       <Stat label="Plays on screen" value={<NumberTicker value={total} />} trend="up" trendLabel="live" />
       <div className="lab-data-table">
         <DataTable
@@ -67,10 +67,10 @@ function Scene({ v }: { v: Record<string, string | number | boolean> }) {
           getRowId={(r) => r.id}
           density="compact"
           columns={[
-            { id: "name", header: "Clip", sortable: true, value: (r: Row) => r.name, cell: (r: Row) => <span data-kz-arrive={r.fresh ? "" : undefined}>{r.name}</span> },
+            { id: "name", header: "Clip", sortable: true, value: (r: Row) => r.name, cell: (r: Row) => <span className="lab-arrive" data-fresh={r.fresh ? "" : undefined}>{r.name}</span> },
             { id: "status", header: "Status", sortable: true, value: (r: Row) => r.status, cell: (r: Row) => <Badge tone={r.status === "Live" ? "success" : "neutral"}>{r.status}</Badge> },
             { id: "plays", header: "Plays", sortable: true, align: "end", value: (r: Row) => r.plays },
-            { id: "trend", header: "14 days", value: (r: Row) => r.id, cell: (r: Row) => <span className="kz-grow" key={`${r.id}-${v.variant}-${v.grow}`}><Sparkline data={r.trend} width={96} height={28} variant={v.variant as "line" | "area" | "bar"} title={`${r.name}, last 14 days`} trendTone /></span> },
+            { id: "trend", header: "14 days", value: (r: Row) => r.id, cell: (r: Row) => <span className="lab-grow" key={`${r.id}-${v.variant}-${v.grow}`}><Sparkline data={r.trend} width={96} height={28} variant={v.variant as "line" | "area" | "bar"} title={`${r.name}, last 14 days`} trendTone /></span> },
           ]}
         />
       </div>
@@ -86,7 +86,7 @@ export function DataStage() {
       component="DataTable"
       importPath="@krizaka/ui/data-table"
       skip={["stream", "interval", "arrival", "grow", "variant", "easing"]}
-      note="Arrival (data-kz-arrive) and growth (.kz-grow) are @krizaka/ui's motion.css, paused off screen and resting done under reduced motion."
+      note="Arrival, growth and the ticker are the lab's CSS over the components' own markup, paused off screen and still under reduced motion."
       render={(v) => <Scene v={v} />}
     >
       {'  caption="Clips, newest first"\n  rows={rows}\n  getRowId={(r) => r.id}\n  columns={columns} // cell: (r) => <Sparkline data={r.trend} />'}
