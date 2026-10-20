@@ -9,6 +9,24 @@
 [![Krizaka UI](https://img.shields.io/badge/@krizaka/ui-compatible-2563eb)](https://ui.krizaka.com)
 [![Tests](https://img.shields.io/badge/tests-15%20passing-emerald)](tests/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-3178c6)](package.json)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-krizaka.github.io%2Fkrizaka--motion-orange?style=for-the-badge&logo=github)](https://krizaka.github.io/krizaka-motion/)
+
+---
+
+## 🌐 Interactive Live Demo & Showcase
+
+Experience all generative engines, particle physics solvers, and Krizaka UI integrations in real time:
+
+🔗 **[Open Interactive Live Demo (GitHub Pages) →](https://krizaka.github.io/krizaka-motion/)**
+
+| Interactive Demo Tab | Key Capabilities to Test | Live Interactive Controls |
+| :--- | :--- | :--- |
+| **Orazaka Engine Flow** | Neural packet routing, foundation core convergence | Direction (L-to-R, R-to-L, Top-to-Bottom, Radial), Flow mode (Inbound, Outbound, Bi-directional), Node Vector Icon & label customizer, Particle density |
+| **Yororis Voice Presence** | Generative vocal empathy & acoustic breathing sphere | Real microphone Web Audio FFT analysis, 4 Voice tones (Léa 216Hz, Theta 432Hz, Solfeggio 528Hz, Aurora 639Hz), Bioluminescent spore swarm, Facial gaze tracking |
+| **Jarvis Holographic HUD** | Iron Man Mark LXXXV tactical combat & diagnostic HUD | Interactive click-to-lock ballistic targeting, Tactical flight modes (Standard, Combat, Stealth, Overdrive), Energy shunt routing, 3D gyro perspective |
+| **Liquid Glass Caustics** | Snell's law refraction & chromatic dispersion | Fluid mediums (Glass n=1.52, Mercury n=1.95, Water n=1.33, Helium n=1.03), Hydrodynamic pulse trigger, Optical background distortion |
+| **Neural Synapse Lattice** | Hodgkin-Huxley membrane action potentials & plasticity | Action potential voltage trigger (-70mV to +30mV), Synaptic cascade avalanche, Cognitive brand clusters (Orazaka, Yororis, Jarvis) |
+| **Krizaka UI + Motion** | `@krizaka/ui` npm components augmented with physics | Interactive Cards, Cut-shape Buttons, Status Chips & Badges with kinetic springs & reactive motion |
 
 ---
 
