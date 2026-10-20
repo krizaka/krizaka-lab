@@ -6,6 +6,7 @@
 /* The classes @krizaka/ui's components use, read from the built package; its page blocks' styles. */
 @import "@krizaka/ui/tailwind.css";
 @import "@krizaka/ui/blocks.css";
+@import "@krizaka/ui/story.css";
 
 /* The lab's own layout, on the tokens only (no colour of its own). */
 html { color-scheme: dark; }
@@ -123,3 +124,13 @@ body { margin: 0; background: var(--kz-surface-0); color: var(--kz-text-primary)
   .lab-data tr, .lab-grow svg path { animation: none !important; }
   .lab-grow svg path[stroke]:not([stroke="none"]) { stroke-dashoffset: 0; }
 }
+
+/* Conversation, journey, figures */
+.lab-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.lab-chat { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; max-width: 36rem; }
+.lab-chat-log { display: flex; flex-direction: column; gap: 8px; width: 100%; min-height: 13rem; padding: 16px; border-radius: 16px; border: 1px solid var(--kz-border-subtle); background: var(--kz-surface-1); }
+.lab-chat-log > :first-child { align-self: flex-end; }
+.lab-journey { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; max-width: 36rem; min-width: 0; }
+.lab-journey > * { max-width: 100%; }
+.lab-figures { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; max-width: 28rem; width: 100%; }
+.lab-figures > :not(button) { width: 100%; }

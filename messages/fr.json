@@ -229,6 +229,27 @@
       "title": "Data that arrives.",
       "lead": "Table rows arrive and re-sort, sparklines grow, figures climb — Krizaka UI components, tuned live.",
       "card": "Row arrival, sort, sparkline growth, number tickers."
+    },
+    "conversation": {
+      "name": "Conversation",
+      "eyebrow": "Krizaka UI chat",
+      "title": "Answers that stream.",
+      "lead": "A model's answer streams into a message bubble, a terminal session is played back — Krizaka UI components, tuned live.",
+      "card": "Token streaming, typing indicator, terminal replay."
+    },
+    "journey": {
+      "name": "Journey",
+      "eyebrow": "Krizaka UI stepper",
+      "title": "A job, step by step.",
+      "lead": "Steps complete, one is in progress with its own progress, one can fail — said in words as well as shown.",
+      "card": "Stepper states, progress, failure."
+    },
+    "figures": {
+      "name": "Figures",
+      "eyebrow": "Krizaka UI figures",
+      "title": "Figures that climb.",
+      "lead": "Digits that climb or roll, a meter whose tone turns with its thresholds, a goal counted in steps.",
+      "card": "NumberTicker, Meter, GoalGauge."
     }
   },
   "footer": {

@@ -7,6 +7,10 @@ import { Sparkline } from "@krizaka/charts/sparkline";
 import { ProductLogo } from "@krizaka/ui";
 import { StaticMap } from "@krizaka/ui/map";
 import { Button } from "@krizaka/ui/button";
+import { TypingIndicator } from "@krizaka/ui/chat";
+import { NumberTicker } from "@krizaka/ui/number-ticker";
+import { Progress } from "@krizaka/ui/progress";
+import { Stat } from "@krizaka/ui/stat";
 import { Chip } from "@krizaka/ui/chip";
 import { EngineFlow, type FlowDensity, type FlowLayout, type FlowTrigger } from "@krizaka/ui/engine-flow";
 import { Dialog } from "@krizaka/ui/dialog";
@@ -26,7 +30,10 @@ import { OrazakaEngineFlow } from "../react/OrazakaEngineFlow";
 import { YororisPresenceOrb } from "../react/YororisPresenceOrb";
 import { useLab } from "./context";
 import { Gallery } from "./gallery";
+import { ConversationStage } from "./conversation";
 import { DataStage } from "./data-motion";
+import { FiguresStage } from "./figures";
+import { JourneyStage } from "./journey";
 import { MapsStage } from "./maps";
 import { type Knob, Playground } from "./playground";
 
@@ -325,6 +332,9 @@ export const DEMOS: Record<TabId, Demo> = {
   caustics: { Preview: () => <LiquidCausticsView interactive={false} />, Stage: CausticsStage, usage: { code: canvasUsage("LiquidCausticsView", 'fluidMedium="glass" palette="prussian"'), file: "Glass.tsx" }, lab: true },
   lattice: { Preview: () => <NeuralLatticeView interactive={false} nodeCount={60} />, Stage: LatticeStage, usage: { code: canvasUsage("NeuralLatticeView", 'theme="prussian-cyan" nodeCount={90}'), file: "Lattice.tsx" }, lab: true },
   maps: { Preview: () => <StaticMap label="Montréal" center={[-73.585, 45.521]} zoom={12} places={[{ position: [-73.6005, 45.5229], label: "Studio" }, { position: [-73.5695, 45.5268], label: "Parc La Fontaine" }]} />, Stage: MapsStage, lab: false },
+  conversation: { Preview: () => <div className="lab-g-col"><TypingIndicator label="The assistant is typing" /></div>, Stage: ConversationStage, lab: false },
+  journey: { Preview: () => <div className="lab-g-col"><Progress label="Transcoding" value={58} size="sm" /></div>, Stage: JourneyStage, lab: false },
+  figures: { Preview: () => <div className="lab-g-col"><Stat label="Raised" value={<NumberTicker value={3150} />} /></div>, Stage: FiguresStage, lab: false },
   data: { Preview: () => <div className="lab-g-col lab-grow"><Sparkline data={[12, 18, 15, 26, 31, 29, 44, 52]} width={220} height={64} variant="area" title="Plays" trendTone /></div>, Stage: DataStage, lab: false },
   "kz-ui": { Preview: () => <Flow compact={false} particles="photons" />, Stage: Gallery, lab: false },
   architecture: { Preview: () => null, Stage: SpecsStage, lab: false },
