@@ -8,6 +8,8 @@ export type TabId =
   | "jarvis"
   | "caustics"
   | "lattice"
+  | "maps"
+  | "data"
   | "kz-ui"
   | "architecture";
 
@@ -61,6 +63,22 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     description: "Hodgkin-Huxley membrane action potentials & synaptic plasticity",
     aliases: ["neural-lattice", "lattice", "synapse", "quantum"],
   },
+  maps: {
+    id: "maps",
+    path: "maps",
+    label: "Maps",
+    title: "Maps in motion — Krizaka Motion",
+    description: "Pins that drop, a route that draws itself, a courier, a heat pulse — on the Krizaka UI map",
+    aliases: ["maps", "map", "route", "delivery"],
+  },
+  data: {
+    id: "data",
+    path: "data-motion",
+    label: "Data",
+    title: "Data in motion — Krizaka Motion",
+    description: "Table rows that arrive and sort, sparklines that grow, figures that climb",
+    aliases: ["data-motion", "data", "table", "sparkline"],
+  },
   "kz-ui": {
     id: "kz-ui",
     path: "krizaka-ui",
@@ -85,6 +103,8 @@ export const TAB_ORDER: TabId[] = [
   "jarvis",
   "caustics",
   "lattice",
+  "maps",
+  "data",
   "kz-ui",
   "architecture",
 ];

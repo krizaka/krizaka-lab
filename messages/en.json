@@ -215,6 +215,20 @@
       "title": "Specs and rules.",
       "lead": "How a lab view behaves, and how one becomes a Krizaka UI primitive.",
       "card": "The motion rules, the tests, the path to Krizaka UI."
+    },
+    "maps": {
+      "name": "Maps",
+      "eyebrow": "Krizaka UI map",
+      "title": "Maps that move.",
+      "lead": "Pins drop, a route draws itself, a courier makes the trip, a demand pulse beats — on the Krizaka UI map.",
+      "card": "Route drawing, pin drops, a delivery path, a heat pulse."
+    },
+    "data": {
+      "name": "Data",
+      "eyebrow": "Krizaka UI data",
+      "title": "Data that arrives.",
+      "lead": "Table rows arrive and re-sort, sparklines grow, figures climb — Krizaka UI components, tuned live.",
+      "card": "Row arrival, sort, sparkline growth, number tickers."
     }
   },
   "footer": {
