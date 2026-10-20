@@ -161,3 +161,10 @@ html[data-vt^="reveal"]::view-transition-new(lab-stage) { animation-name: lab-vt
 .lab-steps li { min-width: 0; display: flex; flex-direction: column; gap: 8px; counter-increment: step; }
 .lab-steps li > strong::before { content: counter(step) ". "; color: var(--kz-accent-text, var(--kz-accent)); }
 @media (min-width: 900px) { .lab-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+/* People */
+.lab-people { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; max-width: 36rem; min-width: 0; }
+.lab-people-row { display: flex; align-items: center; gap: 14px; }
+.lab-people-item { display: inline-flex; }
+.lab-people-name { margin: 0; display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.1rem; }
+.lab-people-list { width: 100%; }

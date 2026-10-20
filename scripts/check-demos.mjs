@@ -17,6 +17,7 @@ const READ = {
   "/overlays/": () => document.querySelector("[data-testid=active]")?.textContent ?? "",
   "/transitions/": () => document.querySelector("[data-testid=vt-view]")?.textContent ?? "",
   "/data-motion/": () => getComputedStyle(document.querySelector(".kz-grow svg")).clipPath,
+  "/people/": () => document.querySelector(".lab-people")?.textContent ?? "",
   "/figures/": () => document.querySelector(".lab-figures")?.textContent ?? "",
 };
 
