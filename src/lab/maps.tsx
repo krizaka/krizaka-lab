@@ -25,6 +25,8 @@ export const MAP_KNOBS: readonly Knob[] = [
   { kind: "toggle", key: "repeat", label: "repeat the trip", value: false },
   { kind: "range", key: "stagger", label: "pins stagger", min: 0, max: 600, step: 60, value: 240, unit: "ms" },
   { kind: "toggle", key: "pulse", label: "a demand pulse", value: true },
+  { kind: "choice", key: "easing", label: "easing", options: ["ease-out", "linear", "ease-in-out"], value: "ease-out" },
+  { kind: "toggle", key: "paused", label: "paused", value: false },
   { kind: "choice", key: "tone", label: "tone", options: ["accent", "soft"], value: "accent" },
 ];
 
@@ -50,6 +52,8 @@ function Scene({ v }: { v: Record<string, string | number | boolean> }) {
           tripDuration={v.tripDuration as number}
           repeatAfter={v.repeat ? 1200 : undefined}
           tone={v.tone as "accent" | "soft"}
+          easing={v.easing as "ease-out" | "linear" | "ease-in-out"}
+          paused={v.paused as boolean}
         />
         {STOPS.map((s, i) => (
           <Marker key={s.id} position={s.position} label={s.label} drop={i * (v.stagger as number)} />

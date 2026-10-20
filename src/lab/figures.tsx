@@ -14,6 +14,7 @@ import { type Knob, Playground } from "./playground";
 export const FIGURE_KNOBS: readonly Knob[] = [
   { kind: "choice", key: "trigger", label: "trigger", options: ["view", "change"], value: "change" },
   { kind: "range", key: "duration", label: "duration", min: 300, max: 3000, step: 100, value: 1100, unit: "ms" },
+  { kind: "choice", key: "easing", label: "easing", options: ["ease-out", "linear", "ease-in-out"], value: "ease-out" },
   { kind: "choice", key: "format", label: "format", options: ["number", "currency", "compact", "percent"], value: "currency" },
   { kind: "choice", key: "meter", label: "meter", options: ["bar", "ring"], value: "bar" },
   { kind: "range", key: "segments", label: "gauge segments", min: 4, max: 12, step: 1, value: 8 },
@@ -45,7 +46,7 @@ function Figures({ v }: { v: Record<string, string | number | boolean> }) {
     <div ref={host} className="lab-figures" data-motion-scope="">
       <Stat
         label="Raised this week"
-        value={<NumberTicker key={`${v.trigger}-${v.format}`} value={shown} trigger={v.trigger as "view" | "change"} duration={v.duration as number} announce={v.trigger === "change"} locale="en-CA" format={FORMATS[v.format as string]} />}
+        value={<NumberTicker key={`${v.trigger}-${v.format}-${v.easing}`} value={shown} trigger={v.trigger as "view" | "change"} duration={v.duration as number} easing={v.easing as "ease-out" | "linear" | "ease-in-out"} announce={v.trigger === "change"} locale="en-CA" format={FORMATS[v.format as string]} />}
         trend="up"
         trendLabel="live"
       />

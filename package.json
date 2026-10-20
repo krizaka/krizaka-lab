@@ -60,9 +60,9 @@
     "@krizaka/fonts": "^0.2.1",
     "@krizaka/i18n": "^0.2.3",
     "@krizaka/icons": "^0.6.0",
-    "@krizaka/tailwind": "^3.33.1",
-    "@krizaka/tokens": "^3.33.1",
-    "@krizaka/ui": "^3.33.1",
+    "@krizaka/tailwind": "^3.34.0",
+    "@krizaka/tokens": "^3.34.0",
+    "@krizaka/ui": "^3.34.0",
     "maplibre-gl": "6.11.2",
     "pmtiles": "^4.5.0"
   },

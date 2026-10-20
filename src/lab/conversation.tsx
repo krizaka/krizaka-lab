@@ -57,6 +57,7 @@ function Stream({ v }: { v: Record<string, string | number | boolean> }) {
 }
 
 export const TERMINAL_KNOBS: readonly Knob[] = [
+  { kind: "range", key: "speed", label: "speed", min: 0.5, max: 4, step: 0.5, value: 1, unit: "×" },
   { kind: "range", key: "typingSpeed", label: "typing", min: 10, max: 120, step: 5, value: 34, unit: "ms per character" },
   { kind: "range", key: "lineDelay", label: "output lines", min: 20, max: 400, step: 10, value: 70, unit: "ms" },
   { kind: "range", key: "stepDelay", label: "between commands", min: 200, max: 3000, step: 100, value: 900, unit: "ms" },
@@ -101,6 +102,7 @@ export function ConversationStage() {
             replayLabel="Replay"
             copyLabel="Copy commands"
             copiedLabel="Copied"
+            speed={v.speed as number}
             typingSpeed={v.typingSpeed as number}
             lineDelay={v.lineDelay as number}
             stepDelay={v.stepDelay as number}
