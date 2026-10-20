@@ -22,6 +22,10 @@ export function DemoPage({ id }: { id: TabId }) {
         back={{ href: href("home"), label: t.demo.back }}
         linkAs={(props: React.ComponentProps<"a">) => <a {...props} onClick={go("home")} />}
       >
+        <p className="lab-whatfor">
+          <strong>{t.demo.whatFor} · </strong>
+          {d.card}
+        </p>
         <Facts items={[demo.lab ? { label: t.home.experimental, tone: "wip" } : { label: t.home.shipped, tone: "ok" }]} />
       </PageHero>
       <Section id="stage" spacing="sm">

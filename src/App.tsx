@@ -19,7 +19,7 @@ import { getHrefForTab, homeHref, type LabPage, resolvePage, type TabId } from "
 import { DemoPage } from "./lab/DemoPage";
 import { Home } from "./lab/Home";
 import { LabContext } from "./lab/context";
-import { LOCALES, type Locale, MESSAGES, pickLocale } from "./lab/messages";
+import { i18n, LOCALES, type Locale, pickLocale } from "./lab/messages";
 
 const REPO = "https://github.com/krizaka/krizaka-motion";
 const LANG_KEY = "kz-lab-lang";
@@ -29,7 +29,7 @@ function readLocale(): Locale {
   try {
     stored = localStorage.getItem(LANG_KEY);
   } catch {}
-  const locale = pickLocale(window.location.search, stored, navigator.language);
+  const locale = pickLocale(window.location.search, stored);
   try {
     if (new URLSearchParams(window.location.search).get("lang")) localStorage.setItem(LANG_KEY, locale);
   } catch {}
@@ -39,7 +39,7 @@ function readLocale(): Locale {
 function Shell() {
   const [page, setPage] = useState<LabPage>(() => resolvePage(window.location));
   const [locale] = useState<Locale>(readLocale);
-  const t = MESSAGES[locale];
+  const t = i18n.getDictionary(locale);
   const { mode, setMode } = useTheme();
   const dark = mode === "dark" || (mode === "system" && !window.matchMedia("(prefers-color-scheme: light)").matches);
 
@@ -70,7 +70,7 @@ function Shell() {
   const languages = LOCALES.map((code) => ({ code, name: languageNames[code] ?? code, href: `?lang=${code}` }));
   const nav: { id: LabPage; label: string }[] = [
     { id: "home", label: t.bar.demos },
-    { id: "kz-ui", label: t.bar.inUi },
+    { id: "kz-ui", label: t.bar.gallery },
     { id: "architecture", label: t.bar.specs },
   ];
 
@@ -126,7 +126,7 @@ function Shell() {
       <SiteFooter current="github" labels={familyLabels[locale]}>
         <SiteFooter.Column title={t.footer.lab}>
           <SiteFooter.Link href={lab.href("home")}>{t.footer.demos}</SiteFooter.Link>
-          <SiteFooter.Link href={lab.href("kz-ui")}>{t.bar.inUi}</SiteFooter.Link>
+          <SiteFooter.Link href={lab.href("kz-ui")}>{t.bar.gallery}</SiteFooter.Link>
           <SiteFooter.Link href={lab.href("architecture")}>{t.bar.specs}</SiteFooter.Link>
           <SiteFooter.Link href={REPO}>{t.footer.source}</SiteFooter.Link>
         </SiteFooter.Column>

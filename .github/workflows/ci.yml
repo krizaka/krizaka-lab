@@ -30,5 +30,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm run typecheck
+      # The lab's catalogues: same keys in en and fr, no empty string, same placeholders (@krizaka/i18n).
+      - run: pnpm exec krizaka-i18n check messages
       - run: pnpm run build
       - run: pnpm test

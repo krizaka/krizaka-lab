@@ -28,6 +28,11 @@ export function Home() {
             </a>
           </Button>
           <Button asChild variant="secondary" size="lg" shape="cut">
+            <a href={href("kz-ui")} onClick={go("kz-ui")}>
+              {h.galleryCta}
+            </a>
+          </Button>
+          <Button asChild variant="ghost" size="lg">
             <a href="https://github.com/krizaka/krizaka-motion">
               {h.source} <ExternalIcon size={14} />
             </a>

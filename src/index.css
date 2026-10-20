@@ -23,27 +23,25 @@ body { margin: 0; background: var(--kz-surface-0); color: var(--kz-text-primary)
 .lab-preview .kz-flow { position: absolute; inset: 6px; --kz-flow-mark: 1.75rem; --kz-flow-hub: 2.75rem; }
 .lab-preview .kz-flow-detail, .lab-preview .kz-flow-node-label, .lab-preview .kz-flow-hub-label, .lab-preview .kz-flow-hub-caption { display: none; }
 
-.lab-stage { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; align-items: start; }
-@media (min-width: 1024px) { .lab-stage { grid-template-columns: minmax(0, 1fr) 300px; } }
-.lab-stage-view { min-width: 0; }
-.lab-box { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 16px; border: 1px solid var(--kz-border-subtle); background: var(--kz-surface-1); }
-.lab-box[data-tall] { aspect-ratio: 4 / 3; }
+.lab-stage { position: relative; display: flex; flex-direction: column; gap: 12px; }
+.lab-stage + .lab-stage { margin-top: 0; }
+.lab-stage-view { min-width: 0; width: 100%; max-width: 1040px; margin-inline: auto; }
+.lab-stage > .lab-box { width: 100%; max-width: 1040px; margin-inline: auto; }
+.lab-settings { display: flex; justify-content: flex-end; width: 100%; max-width: 1040px; margin-inline: auto; order: -1; }
+.lab-box { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 18px; border: 1px solid var(--kz-border-subtle); background: var(--kz-surface-1); }
+.lab-box[data-tall] { aspect-ratio: 16 / 10; }
+@media (max-width: 640px) { .lab-box, .lab-box[data-tall] { aspect-ratio: 4 / 5; } }
 .lab-box > * { position: absolute; inset: 0; }
-.lab-controls { display: flex; flex-direction: column; gap: 16px; padding: 18px; border-radius: 16px; border: 1px solid var(--kz-border-subtle); background: var(--kz-surface-1); }
+.lab-controls { display: flex; flex-direction: column; gap: 18px; }
 .lab-control { display: flex; flex-direction: column; gap: 8px; }
 .lab-control-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--kz-text-secondary); }
+.lab-whatfor { margin: 0; font-size: 15px; color: var(--kz-text-secondary); }
+.lab-whatfor strong { color: var(--kz-text-primary); }
 .lab-switch { display: flex; align-items: center; gap: 10px; font-size: 14px; }
 .lab-subtitle { margin: 48px 0 4px; font-size: 1.25rem; font-weight: 700; }
 .lab-sublead { margin: 0 0 16px; color: var(--kz-text-secondary); }
 .lab-status { margin: 14px 0 0; font-size: 14px; color: var(--kz-text-secondary); }
 
-.lab-kzui { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
-@media (min-width: 768px) { .lab-kzui { grid-template-columns: repeat(2, minmax(0, 1fr)); } .lab-kzui-wide { grid-column: 1 / -1; } }
-.lab-kzui-item { min-width: 0; padding: 20px; border-radius: 16px; border: 1px solid var(--kz-border-subtle); background: var(--kz-surface-1); }
-.lab-kzui-item h3 { margin: 0; font-size: 1.05rem; }
-.lab-kzui-item > p { margin: 6px 0 14px; color: var(--kz-text-secondary); font-size: 14px; }
-.lab-figure { display: flex; align-items: baseline; gap: 10px; font-size: 2.5rem; font-weight: 800; }
-.lab-figure span { font-size: 14px; font-weight: 500; color: var(--kz-text-secondary); }
 .lab-glow { display: flex; flex-direction: column; gap: 6px; padding: 20px; }
 .lab-glow span { font-size: 14px; color: var(--kz-text-secondary); }
 .lab-prose { max-width: 70ch; }
@@ -51,3 +49,36 @@ body { margin: 0; background: var(--kz-surface-0); color: var(--kz-text-primary)
 .lab-prose li, .lab-prose p { line-height: 1.65; color: var(--kz-text-secondary); }
 /* The canvas views size their canvas in pixels: inside a lab box it always fills the box. */
 .lab-preview canvas, .lab-box canvas { width: 100% !important; height: 100% !important; }
+
+/* The gallery: one example per row — the live result beside its words, props, reduced motion and code. */
+.lab-gallery { display: flex; flex-direction: column; gap: 22px; margin: 0; padding: 0; list-style: none; }
+.lab-g-item { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 20px; border-radius: 18px; border: 1px solid var(--kz-border-subtle); background: var(--kz-surface-1); scroll-margin-top: 96px; }
+@media (min-width: 1024px) { .lab-g-item { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: start; } }
+.lab-g-live { position: relative; display: flex; align-items: center; justify-content: center; min-height: 240px; padding: 24px; overflow: hidden; border-radius: 14px; background: var(--kz-surface-0); border: 1px solid var(--kz-border-subtle); }
+.lab-g-text { min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.lab-g-text h3 { margin: 0; font-size: 1.15rem; }
+.lab-g-text p { margin: 0; color: var(--kz-text-secondary); line-height: 1.55; }
+.lab-g-text dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 0; font-size: 13.5px; }
+.lab-g-text dt { font-weight: 600; color: var(--kz-text-primary); }
+@media (max-width: 640px) { .lab-g-text dl { grid-template-columns: minmax(0, 1fr); } .lab-g-text dd { margin-bottom: 6px; } }
+.lab-g-text dd { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; color: var(--kz-text-secondary); }
+.lab-g-text dd code { font-family: var(--kz-font-mono); font-size: 12px; padding: 1px 6px; border-radius: 6px; background: var(--kz-surface-2, var(--kz-surface-0)); border: 1px solid var(--kz-border-subtle); }
+.lab-g-col { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; max-width: 360px; }
+.lab-g-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
+.lab-g-tabs { width: 100%; max-width: 380px; }
+.lab-g-chat { align-items: stretch; }
+.lab-g-presence { position: relative; display: grid; place-items: center; width: 240px; height: 240px; margin-bottom: 24px; }
+.lab-g-orb { position: absolute; inset: 0; }
+.lab-g-orb > * { position: absolute; inset: 0; }
+.lab-g-avatar { position: relative; }
+.lab-g-caption { position: absolute; bottom: -26px; font-size: 13px; color: var(--kz-text-secondary); }
+.lab-g-flow { width: 100%; max-width: 420px; --kz-flow-mark: 2.25rem; --kz-flow-hub: 3.5rem; }
+.lab-g-layer { position: absolute; inset: 0; display: grid; place-items: center; }
+.lab-g-back { position: absolute; inset: 0; }
+.lab-g-back > * { position: absolute; inset: 0; }
+.lab-g-front { position: relative; max-width: 300px; }
+.lab-g-glass { backdrop-filter: blur(10px); background: color-mix(in oklab, var(--kz-surface-1) 70%, transparent); }
+.lab-g-name { font-weight: 700; font-size: 1.1rem; padding: 0 6px; }
+.lab-g-nav { width: 100%; max-width: 360px; }
+.lab-g-live .kz-band { width: 100%; }
+.lab-g-live .lab-glow { max-width: 300px; }

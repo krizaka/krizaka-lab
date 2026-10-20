@@ -11,6 +11,9 @@ importers:
       '@krizaka/fonts':
         specifier: ^0.2.1
         version: 0.2.1
+      '@krizaka/i18n':
+        specifier: ^0.2.3
+        version: 0.2.3(react@19.3.1)(typescript@5.9.3)
       '@krizaka/icons':
         specifier: ^0.6.0
         version: 0.6.0(react@19.3.1)
@@ -330,6 +333,19 @@ packages:
   '@krizaka/fonts@0.2.1':
     resolution: {integrity: sha512-bU/+5zn27g6BWtAQh0N1de/zbcpTJRGFuy+Bvp6CL7M+7SBNfnJ98czZUP81YTAKqApNlKtm3pVf5rMFI7fpyA==}
     engines: {node: '>=22'}
+
+  '@krizaka/i18n@0.2.3':
+    resolution: {integrity: sha512-dDuPtfvnHe3RMjK4P52JcV5FKgf9QgbkVNiAiSHRyUH+N6Wa+nSvARHlptX6cngmZH95/pKoUlszcNpMI//2ww==}
+    engines: {node: '>=22'}
+    hasBin: true
+    peerDependencies:
+      react: '>=18'
+      typescript: '>=5'
+    peerDependenciesMeta:
+      react:
+        optional: true
+      typescript:
+        optional: true
 
   '@krizaka/icons@0.6.0':
     resolution: {integrity: sha512-p6k8IJWvbSbehguKkMAye/9+ltBvzj2vSVZX1Ds3l9F5/gFSo6++7r3uDGRnrcjUt3kfRBXK8CLSc5hV8qfjag==}
@@ -2103,6 +2119,13 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.6.0
 
   '@krizaka/fonts@0.2.1': {}
+
+  '@krizaka/i18n@0.2.3(react@19.3.1)(typescript@5.9.3)':
+    dependencies:
+      '@krizaka/intl': 0.2.1
+    optionalDependencies:
+      react: 19.3.1
+      typescript: 5.9.3
 
   '@krizaka/icons@0.6.0(react@19.3.1)':
     dependencies:
