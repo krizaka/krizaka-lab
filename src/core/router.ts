@@ -13,6 +13,7 @@ export type TabId =
   | "journey"
   | "figures"
   | "overlays"
+  | "people"
   | "transitions"
   | "data"
   | "kz-ui"
@@ -108,6 +109,14 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     description: "A dialog in four placements, the sliding indicator of NavBar and Tabs",
     aliases: ["overlays","dialog","sheet","navbar","indicator"],
   },
+  people: {
+    id: "people",
+    path: "people",
+    label: "People",
+    title: "People arriving — Krizaka Motion",
+    description: "An avatar stack that fills, a verified badge, milestones that unlock",
+    aliases: ["people","avatars","verified","achievements"],
+  },
   transitions: {
     id: "transitions",
     path: "transitions",
@@ -153,6 +162,7 @@ export const TAB_ORDER: TabId[] = [
   "journey",
   "figures",
   "overlays",
+  "people",
   "transitions",
   "data",
   "kz-ui",

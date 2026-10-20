@@ -26,6 +26,7 @@ const ROUTES = [
   "journey",
   "figures",
   "overlays",
+  "people",
   "transitions",
   "data-motion",
   "specs",

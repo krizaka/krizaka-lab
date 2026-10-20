@@ -4,7 +4,7 @@
      node scripts/check-overflow.mjs --base http://localhost:4173 */
 import { chromium } from "playwright";
 
-export const PATHS = ["/", "/orazaka/", "/yororis/", "/jarvis/", "/liquid-glass/", "/neural-lattice/", "/krizaka-ui/", "/maps/", "/conversation/", "/journey/", "/figures/", "/overlays/", "/transitions/", "/data-motion/", "/specs/"];
+export const PATHS = ["/", "/orazaka/", "/yororis/", "/jarvis/", "/liquid-glass/", "/neural-lattice/", "/krizaka-ui/", "/maps/", "/conversation/", "/journey/", "/figures/", "/overlays/", "/people/", "/transitions/", "/data-motion/", "/specs/"];
 export const WIDTHS = [360, 768, 1024, 1440];
 
 const i = process.argv.indexOf("--base");

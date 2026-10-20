@@ -264,6 +264,13 @@
       "title": "Views that cross.",
       "lead": "A view change plays through the View Transitions API: fade, slide or reveal, inside one stage.",
       "card": "Fade, slide, reveal; duration and easing."
+    },
+    "people": {
+      "name": "People",
+      "eyebrow": "Krizaka UI avatars",
+      "title": "People who arrive.",
+      "lead": "An avatar stack that fills, a verified badge that appears, milestones that unlock one by one.",
+      "card": "Avatar stack, VerifiedBadge, Achievement unlock."
     }
   },
   "footer": {
