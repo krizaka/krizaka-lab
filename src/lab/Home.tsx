@@ -7,11 +7,11 @@ import { CardGrid } from "@krizaka/ui/card-grid";
 import { CodeBlock } from "@krizaka/ui/code-block";
 import { LinkCard } from "@krizaka/ui/link-card";
 import { Facts, Section } from "@krizaka/ui/page";
-import { PageHero } from "@krizaka/ui/page-hero";
 
 import { TAB_ORDER, type TabId } from "../core/router";
 import { useLab } from "./context";
 import { DEMOS, ENGINE_FLOW_USAGE } from "./demos";
+import { Hero } from "./hero";
 
 const CARDS: TabId[] = TAB_ORDER.filter((id) => id !== "architecture");
 
@@ -20,25 +20,27 @@ export function Home() {
   const h = t.home;
   return (
     <>
-      <PageHero eyebrow={h.eyebrow} title={h.title} lead={h.lead} align="center">
-        <div className="lab-actions">
-          <Button asChild variant="primary" size="lg">
-            <a href={href("orazaka")} onClick={go("orazaka")}>
-              {h.primary} <ForwardIcon size={16} />
-            </a>
-          </Button>
-          <Button asChild variant="secondary" size="lg">
-            <a href={href("kz-ui")} onClick={go("kz-ui")}>
-              {h.galleryCta}
-            </a>
-          </Button>
-          <Button asChild variant="ghost" size="lg">
-            <a href="https://github.com/krizaka/krizaka-motion">
-              {h.source} <ExternalIcon size={14} />
-            </a>
-          </Button>
-        </div>
-      </PageHero>
+      <Hero />
+
+      <Section id="start" eyebrow="Use it" title="Three steps, then it is yours." lead="Everything on this page is @krizaka/ui: nothing to copy from the lab.">
+        <ol className="lab-steps">
+          <li>
+            <strong>Install</strong>
+            <CodeBlock code="pnpm add @krizaka/ui" language="bash" copyLabel={t.demo.copy} copiedLabel={t.demo.copied} />
+          </li>
+          <li>
+            <strong>Mount the conductor once</strong>
+            <CodeBlock code={'import { MotionObserver } from "@krizaka/ui/motion";\nimport "@krizaka/ui/motion.css";\n\n<MotionObserver />'} language="tsx" copyLabel={t.demo.copy} copiedLabel={t.demo.copied} />
+          </li>
+          <li>
+            <strong>Use a primitive and tune it</strong>
+            <CodeBlock code={'import { EngineFlow } from "@krizaka/ui/engine-flow";\n\n<EngineFlow label="…" hub={hub} nodes={nodes} density="dense" />'} language="tsx" copyLabel={t.demo.copy} copiedLabel={t.demo.copied} />
+          </li>
+        </ol>
+        <p className="lab-sublead">
+          Read the <a href="https://ui.krizaka.com/foundations/motion">Motion foundation</a> and browse <a href="https://ui.krizaka.com/components">every component</a> on ui.krizaka.com.
+        </p>
+      </Section>
 
       <Section id="demos" eyebrow={h.demosEyebrow} title={h.demosTitle} lead={h.demosLead}>
         <CardGrid as="ul" min={300} columns={3}>
