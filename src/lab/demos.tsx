@@ -103,7 +103,7 @@ function Box({ children, tall = false }: { children: ReactNode; tall?: boolean }
 }
 
 /** The engine flow of @krizaka/ui — the shipped primitive krizaka.com's home draws. */
-function Flow({ layout = "radial", mode = "both", particles = "photons", conduit = "bezier", compact = true, config }: { layout?: FlowLayout; mode?: FlowMode; particles?: "photons" | "none"; conduit?: "bezier" | "straight"; compact?: boolean; config?: Partial<React.ComponentProps<typeof EngineFlow>> }) {
+export function Flow({ layout = "radial", mode = "both", particles = "photons", conduit = "bezier", compact = true, config }: { layout?: FlowLayout; mode?: FlowMode; particles?: "photons" | "none"; conduit?: "bezier" | "straight"; compact?: boolean; config?: Partial<React.ComponentProps<typeof EngineFlow>> }) {
   const { t } = useLab();
   const c = t.controls;
   return (
