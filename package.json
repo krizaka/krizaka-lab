@@ -56,12 +56,15 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@krizaka/charts": "^0.6.0",
     "@krizaka/fonts": "^0.2.1",
     "@krizaka/i18n": "^0.2.3",
     "@krizaka/icons": "^0.6.0",
     "@krizaka/tailwind": "^3.31.0",
     "@krizaka/tokens": "^3.31.0",
-    "@krizaka/ui": "^3.31.0"
+    "@krizaka/ui": "^3.31.0",
+    "maplibre-gl": "6.11.2",
+    "pmtiles": "^4.5.0"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

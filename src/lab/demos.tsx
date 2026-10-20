@@ -3,10 +3,12 @@
    shipped primitives of @krizaka/ui. Words come from the messages (useLab). */
 
 import { SettingsIcon } from "@krizaka/icons";
+import { Sparkline } from "@krizaka/charts/sparkline";
 import { ProductLogo } from "@krizaka/ui";
+import { StaticMap } from "@krizaka/ui/map";
 import { Button } from "@krizaka/ui/button";
 import { Chip } from "@krizaka/ui/chip";
-import { EngineFlow, type FlowLayout } from "@krizaka/ui/engine-flow";
+import { EngineFlow, type FlowDensity, type FlowLayout, type FlowTrigger } from "@krizaka/ui/engine-flow";
 import { Dialog } from "@krizaka/ui/dialog";
 import { Slider } from "@krizaka/ui/slider";
 import { Switch } from "@krizaka/ui/switch";
@@ -24,6 +26,9 @@ import { OrazakaEngineFlow } from "../react/OrazakaEngineFlow";
 import { YororisPresenceOrb } from "../react/YororisPresenceOrb";
 import { useLab } from "./context";
 import { Gallery } from "./gallery";
+import { DataStage } from "./data-motion";
+import { MapsStage } from "./maps";
+import { type Knob, Playground } from "./playground";
 
 type FlowMode = "in" | "out" | "both";
 const PRODUCTS = [
@@ -89,7 +94,7 @@ function Box({ children, tall = false }: { children: ReactNode; tall?: boolean }
 }
 
 /** The engine flow of @krizaka/ui — the shipped primitive krizaka.com's home draws. */
-function Flow({ layout = "radial", mode = "both", particles = "photons", conduit = "bezier", compact = true }: { layout?: FlowLayout; mode?: FlowMode; particles?: "photons" | "none"; conduit?: "bezier" | "straight"; compact?: boolean }) {
+function Flow({ layout = "radial", mode = "both", particles = "photons", conduit = "bezier", compact = true, config }: { layout?: FlowLayout; mode?: FlowMode; particles?: "photons" | "none"; conduit?: "bezier" | "straight"; compact?: boolean; config?: Partial<React.ComponentProps<typeof EngineFlow>> }) {
   const { t } = useLab();
   const c = t.controls;
   return (
@@ -100,6 +105,7 @@ function Flow({ layout = "radial", mode = "both", particles = "photons", conduit
       compactLayout={compact ? "top-to-bottom" : false}
       particles={particles}
       conduit={conduit}
+      {...config}
       hint={c.hint}
       hub={{ label: c.engine, caption: c.engineCaption, mark: <ProductLogo id="orazaka" size={52} animated={false} /> }}
       nodes={PRODUCTS.map((p) => ({
@@ -119,28 +125,47 @@ function Flow({ layout = "radial", mode = "both", particles = "photons", conduit
   );
 }
 
+const FLOW_KNOBS: readonly Knob[] = [
+  { kind: "choice", key: "layout", label: "layout", options: ["radial", "top-to-bottom", "left-to-right"], value: "radial" },
+  { kind: "choice", key: "flow", label: "traffic", options: ["in", "out", "both"], value: "both" },
+  { kind: "choice", key: "density", label: "density", options: ["sparse", "normal", "dense"], value: "normal" },
+  { kind: "choice", key: "trigger", label: "trigger", options: ["always", "hover", "active"], value: "always" },
+  { kind: "choice", key: "easing", label: "easing", options: ["linear", "ease-in-out", "cubic-bezier(.2,0,0,1)"], value: "linear" },
+  { kind: "range", key: "speed", label: "speed", min: 4, max: 40, step: 2, value: 16, unit: "units/s" },
+  { kind: "range", key: "stagger", label: "stagger", min: 0, max: 800, step: 50, value: 300, unit: "ms" },
+  { kind: "choice", key: "particles", label: "particles", options: ["photons", "none"], value: "photons" },
+  { kind: "choice", key: "conduit", label: "conduit", options: ["bezier", "straight"], value: "bezier" },
+  { kind: "toggle", key: "breathe", label: "the engine breathes", value: true },
+];
+
 function OrazakaStage() {
   const { t } = useLab();
   const c = t.controls;
-  const [layout, setLayout] = useState<FlowLayout>("radial");
-  const [mode, setMode] = useState<FlowMode>("both");
-  const [particles, setParticles] = useState<"photons" | "none">("photons");
-  const [conduit, setConduit] = useState<"bezier" | "straight">("bezier");
   const [direction, setDirection] = useState<FlowDirection>("left-to-right");
   const [canvasMode, setCanvasMode] = useState<CanvasMode>("bidirectional");
   return (
     <>
-      <div className="lab-stage">
-        <div className="lab-stage-view">
-          <Flow layout={layout} mode={mode} particles={particles} conduit={conduit} compact={false} />
-        </div>
-        <Settings>
-          <Choice label={c.layout} value={layout} options={["radial", "top-to-bottom", "left-to-right"] as const} names={c.layouts} onChange={setLayout} />
-          <Choice label={c.mode} value={mode} options={["in", "out", "both"] as const} names={c.modes} onChange={setMode} />
-          <Choice label={c.particles} value={particles} options={["photons", "none"] as const} names={c.particleNames} onChange={setParticles} />
-          <Choice label={c.conduit} value={conduit} options={["bezier", "straight"] as const} names={c.conduits} onChange={setConduit} />
-        </Settings>
-      </div>
+      <Playground
+        knobs={FLOW_KNOBS}
+        component="EngineFlow"
+        importPath="@krizaka/ui/engine-flow"
+        skip={["flow"]}
+        note="The stream changes, never the claim: a planned product stays dim and still whatever the settings."
+        render={(v) => (
+          <div className="lab-stage-view">
+            <Flow
+              layout={v.layout as FlowLayout}
+              mode={v.flow as FlowMode}
+              particles={v.particles as "photons" | "none"}
+              conduit={v.conduit as "bezier" | "straight"}
+              compact={false}
+              config={{ density: v.density as FlowDensity, trigger: v.trigger as FlowTrigger, easing: v.easing as string, speed: v.speed as number, stagger: v.stagger as number, breathe: v.breathe as boolean }}
+            />
+          </div>
+        )}
+      >
+        {"  label=\"Orazaka and the products it powers\"\n  hub={{ label: \"Orazaka\" }}\n  nodes={nodes}"}
+      </Playground>
       <h3 className="lab-subtitle">{c.canvasTitle}</h3>
       <p className="lab-sublead">{c.canvasLead}</p>
       <div className="lab-stage">
@@ -299,6 +324,8 @@ export const DEMOS: Record<TabId, Demo> = {
   jarvis: { Preview: () => <JarvisHUD interactive3D={false} />, Stage: HudStage, usage: { code: canvasUsage("JarvisHUD", 'theme="cyan" tacticalMode="standard"'), file: "Hud.tsx" }, lab: true },
   caustics: { Preview: () => <LiquidCausticsView interactive={false} />, Stage: CausticsStage, usage: { code: canvasUsage("LiquidCausticsView", 'fluidMedium="glass" palette="prussian"'), file: "Glass.tsx" }, lab: true },
   lattice: { Preview: () => <NeuralLatticeView interactive={false} nodeCount={60} />, Stage: LatticeStage, usage: { code: canvasUsage("NeuralLatticeView", 'theme="prussian-cyan" nodeCount={90}'), file: "Lattice.tsx" }, lab: true },
+  maps: { Preview: () => <StaticMap label="Montréal" center={[-73.585, 45.521]} zoom={12} places={[{ position: [-73.6005, 45.5229], label: "Studio" }, { position: [-73.5695, 45.5268], label: "Parc La Fontaine" }]} />, Stage: MapsStage, lab: false },
+  data: { Preview: () => <div className="lab-g-col lab-grow"><Sparkline data={[12, 18, 15, 26, 31, 29, 44, 52]} width={220} height={64} variant="area" title="Plays" trendTone /></div>, Stage: DataStage, lab: false },
   "kz-ui": { Preview: () => <Flow compact={false} particles="photons" />, Stage: Gallery, lab: false },
   architecture: { Preview: () => null, Stage: SpecsStage, lab: false },
 };

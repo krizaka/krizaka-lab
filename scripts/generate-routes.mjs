@@ -21,6 +21,8 @@ const ROUTES = [
   "liquid-glass",
   "neural-lattice",
   "krizaka-ui",
+  "maps",
+  "data-motion",
   "specs",
   "architecture",
   "caustics",
