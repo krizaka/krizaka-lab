@@ -34,3 +34,10 @@ jobs:
       - run: pnpm exec krizaka-i18n check messages
       - run: pnpm run build
       - run: pnpm test
+      # A real browser, reduced motion OFF: the engine flow's dots travel and the engine breathes (check-overflow runs under
+      # reduced motion and cannot see a frozen figure).
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: |
+          pnpm exec vite preview --outDir dist-demo --port 4173 --strictPort &
+          for i in $(seq 1 30); do curl -fsS http://localhost:4173/ >/dev/null && break; sleep 1; done
+          node scripts/check-motion.mjs --base http://localhost:4173
