@@ -59,9 +59,9 @@
     "@krizaka/fonts": "^0.2.1",
     "@krizaka/i18n": "^0.2.3",
     "@krizaka/icons": "^0.6.0",
-    "@krizaka/tailwind": "^3.27.0",
-    "@krizaka/tokens": "^3.27.0",
-    "@krizaka/ui": "^3.27.0"
+    "@krizaka/tailwind": "^3.29.0",
+    "@krizaka/tokens": "^3.29.0",
+    "@krizaka/ui": "^3.29.0"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
