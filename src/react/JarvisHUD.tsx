@@ -1,9 +1,26 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties } from "react";
-import { JarvisHUDRenderer, type JarvisHUDOptions } from "../core/jarvis-hud";
+import {
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+  type CSSProperties,
+} from "react";
+import {
+  JarvisHUDRenderer,
+  type JarvisHUDOptions,
+  type JarvisTacticalMode,
+  type TargetLock,
+} from "../core/jarvis-hud";
 import { MotionController } from "../core/motion-controller";
 import { type JarvisTheme } from "../core/types";
+
+export interface JarvisHUDHandle {
+  lockTarget: (x: number, y: number) => void;
+  clearTarget: () => void;
+  getRenderer: () => JarvisHUDRenderer | null;
+}
 
 export interface JarvisHUDProps {
   /**
@@ -11,6 +28,11 @@ export interface JarvisHUDProps {
    * @default "cyan"
    */
   theme?: JarvisTheme;
+  /**
+   * Combat tactical posture (standard, combat, stealth, overdrive).
+   * @default "standard"
+   */
+  tacticalMode?: JarvisTacticalMode;
   /**
    * Engages high-alert overdrive mode (crimson flash, amplified telemetry).
    * @default false
@@ -28,23 +50,41 @@ export interface JarvisHUDProps {
   playing?: boolean;
   rotationSpeed?: number;
   showDiagnostics?: boolean;
+  showEnergyMatrix?: boolean;
+  onTargetLocked?: (target: TargetLock) => void;
   className?: string;
   style?: CSSProperties;
 }
 
-export function JarvisHUD({
-  theme = "cyan",
-  overdrive = false,
-  interactive3D = true,
-  playing = true,
-  rotationSpeed = 1.0,
-  showDiagnostics = true,
-  className = "",
-  style,
-}: JarvisHUDProps) {
+export const JarvisHUD = forwardRef<JarvisHUDHandle, JarvisHUDProps>(function JarvisHUD(
+  {
+    theme = "cyan",
+    tacticalMode = "standard",
+    overdrive = false,
+    interactive3D = true,
+    playing = true,
+    rotationSpeed = 1.0,
+    showDiagnostics = true,
+    showEnergyMatrix = true,
+    onTargetLocked,
+    className = "",
+    style,
+  },
+  ref
+) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rendererRef = useRef<JarvisHUDRenderer | null>(null);
   const controllerRef = useRef<MotionController | null>(null);
+
+  useImperativeHandle(ref, () => ({
+    lockTarget: (x: number, y: number) => {
+      rendererRef.current?.lockTargetAt(x, y);
+    },
+    clearTarget: () => {
+      rendererRef.current?.clearTargetLock();
+    },
+    getRenderer: () => rendererRef.current,
+  }));
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -52,10 +92,13 @@ export function JarvisHUD({
 
     const renderer = new JarvisHUDRenderer(canvas, {
       theme,
+      tacticalMode,
       overdrive,
       interactive3D,
       rotationSpeed,
       showDiagnostics,
+      showEnergyMatrix,
+      onTargetLocked,
     });
     rendererRef.current = renderer;
 
@@ -84,13 +127,25 @@ export function JarvisHUD({
     if (rendererRef.current) {
       rendererRef.current.setOptions({
         theme,
+        tacticalMode,
         overdrive,
         interactive3D,
         rotationSpeed,
         showDiagnostics,
+        showEnergyMatrix,
+        onTargetLocked,
       });
     }
-  }, [theme, overdrive, interactive3D, rotationSpeed, showDiagnostics]);
+  }, [
+    theme,
+    tacticalMode,
+    overdrive,
+    interactive3D,
+    rotationSpeed,
+    showDiagnostics,
+    showEnergyMatrix,
+    onTargetLocked,
+  ]);
 
   // Synchronize playing state with @krizaka/ui motion system
   useEffect(() => {
@@ -108,10 +163,10 @@ export function JarvisHUD({
     >
       <canvas
         ref={canvasRef}
-        className="w-full h-full block cursor-grab active:cursor-grabbing touch-none"
+        className="w-full h-full block cursor-crosshair touch-none"
         aria-label="Jarvis Iron Man Holographic HUD AI Core"
         role="img"
       />
     </div>
   );
-}
+});

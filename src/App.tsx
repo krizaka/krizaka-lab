@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   OrazakaEngineFlow,
   YororisPresenceOrb,
+  type YororisPresenceOrbHandle,
   JarvisHUD,
+  type JarvisHUDHandle,
   LiquidCausticsView,
+  type LiquidCausticsViewHandle,
   NeuralLatticeView,
+  type NeuralLatticeViewHandle,
 } from "./react";
 import {
   type ProductId,
@@ -18,7 +22,20 @@ import {
   type ProductSourceNode,
 } from "./core/types";
 import { PRODUCT_BRANDS, JARVIS_THEMES } from "./core/color-palettes";
-import { CAUSTIC_PALETTES, type CausticPalette } from "./core/liquid-caustics";
+import {
+  CAUSTIC_PALETTES,
+  type CausticPalette,
+  type FluidMedium,
+} from "./core/liquid-caustics";
+import { type YororisVoiceTone } from "./core/yororis-synthesis";
+import { type JarvisTacticalMode, type TargetLock } from "./core/jarvis-hud";
+
+// Direct imports of @krizaka/ui components from npm
+import { Button } from "@krizaka/ui/button";
+import { Card } from "@krizaka/ui/card";
+import { Badge } from "@krizaka/ui/badge";
+import { Chip } from "@krizaka/ui/chip";
+
 import {
   Play,
   Pause,
@@ -47,20 +64,41 @@ import {
   Calendar,
   MessageSquare,
   Mic,
+  MicOff,
   Brain,
   Shield,
   Zap,
   X,
   Settings2,
+  Target,
+  Radio,
+  Eye,
+  Compass,
+  Waves,
+  RefreshCw,
+  Flame,
+  ShieldCheck,
+  Crosshair,
+  Terminal,
+  Box,
 } from "lucide-react";
 
-type TabId = "orazaka" | "yororis" | "jarvis" | "caustics" | "lattice" | "architecture";
+type TabId =
+  | "orazaka"
+  | "yororis"
+  | "jarvis"
+  | "caustics"
+  | "lattice"
+  | "kz-ui"
+  | "architecture";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabId>("orazaka");
   const [fps, setFps] = useState(60);
 
-  // Orazaka Controls
+  // ==========================================
+  // 1. Orazaka Engine Controls
+  // ==========================================
   const [enginePlaying, setEnginePlaying] = useState(true);
   const [engineDensity, setEngineDensity] = useState(1.2);
   const [engineSpeed, setEngineSpeed] = useState(1.0);
@@ -75,24 +113,62 @@ export default function App() {
   const [nodeConfigs, setNodeConfigs] = useState<Partial<Record<ProductId, Partial<ProductSourceNode>>>>({});
   const [copiedCode, setCopiedCode] = useState(false);
 
-  // Yororis Controls
+  // ==========================================
+  // 2. Yororis Acoustic Controls
+  // ==========================================
+  const orbRef = useRef<YororisPresenceOrbHandle>(null);
   const [yororisState, setYororisState] = useState<YororisState>("idle");
+  const [yororisVoiceTone, setYororisVoiceTone] = useState<YororisVoiceTone>("lea");
   const [yororisPlaying, setYororisPlaying] = useState(true);
   const [yororisAudio, setYororisAudio] = useState(false);
+  const [yororisMicActive, setYororisMicActive] = useState(false);
+  const [yororisSpores, setYororisSpores] = useState(true);
+  const [yororisAuraFace, setYororisAuraFace] = useState(true);
+  const [yororisIntensity, setYororisIntensity] = useState(1.0);
+  const [breathingPhase, setBreathingPhase] = useState<"inhale" | "hold" | "exhale">("inhale");
+  const [breathingCount, setBreathingCount] = useState(4);
 
-  // Jarvis HUD Controls
+  // ==========================================
+  // 3. Jarvis HUD Controls
+  // ==========================================
+  const hudRef = useRef<JarvisHUDHandle>(null);
   const [jarvisTheme, setJarvisTheme] = useState<JarvisTheme>("cyan");
+  const [jarvisTacticalMode, setJarvisTacticalMode] = useState<JarvisTacticalMode>("standard");
   const [jarvisOverdrive, setJarvisOverdrive] = useState(false);
   const [jarvis3D, setJarvis3D] = useState(true);
   const [jarvisSpeed, setJarvisSpeed] = useState(1.0);
+  const [jarvisActiveLock, setJarvisActiveLock] = useState<TargetLock | null>(null);
+  const [energyMatrix, setEnergyMatrix] = useState({
+    repulsors: 85,
+    shields: 94,
+    unibeam: 60,
+    thrusters: 78,
+  });
 
-  // Liquid Caustics Controls
+  // ==========================================
+  // 4. Liquid Glass Controls
+  // ==========================================
+  const causticsRef = useRef<LiquidCausticsViewHandle>(null);
   const [causticPalette, setCausticPalette] = useState<CausticPalette>("obsidian");
+  const [fluidMedium, setFluidMedium] = useState<FluidMedium>("glass");
   const [refractionStrength, setRefractionStrength] = useState(1.0);
+  const [viscosity, setViscosity] = useState(0.98);
+  const [showUnderlyingText, setShowUnderlyingText] = useState(true);
 
-  // Neural Lattice Controls
+  // ==========================================
+  // 5. Neural Lattice Controls
+  // ==========================================
+  const latticeRef = useRef<NeuralLatticeViewHandle>(null);
   const [latticeTheme, setLatticeTheme] = useState<"obsidian-gold" | "sage-calm" | "prussian-cyan">("obsidian-gold");
   const [nodeCount, setNodeCount] = useState(52);
+  const [enableHebbian, setEnableHebbian] = useState(true);
+  const [avalancheCount, setAvalancheCount] = useState(0);
+
+  // ==========================================
+  // 6. Krizaka UI Showcase Controls
+  // ==========================================
+  const [kzUiGuideTab, setKzUiGuideTab] = useState<"card" | "button" | "voice" | "governance">("card");
+  const [copiedSnippet, setCopiedSnippet] = useState(false);
 
   // FPS monitor
   useEffect(() => {
@@ -113,6 +189,36 @@ export default function App() {
 
     return () => cancelAnimationFrame(animId);
   }, []);
+
+  // 4-7-8 Breathing Pacer Timer
+  useEffect(() => {
+    if (yororisState !== "breathing") return;
+    let timer: ReturnType<typeof setTimeout>;
+    let phase: "inhale" | "hold" | "exhale" = "inhale";
+    let count = 4;
+
+    const tick = () => {
+      count--;
+      if (count <= 0) {
+        if (phase === "inhale") {
+          phase = "hold";
+          count = 7;
+        } else if (phase === "hold") {
+          phase = "exhale";
+          count = 8;
+        } else {
+          phase = "inhale";
+          count = 4;
+        }
+      }
+      setBreathingPhase(phase);
+      setBreathingCount(count);
+      timer = setTimeout(tick, 1000);
+    };
+
+    timer = setTimeout(tick, 1000);
+    return () => clearTimeout(timer);
+  }, [yororisState]);
 
   const updateNodeField = <K extends keyof ProductSourceNode>(
     id: ProductId,
@@ -153,10 +259,56 @@ export function Engine({ playing }: { playing: boolean }) {
     setTimeout(() => setCopiedCode(false), 2000);
   };
 
+  const copyKzSnippet = (codeText: string) => {
+    navigator.clipboard.writeText(codeText);
+    setCopiedSnippet(true);
+    setTimeout(() => setCopiedSnippet(false), 2000);
+  };
+
+  // Toggle live mic
+  const handleToggleMic = async () => {
+    if (!orbRef.current) return;
+    const active = await orbRef.current.toggleMicrophone(!yororisMicActive);
+    setYororisMicActive(active);
+    if (active) {
+      setYororisState("speaking");
+    } else {
+      setYororisState("idle");
+    }
+  };
+
+  // Toggle procedural audio
+  const handleToggleDrone = () => {
+    if (!orbRef.current) return;
+    const active = orbRef.current.toggleProceduralAudio(!yororisAudio);
+    setYororisAudio(active);
+  };
+
+  // Trigger ripple in liquid glass
+  const handleTriggerCausticRipple = () => {
+    if (!causticsRef.current) return;
+    causticsRef.current.addRipple(250 + (Math.random() - 0.5) * 150, 180 + (Math.random() - 0.5) * 100, 1.8);
+  };
+
+  // Trigger cascade avalanche in neural lattice
+  const handleTriggerAvalanche = () => {
+    if (!latticeRef.current) return;
+    latticeRef.current.triggerCascadeAvalanche();
+    setAvalancheCount((prev) => prev + 1);
+  };
+
+  // Acquire target lock in Jarvis HUD
+  const handleAcquireRandomTarget = () => {
+    if (!hudRef.current) return;
+    const x = 120 + Math.random() * 360;
+    const y = 120 + Math.random() * 360;
+    hudRef.current.lockTarget(x, y);
+  };
+
   return (
-    <div className="min-h-screen bg-[#07080a] text-[#f0f2f5] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#07080a] text-[#f0f2f5] flex flex-col font-sans selection:bg-orange-500/30">
       {/* Top Header */}
-      <header className="border-b border-[#1a1e24] bg-[#0c0d10]/90 backdrop-blur-xl sticky top-0 z-50 px-4 md:px-8 py-3 flex items-center justify-between">
+      <header className="border-b border-[#1a1e24] bg-[#0c0d10]/95 backdrop-blur-xl sticky top-0 z-50 px-4 md:px-8 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-orange-500/15 border border-orange-500/30 flex items-center justify-center text-orange-400 font-bold font-mono text-sm shadow-[0_0_14px_rgba(249,115,22,0.3)]">
             kz
@@ -165,11 +317,11 @@ export function Engine({ playing }: { playing: boolean }) {
             <h1 className="font-semibold text-sm md:text-base tracking-tight flex items-center gap-2">
               Krizaka Motion
               <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
-                v1.2.0 · Next-Level
+                v1.3.0 · Next-Level
               </span>
             </h1>
             <p className="text-xs text-[#88929e] hidden sm:block">
-              Moteurs visuels génératifs, physique tactile & audio-visuelle pour l'écosystème Krizaka
+              Moteurs visuels génératifs, optique Snell, physique tactile & composants @krizaka/ui
             </p>
           </div>
         </div>
@@ -225,6 +377,17 @@ export function Engine({ playing }: { playing: boolean }) {
             }`}
           >
             Neural Lattice
+          </button>
+          <button
+            onClick={() => setActiveTab("kz-ui")}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
+              activeTab === "kz-ui"
+                ? "bg-gradient-to-r from-orange-500 to-cyan-500 text-white font-semibold shadow-[0_0_14px_rgba(249,115,22,0.4)]"
+                : "text-orange-400/90 hover:text-white"
+            }`}
+          >
+            <Sparkles className="w-3 h-3" />
+            Krizaka UI + Motion
           </button>
           <button
             onClick={() => setActiveTab("architecture")}
@@ -497,7 +660,7 @@ export function Engine({ playing }: { playing: boolean }) {
               </div>
             </div>
 
-            {/* Node Inspector Drawer / Modal */}
+            {/* Node Inspector Drawer */}
             {inspectingNode && (
               <div className="p-5 rounded-2xl bg-[#0c0d10] border border-orange-500/40 space-y-4 shadow-[0_0_25px_rgba(249,115,22,0.15)] animate-in fade-in slide-in-from-bottom-2 duration-200">
                 <div className="flex items-center justify-between pb-3 border-b border-[#1a1e24]">
@@ -516,7 +679,6 @@ export function Engine({ playing }: { playing: boolean }) {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  {/* Name Input */}
                   <div className="space-y-1">
                     <label className="text-xs text-[#88929e]">Nom du produit / service :</label>
                     <input
@@ -527,7 +689,6 @@ export function Engine({ playing }: { playing: boolean }) {
                     />
                   </div>
 
-                  {/* Subtitle Input */}
                   <div className="space-y-1">
                     <label className="text-xs text-[#88929e]">Sous-titre / Spécialité :</label>
                     <input
@@ -538,7 +699,6 @@ export function Engine({ playing }: { playing: boolean }) {
                     />
                   </div>
 
-                  {/* Icon Selector */}
                   <div className="space-y-1">
                     <label className="text-xs text-[#88929e]">Icône vectorielle :</label>
                     <select
@@ -559,7 +719,6 @@ export function Engine({ playing }: { playing: boolean }) {
                     </select>
                   </div>
 
-                  {/* Color Swatch */}
                   <div className="space-y-1">
                     <label className="text-xs text-[#88929e]">Couleur du flux :</label>
                     <div className="flex items-center gap-2">
@@ -581,85 +740,206 @@ export function Engine({ playing }: { playing: boolean }) {
         )}
 
         {/* ======================================================== */}
-        {/* TAB 2: YORORIS ACOUSTIC PRESENCE */}
+        {/* TAB 2: YORORIS ACOUSTIC PRESENCE (V2 NEXT-LEVEL) */}
         {/* ======================================================== */}
         {activeTab === "yororis" && (
           <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <span className="text-xs font-mono tracking-widest text-[#7c9082] uppercase">
-                  DEV.YORORIS.COM · ESPACE VOCAL & HARMONIQUE
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono tracking-widest text-[#7c9082] uppercase">
+                    DEV.YORORIS.COM · ESPACE VOCAL & HARMONIQUE
+                  </span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#7c9082]/20 border border-[#7c9082]/40 text-[#b8c5b9]">
+                    F0 = 216 Hz · Résonance de Léa
+                  </span>
+                </div>
                 <h2 className="text-2xl md:text-3xl font-bold tracking-tight mt-1">
-                  Yororis Generative Voice Sphere
+                  Yororis Generative Acoustic Voice Sphere
                 </h2>
                 <p className="text-sm text-[#88929e] mt-1 max-w-2xl">
-                  Sphère 3D harmonique de présence pour Yororis. Visualisation des formants de la voix de Léa, ondes acoustiques et pacer de respiration 4-7-8.
+                  Synthèse acoustique générative, rubans de formants vocaux, nuage de spores bioluminescentes, regard empathique et analyse microphone temps réel.
                 </p>
               </div>
 
-              <button
-                onClick={() => setYororisAudio(!yororisAudio)}
-                className={`px-3.5 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition-all ${
-                  yororisAudio
-                    ? "bg-[#7c9082] text-white shadow-[0_0_16px_rgba(124,144,130,0.4)]"
-                    : "bg-[#121519] border border-[#22272e] text-[#88929e] hover:text-white"
-                }`}
-              >
-                {yororisAudio ? <Volume2 className="w-4 h-4 animate-pulse" /> : <VolumeX className="w-4 h-4" />}
-                {yororisAudio ? "Synthèse Acoustique Active" : "Activer Drone Sonore"}
-              </button>
+              <div className="flex items-center gap-2">
+                {/* Live Microphone Toggle */}
+                <button
+                  onClick={handleToggleMic}
+                  className={`px-3.5 py-2 rounded-xl text-xs font-medium flex items-center gap-2 border transition-all ${
+                    yororisMicActive
+                      ? "bg-emerald-500/20 border-emerald-500 text-emerald-300 shadow-[0_0_16px_rgba(16,185,129,0.3)] animate-pulse"
+                      : "bg-[#121519] border-[#22272e] text-[#88929e] hover:text-white"
+                  }`}
+                >
+                  {yororisMicActive ? <Mic className="w-4 h-4 text-emerald-400" /> : <MicOff className="w-4 h-4" />}
+                  {yororisMicActive ? "Microphone Ouvert (Live)" : "Activer Microphone"}
+                </button>
+
+                {/* Soothing Drone Toggle */}
+                <button
+                  onClick={handleToggleDrone}
+                  className={`px-3.5 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition-all ${
+                    yororisAudio
+                      ? "bg-[#7c9082] text-white shadow-[0_0_16px_rgba(124,144,130,0.4)]"
+                      : "bg-[#121519] border border-[#22272e] text-[#88929e] hover:text-white"
+                  }`}
+                >
+                  {yororisAudio ? <Volume2 className="w-4 h-4 animate-pulse" /> : <VolumeX className="w-4 h-4" />}
+                  {yororisAudio ? "Drone Thérapeutique Actif" : "Activer Drone 216Hz"}
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              <div className="lg:col-span-3 aspect-[4/3] md:aspect-[16/9] bg-[#0c0d10] rounded-2xl border border-[#7c9082]/30 p-2 shadow-[0_0_35px_rgba(124,144,130,0.08)] relative overflow-hidden flex items-center justify-center">
+              <div className="lg:col-span-3 aspect-[4/3] md:aspect-[16/9] bg-[#090d0b] rounded-2xl border border-[#7c9082]/35 p-2 shadow-[0_0_45px_rgba(124,144,130,0.12)] relative overflow-hidden flex items-center justify-center">
                 <YororisPresenceOrb
+                  ref={orbRef}
                   state={yororisState}
+                  voiceTone={yororisVoiceTone}
                   playing={yororisPlaying}
                   enableAudio={yororisAudio}
+                  showSpores={yororisSpores}
+                  showAuraFace={yororisAuraFace}
+                  intensity={yororisIntensity}
                   showRings
                   className="w-full h-full rounded-xl"
                 />
 
-                <div className="absolute top-4 left-4 bg-[#0c0d10]/80 backdrop-blur-md px-3 py-1 rounded-md border border-[#22272e] text-[11px] font-mono text-[#b8c5b9]">
-                  Fréquence fondamentale F0 : 216 Hz · Résonance de Léa
+                {/* Active telemetry badges */}
+                <div className="absolute top-4 left-4 flex flex-col gap-1.5 pointer-events-none">
+                  <div className="bg-[#0c0d10]/85 backdrop-blur-md px-3 py-1 rounded-md border border-[#7c9082]/40 text-[11px] font-mono text-[#b8c5b9] flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[#7c9082] animate-ping" />
+                    Profil : {yororisVoiceTone.toUpperCase()} · Freq: {
+                      yororisVoiceTone === "lea" ? "216 Hz" :
+                      yororisVoiceTone === "theta" ? "432 Hz" :
+                      yororisVoiceTone === "solfeggio" ? "528 Hz" : "639 Hz"
+                    }
+                  </div>
+                  {yororisMicActive && (
+                    <div className="bg-emerald-950/80 backdrop-blur-md px-3 py-1 rounded-md border border-emerald-500/40 text-[11px] font-mono text-emerald-300 flex items-center gap-2">
+                      <Radio className="w-3 h-3 animate-spin" />
+                      Analyse spectrale en temps réel (Micro actif)
+                    </div>
+                  )}
                 </div>
+
+                {/* Pacer Countdown Overlay during breathing mode */}
+                {yororisState === "breathing" && (
+                  <div className="absolute bottom-6 bg-black/75 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-[#7c9082]/40 flex items-center gap-3 shadow-xl">
+                    <Compass className="w-5 h-5 text-[#7c9082] animate-spin" />
+                    <div>
+                      <span className="text-[11px] uppercase tracking-wider text-[#88929e] block font-mono">
+                        Pacer Clinique 4-7-8
+                      </span>
+                      <span className="text-sm font-semibold text-white">
+                        {breathingPhase === "inhale" && `Inspirez profondément... (${breathingCount}s)`}
+                        {breathingPhase === "hold" && `Bloquez en douceur... (${breathingCount}s)`}
+                        {breathingPhase === "exhale" && `Expirez lentement... (${breathingCount}s)`}
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
 
+              {/* Yororis Controls */}
               <div className="bg-[#0c0d10] rounded-2xl border border-[#22272e] p-5 space-y-4">
                 <div className="pb-3 border-b border-[#1a1e24]">
-                  <h3 className="text-sm font-semibold text-[#b8c5b9]">États de présence</h3>
-                  <p className="text-xs text-[#88929e] mt-0.5">Modèle clinique et vocal</p>
+                  <h3 className="text-sm font-semibold text-[#b8c5b9]">Harmoniques & États</h3>
+                  <p className="text-xs text-[#88929e] mt-0.5">Thérapie vocale et présence</p>
                 </div>
 
-                <div className="space-y-2">
-                  {[
-                    { id: "idle", label: "1. Repos & Écoute Calme" },
-                    { id: "speaking", label: "2. Présence Vocale (Léa parle)" },
-                    { id: "breathing", label: "3. Pacer Respiratoire (4-7-8)" },
-                    { id: "reflecting", label: "4. Réflexion Clinique" },
-                  ].map((m) => (
+                {/* State selector */}
+                <div className="space-y-1.5">
+                  <span className="text-xs font-medium text-[#88929e] block">État psychologique :</span>
+                  <div className="space-y-1.5">
+                    {[
+                      { id: "idle", label: "1. Repos & Écoute Calme" },
+                      { id: "speaking", label: "2. Présence Vocale (Léa parle)" },
+                      { id: "breathing", label: "3. Pacer Respiratoire (4-7-8)" },
+                      { id: "reflecting", label: "4. Réflexion Clinique" },
+                    ].map((m) => (
+                      <button
+                        key={m.id}
+                        onClick={() => setYororisState(m.id as YororisState)}
+                        className={`w-full px-3 py-2 rounded-xl text-xs font-medium text-left border transition-all ${
+                          yororisState === m.id
+                            ? "bg-[#7c9082]/25 border-[#7c9082] text-white shadow-sm font-semibold"
+                            : "bg-[#121519] border-[#22272e] text-[#88929e] hover:border-[#333a44]"
+                        }`}
+                      >
+                        {m.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Voice Tone Selector */}
+                <div className="space-y-1.5 pt-2 border-t border-[#1a1e24]">
+                  <span className="text-xs font-medium text-[#88929e] block">Bande tonale vocale :</span>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {[
+                      { id: "lea", label: "Léa (216 Hz)" },
+                      { id: "theta", label: "Thêta (432 Hz)" },
+                      { id: "solfeggio", label: "Miracle (528 Hz)" },
+                      { id: "aurora", label: "Aurore (639 Hz)" },
+                    ].map((t) => (
+                      <button
+                        key={t.id}
+                        onClick={() => setYororisVoiceTone(t.id as YororisVoiceTone)}
+                        className={`px-2.5 py-1.5 rounded-lg text-xs font-mono border text-center transition-all ${
+                          yororisVoiceTone === t.id
+                            ? "bg-[#7c9082]/30 border-[#7c9082] text-white font-semibold"
+                            : "bg-[#121519] border-[#22272e] text-[#88929e]"
+                        }`}
+                      >
+                        {t.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Toggles */}
+                <div className="space-y-2 pt-2 border-t border-[#1a1e24]">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-[#88929e]">Nuage de spores bioluminescentes</span>
                     <button
-                      key={m.id}
-                      onClick={() => setYororisState(m.id as YororisState)}
-                      className={`w-full px-3 py-2.5 rounded-xl text-xs font-medium text-left border transition-all ${
-                        yororisState === m.id
-                          ? "bg-[#7c9082]/25 border-[#7c9082] text-white shadow-sm font-semibold"
-                          : "bg-[#121519] border-[#22272e] text-[#88929e] hover:border-[#333a44]"
+                      onClick={() => setYororisSpores(!yororisSpores)}
+                      className={`px-2 py-0.5 rounded text-xs font-mono border ${
+                        yororisSpores ? "bg-[#7c9082]/30 border-[#7c9082] text-white" : "bg-[#121519] border-[#22272e] text-[#88929e]"
                       }`}
                     >
-                      {m.label}
+                      {yororisSpores ? "ON" : "OFF"}
                     </button>
-                  ))}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-[#88929e]">Aura & Regard empathique</span>
+                    <button
+                      onClick={() => setYororisAuraFace(!yororisAuraFace)}
+                      className={`px-2 py-0.5 rounded text-xs font-mono border ${
+                        yororisAuraFace ? "bg-[#7c9082]/30 border-[#7c9082] text-white" : "bg-[#121519] border-[#22272e] text-[#88929e]"
+                      }`}
+                    >
+                      {yororisAuraFace ? "ON" : "OFF"}
+                    </button>
+                  </div>
                 </div>
 
-                <div className="pt-4 border-t border-[#1a1e24] space-y-3">
-                  <span className="text-xs font-medium text-[#88929e] block">Pacer 4-7-8 :</span>
-                  <div className="text-xs font-mono text-[#b8c5b9] bg-[#121519] p-3 rounded-xl border border-[#22272e] space-y-1">
-                    <div>• 4s : Inspiration ventrale</div>
-                    <div>• 7s : Rétention détendue</div>
-                    <div>• 8s : Expiration lente</div>
+                {/* Intensity Slider */}
+                <div className="space-y-1 pt-2 border-t border-[#1a1e24]">
+                  <div className="flex justify-between text-xs">
+                    <span className="text-[#88929e]">Intensité vibratoire</span>
+                    <span className="font-mono text-[#b8c5b9]">{yororisIntensity.toFixed(1)}x</span>
                   </div>
+                  <input
+                    type="range"
+                    min="0.4"
+                    max="2.0"
+                    step="0.1"
+                    value={yororisIntensity}
+                    onChange={(e) => setYororisIntensity(parseFloat(e.target.value))}
+                    className="w-full accent-[#7c9082] cursor-pointer"
+                  />
                 </div>
               </div>
             </div>
@@ -667,67 +947,147 @@ export function Engine({ playing }: { playing: boolean }) {
         )}
 
         {/* ======================================================== */}
-        {/* TAB 3: JARVIS HOLOGRAPHIC HUD */}
+        {/* TAB 3: JARVIS HOLOGRAPHIC HUD (V2 NEXT-LEVEL) */}
         {/* ======================================================== */}
         {activeTab === "jarvis" && (
           <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <span className="text-xs font-mono tracking-widest text-cyan-400 uppercase">
-                  MARK LXXXV · ARC REACTOR CORE
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono tracking-widest text-cyan-400 uppercase">
+                    MARK LXXXV · ARC REACTOR CORE V2
+                  </span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-500/40 text-cyan-300">
+                    Mode : {jarvisTacticalMode.toUpperCase()}
+                  </span>
+                </div>
                 <h2 className="text-2xl md:text-3xl font-bold tracking-tight mt-1">
-                  Jarvis Holographic HUD
+                  Jarvis Holographic HUD Interface
                 </h2>
                 <p className="text-sm text-[#88929e] mt-1 max-w-2xl">
-                  Interface holographique 3D inspirée du HUD de Jarvis dans Iron Man. Réacteur Arc central, 7 anneaux concentriques, gyroscope par parallaxe de souris et alertes tactiques.
+                  Interface holographique 3D cinéma Iron Man. Verrouillage balistique interactif par clic, matrice de distribution d'énergie, modes tactiques et gyroscope de vol.
                 </p>
               </div>
 
-              <button
-                onClick={() => setJarvisOverdrive(!jarvisOverdrive)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold font-mono tracking-wider flex items-center gap-2 transition-all ${
-                  jarvisOverdrive
-                    ? "bg-red-600 text-white shadow-[0_0_20px_rgba(239,68,68,0.6)] animate-pulse"
-                    : "bg-[#121519] border border-[#22272e] text-cyan-400 hover:border-cyan-500/40"
-                }`}
-              >
-                <ShieldAlert className="w-4 h-4" />
-                {jarvisOverdrive ? "OVERDRIVE ACTIF !" : "ENGAGER OVERDRIVE"}
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleAcquireRandomTarget}
+                  className="px-3.5 py-2 rounded-xl bg-cyan-500/15 border border-cyan-500/40 text-xs font-mono text-cyan-300 hover:bg-cyan-500/25 flex items-center gap-2 transition-all"
+                >
+                  <Target className="w-4 h-4" />
+                  Acquérir Cible
+                </button>
+                <button
+                  onClick={() => {
+                    setJarvisOverdrive(!jarvisOverdrive);
+                    setJarvisTacticalMode(!jarvisOverdrive ? "overdrive" : "standard");
+                  }}
+                  className={`px-4 py-2 rounded-xl text-xs font-bold font-mono tracking-wider flex items-center gap-2 transition-all ${
+                    jarvisOverdrive
+                      ? "bg-red-600 text-white shadow-[0_0_20px_rgba(239,68,68,0.6)] animate-pulse"
+                      : "bg-[#121519] border border-[#22272e] text-cyan-400 hover:border-cyan-500/40"
+                  }`}
+                >
+                  <ShieldAlert className="w-4 h-4" />
+                  {jarvisOverdrive ? "OVERDRIVE ENGAGÉ !" : "MAX UNIBEAM OVERDRIVE"}
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              <div className="lg:col-span-3 aspect-square max-h-[580px] mx-auto w-full bg-[#05070a] rounded-2xl border border-cyan-500/30 p-2 shadow-[0_0_40px_rgba(6,182,212,0.1)] relative overflow-hidden flex items-center justify-center">
+              <div className="lg:col-span-3 aspect-square max-h-[580px] mx-auto w-full bg-[#05070a] rounded-2xl border border-cyan-500/30 p-2 shadow-[0_0_40px_rgba(6,182,212,0.12)] relative overflow-hidden flex items-center justify-center">
                 <JarvisHUD
+                  ref={hudRef}
                   theme={jarvisTheme}
+                  tacticalMode={jarvisTacticalMode}
                   overdrive={jarvisOverdrive}
                   interactive3D={jarvis3D}
                   rotationSpeed={jarvisSpeed}
                   showDiagnostics
+                  showEnergyMatrix
+                  onTargetLocked={(tgt) => setJarvisActiveLock(tgt)}
                   className="w-full h-full rounded-xl"
                 />
 
-                <div className="absolute top-4 left-4 bg-black/70 backdrop-blur-md px-3 py-1 rounded-md border border-cyan-500/30 text-[11px] font-mono text-cyan-300">
-                  Déplacez le curseur pour incliner le champ holographique 3D
+                <div className="absolute top-4 left-4 bg-black/75 backdrop-blur-md px-3 py-1.5 rounded-md border border-cyan-500/30 text-[11px] font-mono text-cyan-300 flex items-center gap-2">
+                  <Crosshair className="w-3.5 h-3.5 animate-pulse text-cyan-400" />
+                  <span>Cliquez n'importe où pour verrouiller une cible balistique</span>
                 </div>
+
+                {/* Target info popover */}
+                {jarvisActiveLock && (
+                  <div className="absolute bottom-6 right-6 bg-[#05070a]/90 backdrop-blur-md px-4 py-3 rounded-xl border border-red-500/50 text-xs font-mono space-y-1 shadow-[0_0_20px_rgba(239,68,68,0.3)] animate-in fade-in">
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="text-red-400 font-bold flex items-center gap-1.5">
+                        <Flame className="w-3.5 h-3.5" />
+                        CIBLE VERROUILLÉE
+                      </span>
+                      <button
+                        onClick={() => {
+                          hudRef.current?.clearTarget();
+                          setJarvisActiveLock(null);
+                        }}
+                        className="text-[10px] text-zinc-400 hover:text-white"
+                      >
+                        [LIBÉRER]
+                      </button>
+                    </div>
+                    <div className="text-[#88929e]">
+                      POS : {Math.round(jarvisActiveLock.x)}X / {Math.round(jarvisActiveLock.y)}Y · DIST : {jarvisActiveLock.distanceMeters}m
+                    </div>
+                    <div className="text-[10px] text-red-300">
+                      MENACE : {jarvisActiveLock.threatLevel} · SOL-AIR GUIDÉ
+                    </div>
+                  </div>
+                )}
               </div>
 
-              <div className="bg-[#0c0d10] rounded-2xl border border-[#22272e] p-5 space-y-5">
+              {/* Jarvis Side Controls */}
+              <div className="bg-[#0c0d10] rounded-2xl border border-[#22272e] p-5 space-y-4">
                 <div className="pb-3 border-b border-[#1a1e24]">
-                  <h3 className="text-sm font-semibold">Diagnostics & Thèmes</h3>
-                  <p className="text-xs text-[#88929e] mt-0.5">Configuration holographique</p>
+                  <h3 className="text-sm font-semibold">Modes Tactiques & Shunts</h3>
+                  <p className="text-xs text-[#88929e] mt-0.5">Protocoles de combat Mark LXXXV</p>
                 </div>
 
-                <div className="space-y-2">
-                  <span className="text-xs font-medium text-[#88929e] block">Spectre de couleur :</span>
-                  <div className="grid grid-cols-1 gap-1.5">
+                {/* Tactical Modes */}
+                <div className="space-y-1.5">
+                  <span className="text-xs font-medium text-[#88929e] block">Posture de combat :</span>
+                  <div className="grid grid-cols-2 gap-1.5">
                     {[
-                      { id: "cyan", name: "Stark Cyan (Original)" },
-                      { id: "orazaka", name: "Orazaka Plasma (Orange)" },
-                      { id: "yororis", name: "Yororis Sage (Apaisant)" },
-                      { id: "crimson", name: "Mark VII Crimson (Alerte)" },
-                      { id: "gold", name: "Golden Magpie (Kachizaka)" },
+                      { id: "standard", label: "Standard" },
+                      { id: "combat", label: "Combat" },
+                      { id: "stealth", label: "Furtif" },
+                      { id: "overdrive", label: "Overdrive" },
+                    ].map((m) => (
+                      <button
+                        key={m.id}
+                        onClick={() => {
+                          setJarvisTacticalMode(m.id as JarvisTacticalMode);
+                          if (m.id === "overdrive") setJarvisOverdrive(true);
+                          else setJarvisOverdrive(false);
+                        }}
+                        className={`px-2.5 py-2 rounded-xl text-xs font-mono border text-center transition-all ${
+                          jarvisTacticalMode === m.id
+                            ? "bg-cyan-500/20 border-cyan-400 text-cyan-200 font-semibold"
+                            : "bg-[#121519] border-[#22272e] text-[#88929e]"
+                        }`}
+                      >
+                        {m.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Color Spectrum */}
+                <div className="space-y-1.5 pt-2 border-t border-[#1a1e24]">
+                  <span className="text-xs font-medium text-[#88929e] block">Spectre holographique :</span>
+                  <div className="space-y-1">
+                    {[
+                      { id: "cyan", name: "Stark Cyan" },
+                      { id: "orazaka", name: "Orazaka Plasma" },
+                      { id: "yororis", name: "Yororis Sage" },
+                      { id: "crimson", name: "Mark VII Crimson" },
+                      { id: "gold", name: "Golden Magpie" },
                     ].map((t) => (
                       <button
                         key={t.id}
@@ -735,50 +1095,63 @@ export function Engine({ playing }: { playing: boolean }) {
                           setJarvisTheme(t.id as JarvisTheme);
                           setJarvisOverdrive(false);
                         }}
-                        className={`px-3 py-2 rounded-xl text-xs font-mono text-left flex items-center gap-2 border transition-all ${
+                        className={`w-full px-3 py-1.5 rounded-lg text-xs font-mono text-left flex items-center justify-between border transition-all ${
                           jarvisTheme === t.id && !jarvisOverdrive
                             ? "bg-white/10 border-white text-white font-semibold"
                             : "bg-[#121519] border-[#22272e] text-[#88929e] hover:border-[#333a44]"
                         }`}
                       >
+                        <span>{t.name}</span>
                         <span
                           className="w-2.5 h-2.5 rounded-full shadow-sm"
                           style={{ backgroundColor: JARVIS_THEMES[t.id as JarvisTheme].primary }}
                         />
-                        {t.name}
                       </button>
                     ))}
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-[#1a1e24] flex items-center justify-between">
-                  <span className="text-xs text-[#88929e]">Inclinaison 3D gyroscopique</span>
-                  <button
-                    onClick={() => setJarvis3D(!jarvis3D)}
-                    className={`px-2.5 py-1 rounded-md text-xs font-mono border transition-all ${
-                      jarvis3D
-                        ? "bg-cyan-500/20 border-cyan-500/40 text-cyan-300"
-                        : "bg-[#121519] border-[#22272e] text-[#88929e]"
-                    }`}
-                  >
-                    {jarvis3D ? "ON" : "OFF"}
-                  </button>
+                {/* Energy Matrix Shunts */}
+                <div className="space-y-2 pt-2 border-t border-[#1a1e24]">
+                  <span className="text-xs font-medium text-[#88929e] block">Matrice d'énergie réacteur :</span>
+                  <div className="space-y-1.5 text-xs font-mono">
+                    <div className="flex justify-between">
+                      <span className="text-cyan-400">Répulseurs</span>
+                      <span className="text-white">{energyMatrix.repulsors}%</span>
+                    </div>
+                    <div className="w-full bg-[#121519] h-1.5 rounded-full overflow-hidden">
+                      <div className="bg-cyan-400 h-full" style={{ width: `${energyMatrix.repulsors}%` }} />
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span className="text-emerald-400">Boucliers nanotech</span>
+                      <span className="text-white">{energyMatrix.shields}%</span>
+                    </div>
+                    <div className="w-full bg-[#121519] h-1.5 rounded-full overflow-hidden">
+                      <div className="bg-emerald-400 h-full" style={{ width: `${energyMatrix.shields}%` }} />
+                    </div>
+
+                    <div className="flex justify-between">
+                      <span className="text-orange-400">Unibeam central</span>
+                      <span className="text-white">{energyMatrix.unibeam}%</span>
+                    </div>
+                    <div className="w-full bg-[#121519] h-1.5 rounded-full overflow-hidden">
+                      <div className="bg-orange-400 h-full" style={{ width: `${energyMatrix.unibeam}%` }} />
+                    </div>
+                  </div>
                 </div>
 
-                <div className="space-y-1.5">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-[#88929e]">Vitesse de rotation</span>
-                    <span className="font-mono text-cyan-400">{jarvisSpeed.toFixed(1)}x</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0.2"
-                    max="3.0"
-                    step="0.2"
-                    value={jarvisSpeed}
-                    onChange={(e) => setJarvisSpeed(parseFloat(e.target.value))}
-                    className="w-full accent-cyan-500 cursor-pointer"
-                  />
+                {/* 3D tilt toggle */}
+                <div className="pt-2 border-t border-[#1a1e24] flex items-center justify-between">
+                  <span className="text-xs text-[#88929e]">Gyroscope 3D par curseur</span>
+                  <button
+                    onClick={() => setJarvis3D(!jarvis3D)}
+                    className={`px-2 py-0.5 rounded text-xs font-mono border ${
+                      jarvis3D ? "bg-cyan-500/20 border-cyan-400 text-cyan-300" : "bg-[#121519] border-[#22272e] text-[#88929e]"
+                    }`}
+                  >
+                    {jarvis3D ? "ACTIF" : "STATIONNAIRE"}
+                  </button>
                 </div>
               </div>
             </div>
@@ -786,77 +1159,159 @@ export function Engine({ playing }: { playing: boolean }) {
         )}
 
         {/* ======================================================== */}
-        {/* TAB 4: LIQUID GLASS CAUSTICS */}
+        {/* TAB 4: LIQUID GLASS CAUSTICS (V2 NEXT-LEVEL) */}
         {/* ======================================================== */}
         {activeTab === "caustics" && (
           <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <span className="text-xs font-mono tracking-widest text-amber-400 uppercase">
-                  SPATIAL UX · DISPERSION CHROMATIQUE & CAUSTIQUES
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono tracking-widest text-amber-400 uppercase">
+                    SPATIAL UX · DISPERSION CHROMATIQUE & MILIEUX FLUIDES
+                  </span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300">
+                    Milieu : {fluidMedium.toUpperCase()} (n = {
+                      fluidMedium === "glass" ? "1.52" :
+                      fluidMedium === "mercury" ? "1.95" :
+                      fluidMedium === "water" ? "1.33" : "1.03"
+                    })
+                  </span>
+                </div>
                 <h2 className="text-2xl md:text-3xl font-bold tracking-tight mt-1">
-                  Liquid Glass Caustic Mesh
+                  Liquid Glass Caustic Mesh & Snell Refraction
                 </h2>
                 <p className="text-sm text-[#88929e] mt-1 max-w-2xl">
-                  Réfraction optique selon la loi de Snell-Descartes avec dispersion de longueur d'onde RGB. Ondulations fluides à amortissement visqueux de Navier-Stokes.
+                  Réfraction optique selon la loi de Snell-Descartes avec dispersion spectrale RGB. Milieux de réfraction variables (verre, eau, mercure liquide, hélium superfluide) et déformation typographique.
                 </p>
               </div>
+
+              <button
+                onClick={handleTriggerCausticRipple}
+                className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-semibold text-xs flex items-center gap-2 transition-all shadow-[0_0_16px_rgba(245,158,11,0.3)]"
+              >
+                <Waves className="w-4 h-4" />
+                Générer Onde Fluide
+              </button>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               <div className="lg:col-span-3 aspect-[16/9] min-h-[380px] bg-[#07080a] rounded-2xl border border-amber-500/30 p-2 shadow-[0_0_40px_rgba(245,158,11,0.08)] relative overflow-hidden flex items-center justify-center">
                 <LiquidCausticsView
+                  ref={causticsRef}
                   palette={causticPalette}
+                  fluidMedium={fluidMedium}
                   interactive
+                  viscosity={viscosity}
                   refractionStrength={refractionStrength}
+                  showUnderlyingText={showUnderlyingText}
                   className="w-full h-full rounded-xl"
                 />
                 <div className="absolute top-4 left-4 bg-black/75 backdrop-blur-md px-3 py-1 rounded-md border border-[#22272e] text-[11px] font-mono text-amber-300">
-                  Cliquez ou déplacez le curseur pour créer des ondes de réfraction fluide
+                  Survolez ou cliquez pour propager des ondes de réfraction optique Navier-Stokes
                 </div>
               </div>
 
               <div className="bg-[#0c0d10] rounded-2xl border border-[#22272e] p-5 space-y-4">
                 <div className="pb-3 border-b border-[#1a1e24]">
-                  <h3 className="text-sm font-semibold">Palettes Minérales</h3>
-                  <p className="text-xs text-[#88929e] mt-0.5">Teintes architecturales</p>
+                  <h3 className="text-sm font-semibold">Milieu & Dispersion</h3>
+                  <p className="text-xs text-[#88929e] mt-0.5">Propriétés optiques du matériau</p>
                 </div>
 
-                <div className="space-y-2">
-                  {(["obsidian", "prussian", "yororis", "amber"] as CausticPalette[]).map((p) => (
-                    <button
-                      key={p}
-                      onClick={() => setCausticPalette(p)}
-                      className={`w-full px-3 py-2.5 rounded-xl text-xs font-medium text-left border flex items-center justify-between transition-all ${
-                        causticPalette === p
-                          ? "bg-white/10 border-white text-white font-semibold"
-                          : "bg-[#121519] border-[#22272e] text-[#88929e] hover:border-[#333a44]"
-                      }`}
-                    >
-                      <span>{CAUSTIC_PALETTES[p].name}</span>
-                      <span
-                        className="w-3 h-3 rounded-full border border-white/20"
-                        style={{ backgroundColor: CAUSTIC_PALETTES[p].highlight }}
-                      />
-                    </button>
-                  ))}
-                </div>
-
-                <div className="pt-3 border-t border-[#1a1e24] space-y-1.5">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-[#88929e]">Indice de réfraction</span>
-                    <span className="font-mono text-amber-400">{refractionStrength.toFixed(1)}x</span>
+                {/* Medium Picker */}
+                <div className="space-y-1.5">
+                  <span className="text-xs font-medium text-[#88929e] block">Milieu de réfraction :</span>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {[
+                      { id: "glass", label: "Verre (1.52)" },
+                      { id: "mercury", label: "Mercure (1.95)" },
+                      { id: "water", label: "Eau (1.33)" },
+                      { id: "helium", label: "Hélium (1.03)" },
+                    ].map((m) => (
+                      <button
+                        key={m.id}
+                        onClick={() => setFluidMedium(m.id as FluidMedium)}
+                        className={`px-2.5 py-2 rounded-xl text-xs font-mono border text-center transition-all ${
+                          fluidMedium === m.id
+                            ? "bg-amber-500/20 border-amber-400 text-amber-200 font-semibold"
+                            : "bg-[#121519] border-[#22272e] text-[#88929e]"
+                        }`}
+                      >
+                        {m.label}
+                      </button>
+                    ))}
                   </div>
-                  <input
-                    type="range"
-                    min="0.4"
-                    max="2.5"
-                    step="0.1"
-                    value={refractionStrength}
-                    onChange={(e) => setRefractionStrength(parseFloat(e.target.value))}
-                    className="w-full accent-amber-500 cursor-pointer"
-                  />
+                </div>
+
+                {/* Palettes */}
+                <div className="space-y-1.5 pt-2 border-t border-[#1a1e24]">
+                  <span className="text-xs font-medium text-[#88929e] block">Palette minérale :</span>
+                  <div className="space-y-1">
+                    {(["obsidian", "prussian", "yororis", "amber"] as CausticPalette[]).map((p) => (
+                      <button
+                        key={p}
+                        onClick={() => setCausticPalette(p)}
+                        className={`w-full px-3 py-1.5 rounded-lg text-xs font-medium text-left border flex items-center justify-between transition-all ${
+                          causticPalette === p
+                            ? "bg-white/10 border-white text-white font-semibold"
+                            : "bg-[#121519] border-[#22272e] text-[#88929e] hover:border-[#333a44]"
+                        }`}
+                      >
+                        <span>{CAUSTIC_PALETTES[p].name}</span>
+                        <span
+                          className="w-3 h-3 rounded-full border border-white/20"
+                          style={{ backgroundColor: CAUSTIC_PALETTES[p].highlight }}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Sliders */}
+                <div className="space-y-2 pt-2 border-t border-[#1a1e24]">
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-[#88929e]">Indice de réfraction</span>
+                      <span className="font-mono text-amber-400">{refractionStrength.toFixed(1)}x</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0.4"
+                      max="2.5"
+                      step="0.1"
+                      value={refractionStrength}
+                      onChange={(e) => setRefractionStrength(parseFloat(e.target.value))}
+                      className="w-full accent-amber-500 cursor-pointer"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-[#88929e]">Viscosité fluide</span>
+                      <span className="font-mono text-amber-400">{viscosity.toFixed(2)}</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0.88"
+                      max="0.99"
+                      step="0.01"
+                      value={viscosity}
+                      onChange={(e) => setViscosity(parseFloat(e.target.value))}
+                      className="w-full accent-amber-500 cursor-pointer"
+                    />
+                  </div>
+                </div>
+
+                {/* Underlying text toggle */}
+                <div className="pt-2 border-t border-[#1a1e24] flex items-center justify-between">
+                  <span className="text-xs text-[#88929e]">Déformation typographie</span>
+                  <button
+                    onClick={() => setShowUnderlyingText(!showUnderlyingText)}
+                    className={`px-2 py-0.5 rounded text-xs font-mono border ${
+                      showUnderlyingText ? "bg-amber-500/20 border-amber-400 text-amber-300" : "bg-[#121519] border-[#22272e] text-[#88929e]"
+                    }`}
+                  >
+                    {showUnderlyingText ? "ACTIF" : "OFF"}
+                  </button>
                 </div>
               </div>
             </div>
@@ -864,46 +1319,74 @@ export function Engine({ playing }: { playing: boolean }) {
         )}
 
         {/* ======================================================== */}
-        {/* TAB 5: QUANTUM NEURAL LATTICE */}
+        {/* TAB 5: QUANTUM NEURAL LATTICE (V2 NEXT-LEVEL) */}
         {/* ======================================================== */}
         {activeTab === "lattice" && (
           <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
-                <span className="text-xs font-mono tracking-widest text-indigo-400 uppercase">
-                  COGNITIVE MESH · MAILLAGE SYNAPTIQUE
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono tracking-widest text-indigo-400 uppercase">
+                    COGNITIVE MESH · HODGKIN-HUXLEY SYNAPTIQUE
+                  </span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/20 border border-indigo-500/40 text-indigo-300">
+                    Avalanches provoquées : {avalancheCount}
+                  </span>
+                </div>
                 <h2 className="text-2xl md:text-3xl font-bold tracking-tight mt-1">
                   Quantum Neural Synapse Lattice
                 </h2>
                 <p className="text-sm text-[#88929e] mt-1 max-w-2xl">
-                  Réseau synaptique dynamique Delaunay / K-NN avec propagation de potentiels d'action et champ d'excitation tactile au curseur.
+                  Réseau synaptique biologique selon le modèle de potentiel de membrane de Hodgkin-Huxley. Plasticité hebbienne (« les neurones qui s'activent ensemble se lient ensemble ») et grappes cognitives Krizaka.
                 </p>
               </div>
+
+              <button
+                onClick={handleTriggerAvalanche}
+                className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs flex items-center gap-2 transition-all shadow-[0_0_20px_rgba(99,102,241,0.4)]"
+              >
+                <Zap className="w-4 h-4 text-yellow-300" />
+                Déclencher Avalanche Neuro-synaptique
+              </button>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               <div className="lg:col-span-3 aspect-[16/9] min-h-[380px] bg-[#07080a] rounded-2xl border border-indigo-500/30 p-2 shadow-[0_0_40px_rgba(99,102,241,0.08)] relative overflow-hidden flex items-center justify-center">
                 <NeuralLatticeView
+                  ref={latticeRef}
                   nodeCount={nodeCount}
+                  enableHebbianPlasticity={enableHebbian}
                   interactive
                   theme={latticeTheme}
                   className="w-full h-full rounded-xl"
                 />
                 <div className="absolute top-4 left-4 bg-black/75 backdrop-blur-md px-3 py-1 rounded-md border border-[#22272e] text-[11px] font-mono text-indigo-300">
-                  Survolez ou cliquez pour propager des impulsions synaptiques
+                  Survolez ou cliquez pour stimuler la dépolarisation des synapses
+                </div>
+
+                {/* Cognitive clusters indicator */}
+                <div className="absolute bottom-4 left-4 flex items-center gap-3 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-lg border border-[#22272e] text-[10px] font-mono">
+                  <span className="flex items-center gap-1.5 text-orange-400">
+                    <span className="w-2 h-2 rounded-full bg-orange-500" /> Orazaka Core
+                  </span>
+                  <span className="flex items-center gap-1.5 text-[#7c9082]">
+                    <span className="w-2 h-2 rounded-full bg-[#7c9082]" /> Yororis Empathy
+                  </span>
+                  <span className="flex items-center gap-1.5 text-cyan-400">
+                    <span className="w-2 h-2 rounded-full bg-cyan-400" /> Jarvis Hologram
+                  </span>
                 </div>
               </div>
 
               <div className="bg-[#0c0d10] rounded-2xl border border-[#22272e] p-5 space-y-4">
                 <div className="pb-3 border-b border-[#1a1e24]">
-                  <h3 className="text-sm font-semibold">Densité synaptique</h3>
-                  <p className="text-xs text-[#88929e] mt-0.5">Topologie du maillage</p>
+                  <h3 className="text-sm font-semibold">Plasticité & Topologie</h3>
+                  <p className="text-xs text-[#88929e] mt-0.5">Paramètres neuro-computationnels</p>
                 </div>
 
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-xs">
-                    <span className="text-[#88929e]">Nombre de nœuds</span>
+                    <span className="text-[#88929e]">Nombre de neurones</span>
                     <span className="font-mono text-indigo-400">{nodeCount}</span>
                   </div>
                   <input
@@ -916,13 +1399,431 @@ export function Engine({ playing }: { playing: boolean }) {
                     className="w-full accent-indigo-500 cursor-pointer"
                   />
                 </div>
+
+                <div className="space-y-1.5 pt-2 border-t border-[#1a1e24]">
+                  <span className="text-xs font-medium text-[#88929e] block">Thème spectral :</span>
+                  <div className="space-y-1">
+                    {[
+                      { id: "obsidian-gold", name: "Obsidian Gold (Kachizaka)" },
+                      { id: "sage-calm", name: "Sage Calm (Yororis)" },
+                      { id: "prussian-cyan", name: "Prussian Cyan (Jarvis)" },
+                    ].map((t) => (
+                      <button
+                        key={t.id}
+                        onClick={() => setLatticeTheme(t.id as any)}
+                        className={`w-full px-3 py-1.5 rounded-lg text-xs font-medium text-left border transition-all ${
+                          latticeTheme === t.id
+                            ? "bg-white/10 border-white text-white font-semibold"
+                            : "bg-[#121519] border-[#22272e] text-[#88929e] hover:border-[#333a44]"
+                        }`}
+                      >
+                        {t.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-[#1a1e24] flex items-center justify-between">
+                  <span className="text-xs text-[#88929e]">Plasticité Hebbienne</span>
+                  <button
+                    onClick={() => setEnableHebbian(!enableHebbian)}
+                    className={`px-2 py-0.5 rounded text-xs font-mono border ${
+                      enableHebbian ? "bg-indigo-500/20 border-indigo-400 text-indigo-300" : "bg-[#121519] border-[#22272e] text-[#88929e]"
+                    }`}
+                  >
+                    {enableHebbian ? "ACTIVE" : "OFF"}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         )}
 
         {/* ======================================================== */}
-        {/* TAB 6: ARCHITECTURE & SPECS */}
+        {/* TAB 6: KRIZAKA UI + MOTION LIVE SHOWCASE & INTEGRATION */}
+        {/* ======================================================== */}
+        {activeTab === "kz-ui" && (
+          <div className="space-y-8 animate-in fade-in duration-300">
+            {/* Header */}
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono tracking-widest text-orange-400 uppercase">
+                  ÉCOSYSTÈME KRIZAKA · NPM @KRIZAKA/UI + @KRIZAKA/MOTION
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
+                  100% npm · Zéro copie locale
+                </span>
+              </div>
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight mt-1">
+                Krizaka UI Components Augmented with Motion
+              </h2>
+              <p className="text-sm text-[#88929e] mt-1 max-w-3xl">
+                Démonstrateur en direct montrant comment appliquer la physique et les canevas génératifs de <code className="text-orange-300">krizaka-motion</code> sur les composants officiels <code className="text-white">@krizaka/ui</code> (Card, Button, Badge, Chip) sans jamais dupliquer de code.
+              </p>
+            </div>
+
+            {/* Live Interactive Grid of Augmented Components */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Card 1: Liquid Glass Caustics Card */}
+              <div className="relative rounded-2xl overflow-hidden border border-amber-500/30 bg-[#0c0d10] p-6 shadow-[0_0_30px_rgba(245,158,11,0.06)] group">
+                {/* Background Caustics Canvas */}
+                <div className="absolute inset-0 opacity-40 pointer-events-auto">
+                  <LiquidCausticsView
+                    palette="amber"
+                    fluidMedium="glass"
+                    viscosity={0.98}
+                    refractionStrength={1.2}
+                    showUnderlyingText={false}
+                    className="w-full h-full"
+                  />
+                </div>
+
+                {/* Glassmorphism Foreground Card Content using @krizaka/ui */}
+                <div className="relative z-10 space-y-4 backdrop-blur-[2px]">
+                  <div className="flex items-center justify-between">
+                    <Badge tone="accent" size="sm">
+                      Liquid Glass
+                    </Badge>
+                    <span className="text-[10px] font-mono text-amber-300">Card.Root</span>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-bold text-white tracking-tight">
+                      Backdrop Snell Refractif
+                    </h3>
+                    <p className="text-xs text-[#b8c5b9] mt-1 leading-relaxed">
+                      La carte @krizaka/ui laisse transparaître la réfraction fluide au survol de la souris.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-2">
+                    <Button variant="primary" shape="cut" size="sm">
+                      Action Principale
+                    </Button>
+                    <Button variant="secondary" shape="rounded" size="sm">
+                      Détails
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 2: Jarvis Tactical Combat Reticle */}
+              <div className="relative rounded-2xl overflow-hidden border border-cyan-500/30 bg-[#07090d] p-6 shadow-[0_0_30px_rgba(6,182,212,0.08)] group">
+                <div className="absolute inset-0 opacity-35 pointer-events-auto">
+                  <JarvisHUD
+                    theme="cyan"
+                    tacticalMode="combat"
+                    interactive3D={false}
+                    rotationSpeed={0.8}
+                    showDiagnostics={false}
+                    showEnergyMatrix={false}
+                    className="w-full h-full"
+                  />
+                </div>
+
+                <div className="relative z-10 space-y-4 backdrop-blur-[2px]">
+                  <div className="flex items-center justify-between">
+                    <Badge tone="warning" size="sm">
+                      Mark LXXXV
+                    </Badge>
+                    <span className="text-[10px] font-mono text-cyan-300">Button shape="cut"</span>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-bold text-white tracking-tight">
+                      Tactical Reticle Buttons
+                    </h3>
+                    <p className="text-xs text-[#b8c5b9] mt-1 leading-relaxed">
+                      Boutons chamfreinés Krizaka avec télémétrie de visée et impulsion tactile.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col gap-2 pt-2">
+                    <Button variant="primary" shape="cut" size="md" className="w-full justify-between">
+                      <span>VERROUILLER CIBLE</span>
+                      <Crosshair className="w-4 h-4 text-cyan-200" />
+                    </Button>
+                    <div className="flex gap-2">
+                      <Button variant="outline" shape="rounded" size="sm" className="flex-1">
+                        STANDBY
+                      </Button>
+                      <Button variant="danger" shape="cut" size="sm">
+                        ÉJECTER
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 3: Yororis Acoustic Harmonic Presence */}
+              <div className="relative rounded-2xl overflow-hidden border border-[#7c9082]/40 bg-[#090d0b] p-6 shadow-[0_0_30px_rgba(124,144,130,0.08)] group">
+                <div className="absolute inset-0 opacity-40 pointer-events-auto">
+                  <YororisPresenceOrb
+                    state="speaking"
+                    voiceTone="lea"
+                    showSpores={true}
+                    showAuraFace={false}
+                    showRings={true}
+                    className="w-full h-full"
+                  />
+                </div>
+
+                <div className="relative z-10 space-y-4 backdrop-blur-[2px]">
+                  <div className="flex items-center justify-between">
+                    <Badge tone="success" size="sm">
+                      Harmonique 216Hz
+                    </Badge>
+                    <span className="text-[10px] font-mono text-[#b8c5b9]">Chip + Badge</span>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-bold text-white tracking-tight">
+                      Acoustic Breathing Chips
+                    </h3>
+                    <p className="text-xs text-[#b8c5b9] mt-1 leading-relaxed">
+                      Composants Chip reflétant les états de résonance de Léa avec micro-pulsations.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1.5 pt-2">
+                    <Chip size="sm" className="bg-[#7c9082]/30 border-[#7c9082] text-white">
+                      F0: 216 Hz
+                    </Chip>
+                    <Chip size="sm" className="bg-[#121519] border-[#22272e] text-[#b8c5b9]">
+                      Pacer 4-7-8
+                    </Chip>
+                    <Chip size="sm" className="bg-[#121519] border-[#22272e] text-[#b8c5b9]">
+                      Formants F1-F4
+                    </Chip>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Comprehensive Step-by-step Integration Guide */}
+            <div className="rounded-2xl border border-[#22272e] bg-[#0c0d10] p-6 space-y-6">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#1a1e24]">
+                <div>
+                  <h3 className="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+                    <Terminal className="w-5 h-5 text-orange-400" />
+                    Comment utiliser @krizaka/motion avec @krizaka/ui
+                  </h3>
+                  <p className="text-xs text-[#88929e] mt-0.5">
+                    Guide d'architecture complet pour Next.js, Vite et applications React
+                  </p>
+                </div>
+
+                {/* Subtabs for recipes */}
+                <div className="flex items-center gap-1 bg-[#121519] p-1 rounded-xl border border-[#22272e]">
+                  {[
+                    { id: "card", label: "1. Backdrop Card" },
+                    { id: "button", label: "2. Button Springs" },
+                    { id: "voice", label: "3. Voice Bubble" },
+                    { id: "governance", label: "4. Règle Gouvernance" },
+                  ].map((tab) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setKzUiGuideTab(tab.id as any)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
+                        kzUiGuideTab === tab.id
+                          ? "bg-orange-500/20 border border-orange-500 text-orange-300 font-semibold"
+                          : "text-[#88929e] hover:text-white"
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Code Snippets for each recipe */}
+              {kzUiGuideTab === "card" && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-[#88929e]">
+                      Installer depuis npm, puis positionner le canvas en <code className="text-white">absolute inset-0</code> derrière les composants <code className="text-white">Card.Root</code> :
+                    </p>
+                    <button
+                      onClick={() =>
+                        copyKzSnippet(`// 1. Installation depuis npm :
+// pnpm add @krizaka/ui @krizaka/tokens @krizaka/motion
+
+import React from "react";
+import { Card } from "@krizaka/ui/card";
+import { Button } from "@krizaka/ui/button";
+import { Badge } from "@krizaka/ui/badge";
+import { LiquidCausticsView } from "@krizaka/motion";
+
+export function MotionGlassCard() {
+  return (
+    <Card.Root className="relative overflow-hidden border border-amber-500/30 rounded-2xl bg-[#0c0d10]/90">
+      {/* Canevas réactif krizaka-motion en arrière-plan */}
+      <div className="absolute inset-0 pointer-events-auto opacity-50">
+        <LiquidCausticsView palette="amber" fluidMedium="glass" />
+      </div>
+
+      {/* Contenu Krizaka UI en premier plan */}
+      <Card.Body className="relative z-10 p-6 space-y-4 backdrop-blur-[2px]">
+        <Badge tone="accent">Liquid Glass</Badge>
+        <Card.Title className="text-xl font-bold text-white">
+          Interface Spatiale Réfractive
+        </Card.Title>
+        <Card.Description className="text-sm text-zinc-400">
+          Ce composant Card de @krizaka/ui réagit au curseur avec réfraction de Snell.
+        </Card.Description>
+        <Card.Footer className="pt-2">
+          <Button variant="primary" shape="cut">
+            Confirmer
+          </Button>
+        </Card.Footer>
+      </Card.Body>
+    </Card.Root>
+  );
+}`)
+                      }
+                      className="px-3 py-1.5 rounded-lg bg-[#121519] border border-[#22272e] text-xs font-mono text-orange-300 hover:bg-[#1a1e24] flex items-center gap-1.5"
+                    >
+                      {copiedSnippet ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                      {copiedSnippet ? "Copié !" : "Copier l'exemple"}
+                    </button>
+                  </div>
+
+                  <pre className="p-4 rounded-xl bg-[#07080a] border border-[#1a1e24] text-xs font-mono text-[#b8c5b9] overflow-x-auto leading-relaxed">
+{`// 1. Installation depuis npm :
+// pnpm add @krizaka/ui @krizaka/tokens @krizaka/motion
+
+import React from "react";
+import { Card } from "@krizaka/ui/card";
+import { Button } from "@krizaka/ui/button";
+import { Badge } from "@krizaka/ui/badge";
+import { LiquidCausticsView } from "@krizaka/motion";
+
+export function MotionGlassCard() {
+  return (
+    <Card.Root className="relative overflow-hidden border border-amber-500/30 rounded-2xl bg-[#0c0d10]/90">
+      {/* Canevas réactif krizaka-motion en arrière-plan */}
+      <div className="absolute inset-0 pointer-events-auto opacity-50">
+        <LiquidCausticsView palette="amber" fluidMedium="glass" />
+      </div>
+
+      {/* Contenu Krizaka UI en premier plan */}
+      <Card.Body className="relative z-10 p-6 space-y-4 backdrop-blur-[2px]">
+        <Badge tone="accent">Liquid Glass</Badge>
+        <Card.Title className="text-xl font-bold text-white">
+          Interface Spatiale Réfractive
+        </Card.Title>
+        <Card.Description className="text-sm text-zinc-400">
+          Ce composant Card de @krizaka/ui réagit au curseur avec réfraction de Snell.
+        </Card.Description>
+        <Card.Footer className="pt-2">
+          <Button variant="primary" shape="cut">
+            Confirmer
+          </Button>
+        </Card.Footer>
+      </Card.Body>
+    </Card.Root>
+  );
+}`}
+                  </pre>
+                </div>
+              )}
+
+              {kzUiGuideTab === "button" && (
+                <div className="space-y-4">
+                  <p className="text-xs text-[#88929e]">
+                    Appliquer le solveur de ressorts différentiels <code className="text-white">SpringSolver</code> sur les boutons chamfreinés de <code className="text-white">@krizaka/ui/button</code> :
+                  </p>
+                  <pre className="p-4 rounded-xl bg-[#07080a] border border-[#1a1e24] text-xs font-mono text-[#b8c5b9] overflow-x-auto leading-relaxed">
+{`import React, { useRef, useState } from "react";
+import { Button } from "@krizaka/ui/button";
+import { SpringSolver } from "@krizaka/motion/core";
+
+export function KineticSpringButton() {
+  const [offsetY, setOffsetY] = useState(0);
+  const spring = useRef(new SpringSolver({ stiffness: 280, damping: 22, mass: 1 }));
+
+  const handlePointerDown = () => {
+    spring.current.setTarget(4); // Déplacement vers le bas
+  };
+
+  const handlePointerUp = () => {
+    spring.current.setTarget(0); // Retour élastique net
+  };
+
+  return (
+    <Button
+      variant="primary"
+      shape="cut"
+      size="lg"
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+      style={{ transform: \`translateY(\${offsetY}px)\` }}
+    >
+      Bouton Kinetic Spring
+    </Button>
+  );
+}`}
+                  </pre>
+                </div>
+              )}
+
+              {kzUiGuideTab === "voice" && (
+                <div className="space-y-4">
+                  <p className="text-xs text-[#88929e]">
+                    Intégrer la sphère de présence vocale dans les bulles de dialogue de l'application Yororis :
+                  </p>
+                  <pre className="p-4 rounded-xl bg-[#07080a] border border-[#1a1e24] text-xs font-mono text-[#b8c5b9] overflow-x-auto leading-relaxed">
+{`import React from "react";
+import { Chip } from "@krizaka/ui/chip";
+import { YororisPresenceOrb } from "@krizaka/motion";
+
+export function YororisVoiceMessage() {
+  return (
+    <div className="flex items-center gap-3 p-4 rounded-2xl bg-[#090d0b] border border-[#7c9082]/30">
+      <div className="w-12 h-12 rounded-full overflow-hidden shrink-0">
+        <YororisPresenceOrb state="speaking" voiceTone="lea" showSpores={false} />
+      </div>
+      <div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-semibold text-white">Léa · Présence Vocale</span>
+          <Chip size="sm">216 Hz F0</Chip>
+        </div>
+        <p className="text-xs text-[#b8c5b9] mt-0.5">
+          « Prenez une lente inspiration ventrale... »
+        </p>
+      </div>
+    </div>
+  );
+}`}
+                  </pre>
+                </div>
+              )}
+
+              {kzUiGuideTab === "governance" && (
+                <div className="space-y-3">
+                  <div className="p-4 rounded-xl bg-[#07080a] border border-orange-500/30 text-xs text-[#88929e] space-y-2">
+                    <div className="text-orange-400 font-semibold flex items-center gap-2">
+                      <ShieldCheck className="w-4 h-4" />
+                      Gouvernance « Krizaka UI d'abord » :
+                    </div>
+                    <p>
+                      1. <strong className="text-white">Zéro boucle RAF concurrente :</strong> tous les moteurs de <code className="text-orange-300">krizaka-motion</code> vérifient <code className="text-white">html[data-motion="ready"]</code> et se coupent automatiquement dès que le conteneur sort du viewport via <code className="text-white">[data-offscreen]</code>.
+                    </p>
+                    <p>
+                      2. <strong className="text-white">Accessibilité & Motion réduit :</strong> Si l'utilisateur active <code className="text-white">prefers-reduced-motion: reduce</code>, la boucle s'arrête instantanément pour ne restituer qu'un rendu vectoriel statique net (zéro vertige, zéro CLS).
+                    </p>
+                    <p>
+                      3. <strong className="text-white">Couleurs & Tokens purs :</strong> Tous les dégradés et palettes sont mappés sur les tokens de marque <code className="text-white">@krizaka/tokens</code> (Orazaka, Yororis, Orochia, Yasakia, Kachizaka, Akinaza).
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ======================================================== */}
+        {/* TAB 7: ARCHITECTURE & SPECS */}
         {/* ======================================================== */}
         {activeTab === "architecture" && (
           <div className="max-w-4xl space-y-6">

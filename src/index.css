@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "@krizaka/tokens/tokens.css";
+@import "@krizaka/ui/blocks.css";
 
 @layer base {
   :root {

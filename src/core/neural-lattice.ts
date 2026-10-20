@@ -1,32 +1,33 @@
 /**
- * @krizaka/motion — Quantum Neural Synapse Lattice Engine
- *
- * Simulates high-density cognitive neural networks:
- * - Dynamic Delaunay & K-NN synaptic axons
- * - Action-potential electrical signal propagation along pathways
- * - Localized cursor synaptic activation field
- * - High-end non-cliché editorial palette (Obsidian, Titanium, Bioluminescent Sage)
+ * @krizaka/motion — Quantum Neural Synapse Lattice Engine (V2 Next-Level)
+ * Biological Hodgkin-Huxley action potential propagation, cognitive cluster engrams,
+ * Hebbian synaptic plasticity, and synchronous neuro-cascade avalanche.
+ * 100% self-contained in krizaka-motion.
  */
 
 import { Point2D } from "./types";
 import { SpringVector2D } from "./spring-physics";
 
+export type CognitiveCluster = "orazaka" | "yororis" | "jarvis";
+
 export interface SynapseNode {
   id: number;
+  cluster: CognitiveCluster;
   x: number;
   y: number;
   vx: number;
   vy: number;
   baseRadius: number;
-  charge: number; // 0 to 1
+  membranePotential: number; // -70mV to +30mV (normalized 0 to 1)
   synapticRefractory: number;
-  neighbors: number[];
+  firingThreshold: number;
+  neighbors: Array<{ nodeId: number; weight: number }>; // Hebbian synaptic weights
 }
 
 export interface ActionPotential {
   fromNodeId: number;
   toNodeId: number;
-  progress: number; // 0 to 1
+  progress: number;
   speed: number;
   intensity: number;
   color: string;
@@ -37,8 +38,15 @@ export interface NeuralLatticeOptions {
   connectionDistance?: number;
   interactive?: boolean;
   pulseFrequency?: number;
+  enableHebbianPlasticity?: boolean;
   theme?: "obsidian-gold" | "sage-calm" | "prussian-cyan";
 }
+
+const CLUSTER_COLORS: Record<CognitiveCluster, { primary: string; secondary: string; glow: string }> = {
+  orazaka: { primary: "#f97316", secondary: "#fdba74", glow: "rgba(249, 115, 22, 0.45)" },
+  yororis: { primary: "#7c9082", secondary: "#b8c5b9", glow: "rgba(124, 144, 130, 0.45)" },
+  jarvis: { primary: "#00f0ff", secondary: "#38bdf8", glow: "rgba(0, 240, 255, 0.45)" },
+};
 
 export class NeuralLatticeRenderer {
   private canvas: HTMLCanvasElement;
@@ -65,6 +73,7 @@ export class NeuralLatticeRenderer {
       connectionDistance: 110,
       interactive: true,
       pulseFrequency: 1.0,
+      enableHebbianPlasticity: true,
       theme: "obsidian-gold",
       ...options,
     };
@@ -75,7 +84,11 @@ export class NeuralLatticeRenderer {
   }
 
   public setOptions(options: Partial<NeuralLatticeOptions>): void {
+    const countChanged = options.nodeCount && options.nodeCount !== this.options.nodeCount;
     this.options = { ...this.options, ...options };
+    if (countChanged) {
+      this.initNodes();
+    }
   }
 
   public setDimensions(w: number, h: number, dpr: number): void {
@@ -97,20 +110,24 @@ export class NeuralLatticeRenderer {
     this.nodes = [];
     this.potentials = [];
 
-    const padding = 24;
+    const padding = 28;
     const innerW = this.width - padding * 2;
     const innerH = this.height - padding * 2;
+    const clusters: CognitiveCluster[] = ["orazaka", "yororis", "jarvis"];
 
     for (let i = 0; i < count; i++) {
+      const cluster = clusters[i % 3];
       this.nodes.push({
         id: i,
+        cluster,
         x: padding + Math.random() * innerW,
         y: padding + Math.random() * innerH,
-        vx: (Math.random() - 0.5) * 18,
-        vy: (Math.random() - 0.5) * 18,
-        baseRadius: 2.4 + Math.random() * 2.2,
-        charge: Math.random() * 0.4,
-        synapticRefractory: Math.random() * 2,
+        vx: (Math.random() - 0.5) * 16,
+        vy: (Math.random() - 0.5) * 16,
+        baseRadius: 2.8 + Math.random() * 2.0,
+        membranePotential: Math.random() * 0.3,
+        synapticRefractory: 0,
+        firingThreshold: 0.65 + Math.random() * 0.2,
         neighbors: [],
       });
     }
@@ -133,7 +150,7 @@ export class NeuralLatticeRenderer {
         const distSq = dx * dx + dy * dy;
 
         if (distSq < maxDistSq) {
-          a.neighbors.push(j);
+          a.neighbors.push({ nodeId: j, weight: 1.0 });
         }
       }
     }
@@ -156,30 +173,52 @@ export class NeuralLatticeRenderer {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 
-      // Trigger action potential cascade from nearest nodes
       for (const node of this.nodes) {
         const dx = node.x - x;
         const dy = node.y - y;
-        if (dx * dx + dy * dy < 100 * 100) {
-          this.fireActionPotential(node);
+        if (dx * dx + dy * dy < 90 * 90) {
+          this.stimulateNode(node, 1.0);
         }
       }
     });
   }
 
-  public fireActionPotential(node: SynapseNode): void {
-    if (node.neighbors.length === 0) return;
-    const targetIdx = node.neighbors[Math.floor(Math.random() * node.neighbors.length)];
-    node.charge = 1.0;
+  /** Triggers a synchronous neuro-avalanche cascade across the lattice */
+  public triggerCascadeAvalanche(): void {
+    for (let i = 0; i < Math.min(8, this.nodes.length); i++) {
+      const randomNode = this.nodes[Math.floor(Math.random() * this.nodes.length)];
+      if (randomNode) this.stimulateNode(randomNode, 1.2);
+    }
+  }
 
-    this.potentials.push({
-      fromNodeId: node.id,
-      toNodeId: targetIdx,
-      progress: 0,
-      speed: 1.8 + Math.random() * 1.2,
-      intensity: 1.0,
-      color: "#f59e0b",
-    });
+  public stimulateNode(node: SynapseNode, intensity = 1.0): void {
+    node.membranePotential = Math.min(1.0, node.membranePotential + intensity);
+    if (node.membranePotential >= node.firingThreshold && node.synapticRefractory <= 0) {
+      this.fireNodeActionPotential(node);
+    }
+  }
+
+  private fireNodeActionPotential(node: SynapseNode): void {
+    node.synapticRefractory = 0.4;
+    node.membranePotential = 0.1;
+    const colors = CLUSTER_COLORS[node.cluster];
+
+    for (const neighbor of node.neighbors) {
+      if (Math.random() < 0.6) {
+        if (this.options.enableHebbianPlasticity) {
+          neighbor.weight = Math.min(2.8, neighbor.weight + 0.12);
+        }
+
+        this.potentials.push({
+          fromNodeId: node.id,
+          toNodeId: neighbor.nodeId,
+          progress: 0,
+          speed: 1.8 + Math.random() * 1.2,
+          intensity: 1.0,
+          color: colors.primary,
+        });
+      }
+    }
   }
 
   public render(deltaTime: number, timestamp: number): void {
@@ -187,7 +226,6 @@ export class NeuralLatticeRenderer {
     const ctx = this.ctx;
     const dpr = this.dpr;
 
-    // Update kinetic cursor spring
     this.cursorSpring.update(this.mousePos.x, this.mousePos.y, deltaTime);
     const cursor = { x: this.cursorSpring.x.getValue(), y: this.cursorSpring.y.getValue() };
 
@@ -195,16 +233,16 @@ export class NeuralLatticeRenderer {
     ctx.scale(dpr, dpr);
     ctx.clearRect(0, 0, this.width, this.height);
 
-    // 1. Update nodes positions with boundary damping
+    // 1. Update nodes
     this.updateNodes(deltaTime, cursor);
 
-    // 2. Spawn spontaneous neural action potentials
-    if (Math.random() < 0.25 * (this.options.pulseFrequency || 1)) {
-      const randomNode = this.nodes[Math.floor(Math.random() * this.nodes.length)];
-      if (randomNode) this.fireActionPotential(randomNode);
+    // 2. Spontaneous biological oscillations
+    if (Math.random() < 0.3 * (this.options.pulseFrequency || 1)) {
+      const randNode = this.nodes[Math.floor(Math.random() * this.nodes.length)];
+      if (randNode) this.stimulateNode(randNode, 0.7);
     }
 
-    // 3. Draw synaptic axons (connecting lines)
+    // 3. Draw synaptic axons
     this.drawAxons(ctx);
 
     // 4. Update and draw action potentials
@@ -212,6 +250,9 @@ export class NeuralLatticeRenderer {
 
     // 5. Draw synaptic nodes
     this.drawNodes(ctx, cursor);
+
+    // 6. Draw cluster telemetry legend
+    this.drawClusterLegend(ctx);
 
     ctx.restore();
   }
@@ -223,37 +264,25 @@ export class NeuralLatticeRenderer {
       n.x += n.vx * dt;
       n.y += n.vy * dt;
 
-      // Boundary rebound
-      if (n.x < pad) {
-        n.x = pad;
-        n.vx *= -1;
-      } else if (n.x > this.width - pad) {
-        n.x = this.width - pad;
-        n.vx *= -1;
-      }
-      if (n.y < pad) {
-        n.y = pad;
-        n.vy *= -1;
-      } else if (n.y > this.height - pad) {
-        n.y = this.height - pad;
-        n.vy *= -1;
-      }
+      if (n.x < pad) { n.x = pad; n.vx *= -1; }
+      else if (n.x > this.width - pad) { n.x = this.width - pad; n.vx *= -1; }
+      if (n.y < pad) { n.y = pad; n.vy *= -1; }
+      else if (n.y > this.height - pad) { n.y = this.height - pad; n.vy *= -1; }
 
-      // Cursor magnetic stimulation
       if (cursor.x > 0 && cursor.y > 0) {
         const dx = cursor.x - n.x;
         const dy = cursor.y - n.y;
         const distSq = dx * dx + dy * dy;
-        if (distSq < 120 * 120 && distSq > 4) {
-          const force = (1 - Math.sqrt(distSq) / 120) * 14;
+        if (distSq < 130 * 130 && distSq > 4) {
+          const force = (1 - Math.sqrt(distSq) / 130) * 16;
           n.x += (dx / Math.sqrt(distSq)) * force * dt;
           n.y += (dy / Math.sqrt(distSq)) * force * dt;
-          n.charge = Math.min(1.0, n.charge + dt * 2.5);
+          this.stimulateNode(n, dt * 1.8);
         }
       }
 
-      // Decay charge
-      n.charge = Math.max(0, n.charge - dt * 0.8);
+      n.synapticRefractory = Math.max(0, n.synapticRefractory - dt);
+      n.membranePotential = Math.max(0.05, n.membranePotential - dt * 0.4);
     }
   }
 
@@ -261,8 +290,9 @@ export class NeuralLatticeRenderer {
     const maxDist = this.options.connectionDistance || 110;
 
     for (const a of this.nodes) {
-      for (const neighborIdx of a.neighbors) {
-        const b = this.nodes[neighborIdx];
+      const colors = CLUSTER_COLORS[a.cluster];
+      for (const neighbor of a.neighbors) {
+        const b = this.nodes[neighbor.nodeId];
         if (!b) continue;
 
         const dx = b.x - a.x;
@@ -270,12 +300,12 @@ export class NeuralLatticeRenderer {
         const dist = Math.sqrt(dx * dx + dy * dy);
 
         if (dist < maxDist) {
-          const alpha = (1 - dist / maxDist) * 0.28 * (1 + (a.charge + b.charge) * 0.5);
+          const alpha = (1 - dist / maxDist) * 0.3 * (neighbor.weight / 1.5);
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = a.charge > 0.5 || b.charge > 0.5 ? "rgba(245, 158, 11, 0.6)" : "rgba(142, 146, 151, 0.22)";
-          ctx.lineWidth = a.charge > 0.5 ? 1.4 : 0.8;
+          ctx.strokeStyle = a.membranePotential > 0.4 || b.membranePotential > 0.4 ? colors.primary : "rgba(142, 146, 151, 0.2)";
+          ctx.lineWidth = neighbor.weight > 1.4 ? 1.6 : 0.8;
           ctx.globalAlpha = Math.min(1, alpha);
           ctx.stroke();
         }
@@ -299,19 +329,18 @@ export class NeuralLatticeRenderer {
 
           ctx.save();
           ctx.beginPath();
-          ctx.arc(curX, curY, 2.4, 0, Math.PI * 2);
-          ctx.fillStyle = "#fbbf24";
-          ctx.shadowColor = "#f59e0b";
+          ctx.arc(curX, curY, 2.6, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = p.color;
           ctx.shadowBlur = 8;
           ctx.fill();
           ctx.restore();
         }
         alive.push(p);
       } else {
-        // Trigger charge in destination node
         const dest = this.nodes[p.toNodeId];
         if (dest) {
-          dest.charge = 1.0;
+          this.stimulateNode(dest, 0.4);
         }
       }
     }
@@ -320,29 +349,56 @@ export class NeuralLatticeRenderer {
 
   private drawNodes(ctx: CanvasRenderingContext2D, cursor: Point2D): void {
     for (const n of this.nodes) {
-      const isCharged = n.charge > 0.2;
-      const r = n.baseRadius * (1 + n.charge * 0.6);
+      const colors = CLUSTER_COLORS[n.cluster];
+      const isFiring = n.membranePotential > 0.4;
+      const r = n.baseRadius * (1 + n.membranePotential * 0.7);
 
       ctx.save();
-
-      // Synaptic halo
-      if (isCharged) {
+      if (isFiring) {
         ctx.beginPath();
-        ctx.arc(n.x, n.y, r * 2.8, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(245, 158, 11, 0.2)";
+        ctx.arc(n.x, n.y, r * 2.6, 0, Math.PI * 2);
+        ctx.fillStyle = colors.glow;
         ctx.fill();
       }
 
-      // Solid node core
       ctx.beginPath();
       ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-      ctx.fillStyle = isCharged ? "#fef3c7" : "#8e9297";
-      ctx.strokeStyle = isCharged ? "#f59e0b" : "#262b32";
-      ctx.lineWidth = 1.2;
+      ctx.fillStyle = isFiring ? "#ffffff" : colors.primary;
+      ctx.strokeStyle = colors.primary;
+      ctx.lineWidth = 1.3;
+      ctx.shadowColor = colors.primary;
+      ctx.shadowBlur = isFiring ? 10 : 3;
       ctx.fill();
       ctx.stroke();
 
       ctx.restore();
     }
+  }
+
+  private drawClusterLegend(ctx: CanvasRenderingContext2D): void {
+    ctx.save();
+    ctx.font = "10px SF Mono, monospace";
+    ctx.textBaseline = "middle";
+
+    const legends: Array<{ cluster: CognitiveCluster; label: string }> = [
+      { cluster: "orazaka", label: "ORAZAKA (MOTEUR COGNITIF)" },
+      { cluster: "yororis", label: "YORORIS (EMPATHIE VOCALE)" },
+      { cluster: "jarvis", label: "JARVIS (RAISONNEMENT TACTIQUE)" },
+    ];
+
+    let startX = 14;
+    for (const leg of legends) {
+      const colors = CLUSTER_COLORS[leg.cluster];
+      ctx.beginPath();
+      ctx.arc(startX + 4, this.height - 14, 4, 0, Math.PI * 2);
+      ctx.fillStyle = colors.primary;
+      ctx.fill();
+
+      ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
+      ctx.fillText(leg.label, startX + 14, this.height - 14);
+      startX += ctx.measureText(leg.label).width + 30;
+    }
+
+    ctx.restore();
   }
 }

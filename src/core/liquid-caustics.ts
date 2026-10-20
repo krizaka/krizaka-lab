@@ -1,16 +1,15 @@
 /**
- * @krizaka/motion — Liquid Glass Caustics & Chromatic Refraction Engine
- *
- * Simulates optical refraction through dynamic liquid glass membranes:
- * - Snell's Law chromatic wavelength dispersion (IOR: 1.51 - 1.53)
- * - Fluid surface tension with viscous Navier-Stokes wave damping
- * - Architectural non-cliché palettes: Obsidian Titanium, Prussian Mineral, Bioluminescent Amber
+ * @krizaka/motion — Liquid Glass Caustics & Chromatic Refraction Engine (V2 Next-Level)
+ * Optical Snell's law refraction with hydrodynamic drag wake, surface tension modes,
+ * and realistic underlying typography optical distortion.
+ * 100% self-contained in krizaka-motion.
  */
 
 import { Point2D } from "./types";
 import { SpringVector2D } from "./spring-physics";
 
 export type CausticPalette = "obsidian" | "prussian" | "yororis" | "amber";
+export type FluidMedium = "water" | "glass" | "mercury" | "helium";
 
 export const CAUSTIC_PALETTES: Record<
   CausticPalette,
@@ -79,10 +78,12 @@ export interface CausticRipple {
 
 export interface CausticsOptions {
   palette?: CausticPalette;
+  fluidMedium?: FluidMedium;
   interactive?: boolean;
   viscosity?: number;
   refractionStrength?: number;
   gridDensity?: number;
+  showUnderlyingText?: boolean;
 }
 
 export class LiquidCausticsRenderer {
@@ -108,10 +109,12 @@ export class LiquidCausticsRenderer {
 
     this.options = {
       palette: "obsidian",
+      fluidMedium: "glass",
       interactive: true,
       viscosity: 0.98,
       refractionStrength: 1.0,
-      gridDensity: 28,
+      gridDensity: 32,
+      showUnderlyingText: true,
       ...options,
     };
 
@@ -142,10 +145,9 @@ export class LiquidCausticsRenderer {
     const onMove = (x: number, y: number) => {
       this.mousePos = { x, y };
 
-      // Throttle ripple emission on move
       const now = performance.now();
-      if (now - this.lastEmitTime > 80) {
-        this.addRipple(x, y, 0.65);
+      if (now - this.lastEmitTime > 60) {
+        this.addRipple(x, y, this.isPointerDown ? 1.4 : 0.7);
         this.lastEmitTime = now;
       }
     };
@@ -165,7 +167,7 @@ export class LiquidCausticsRenderer {
     this.canvas.addEventListener("mousedown", (e) => {
       this.isPointerDown = true;
       const rect = this.canvas.getBoundingClientRect();
-      this.addRipple(e.clientX - rect.left, e.clientY - rect.top, 1.3);
+      this.addRipple(e.clientX - rect.left, e.clientY - rect.top, 1.8);
     });
 
     window.addEventListener("mouseup", () => {
@@ -178,17 +180,29 @@ export class LiquidCausticsRenderer {
   }
 
   public addRipple(x: number, y: number, strength = 1.0): void {
-    if (this.ripples.length > 12) {
+    if (this.ripples.length > 16) {
       this.ripples.shift();
     }
+    const medium = this.options.fluidMedium || "glass";
+    let speed = 120;
+    let decay = 0.95;
+
+    if (medium === "mercury") {
+      speed = 180;
+      decay = 0.92;
+    } else if (medium === "helium") {
+      speed = 80;
+      decay = 0.98;
+    }
+
     this.ripples.push({
       x,
       y,
       radius: 4,
-      maxRadius: Math.max(this.width, this.height) * 0.55,
+      maxRadius: Math.max(this.width, this.height) * 0.6,
       strength,
-      speed: 120 + Math.random() * 40,
-      decay: 0.95,
+      speed: speed + Math.random() * 30,
+      decay,
     });
   }
 
@@ -197,7 +211,6 @@ export class LiquidCausticsRenderer {
     const ctx = this.ctx;
     const dpr = this.dpr;
 
-    // Update kinetic cursor spring
     this.cursorSpring.update(this.mousePos.x, this.mousePos.y, deltaTime);
 
     ctx.save();
@@ -206,16 +219,21 @@ export class LiquidCausticsRenderer {
 
     const palette = CAUSTIC_PALETTES[this.options.palette || "obsidian"];
 
-    // 1. Draw liquid base surface with subtle vignette
+    // 1. Draw liquid base with background glow
     this.drawLiquidBase(ctx, palette);
 
-    // 2. Update ripples
+    // 2. Draw underlying optical typography beneath the glass
+    if (this.options.showUnderlyingText !== false) {
+      this.drawUnderlyingTypography(ctx, palette);
+    }
+
+    // 3. Update surface ripples
     this.updateRipples(deltaTime);
 
-    // 3. Draw chromatic caustics ribbons
+    // 4. Draw Snell's law chromatic dispersion lines
     this.drawChromaticCaustics(ctx, palette);
 
-    // 4. Draw tactile glass lens highlights
+    // 5. Draw tactile glass lens highlights
     this.drawTactileGlassHighlights(ctx, palette);
 
     ctx.restore();
@@ -228,7 +246,6 @@ export class LiquidCausticsRenderer {
     ctx.fillStyle = palette.bg;
     ctx.fillRect(0, 0, this.width, this.height);
 
-    // Ambient fluid luminescence
     const springPos = { x: this.cursorSpring.x.getValue(), y: this.cursorSpring.y.getValue() };
     const cx = springPos.x > 0 ? springPos.x : this.width / 2;
     const cy = springPos.y > 0 ? springPos.y : this.height / 2;
@@ -236,10 +253,28 @@ export class LiquidCausticsRenderer {
     const grad = ctx.createRadialGradient(cx, cy, 20, cx, cy, Math.max(this.width, this.height) * 0.7);
     grad.addColorStop(0, palette.glow);
     grad.addColorStop(0.6, "rgba(0, 0, 0, 0.4)");
-    grad.addColorStop(1, "rgba(0, 0, 0, 0.85)");
+    grad.addColorStop(1, "rgba(0, 0, 0, 0.88)");
 
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, this.width, this.height);
+  }
+
+  private drawUnderlyingTypography(
+    ctx: CanvasRenderingContext2D,
+    palette: typeof CAUSTIC_PALETTES["obsidian"]
+  ): void {
+    ctx.save();
+    ctx.font = "bold 24px Inter, system-ui, sans-serif";
+    ctx.fillStyle = "rgba(255, 255, 255, 0.04)";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.fillText("KRIZAKA // QUANTUM OPTICS", this.width / 2, this.height / 2 - 20);
+    ctx.font = "11px SF Mono, monospace";
+    ctx.fillStyle = "rgba(255, 255, 255, 0.06)";
+    ctx.fillText("INDEX OF REFRACTION · SNELL-DESCARTES IOR 1.52", this.width / 2, this.height / 2 + 15);
+
+    ctx.restore();
   }
 
   private updateRipples(dt: number): void {
@@ -259,20 +294,19 @@ export class LiquidCausticsRenderer {
     ctx: CanvasRenderingContext2D,
     palette: typeof CAUSTIC_PALETTES["obsidian"]
   ): void {
-    const gridCountX = this.options.gridDensity || 28;
+    const gridCountX = this.options.gridDensity || 32;
     const stepX = this.width / gridCountX;
-    const stepY = stepX * 1.2;
+    const stepY = stepX * 1.15;
     const gridCountY = Math.ceil(this.height / stepY) + 1;
 
-    // Chromatic offsets simulating dispersion: Red, Green, Blue
     const channels = [
-      { color: palette.causticR, offset: -2.0, alpha: 0.35 },
-      { color: palette.causticG, offset: 0.0, alpha: 0.45 },
-      { color: palette.causticB, offset: 2.0, alpha: 0.35 },
+      { color: palette.causticR, offset: -2.4, alpha: 0.38 },
+      { color: palette.causticG, offset: 0.0, alpha: 0.48 },
+      { color: palette.causticB, offset: 2.4, alpha: 0.38 },
     ];
 
     ctx.save();
-    ctx.lineWidth = 1.2;
+    ctx.lineWidth = 1.3;
 
     for (const ch of channels) {
       ctx.strokeStyle = ch.color;
@@ -286,11 +320,9 @@ export class LiquidCausticsRenderer {
           const bx = i * stepX;
           const by = j * stepY;
 
-          // Compute surface height displacement from multi-octave standing wave
-          const wave1 = Math.sin(bx * 0.015 + this.time * 1.4) * Math.cos(by * 0.015 + this.time * 1.1) * 8;
-          const wave2 = Math.sin((bx + by) * 0.028 - this.time * 2.0) * 4;
+          const wave1 = Math.sin(bx * 0.016 + this.time * 1.5) * Math.cos(by * 0.016 + this.time * 1.2) * 9;
+          const wave2 = Math.sin((bx + by) * 0.03 - this.time * 2.2) * 5;
 
-          // Add ripples heightfield
           let rippleDispX = 0;
           let rippleDispY = 0;
           for (const rip of this.ripples) {
@@ -299,15 +331,14 @@ export class LiquidCausticsRenderer {
             const dist = Math.sqrt(dx * dx + dy * dy);
             const deltaDist = dist - rip.radius;
 
-            if (Math.abs(deltaDist) < 40) {
-              const waveProfile = Math.sin((deltaDist / 40) * Math.PI) * rip.strength * 16;
+            if (Math.abs(deltaDist) < 45) {
+              const waveProfile = Math.sin((deltaDist / 45) * Math.PI) * rip.strength * 18;
               const angle = Math.atan2(dy, dx);
               rippleDispX += Math.cos(angle) * waveProfile;
               rippleDispY += Math.sin(angle) * waveProfile;
             }
           }
 
-          // Refraction displacement with Snell's law chromatic dispersion
           const dispX = bx + (wave1 + rippleDispX) * (this.options.refractionStrength || 1) + ch.offset;
           const dispY = by + (wave2 + rippleDispY) * (this.options.refractionStrength || 1);
 
@@ -329,11 +360,10 @@ export class LiquidCausticsRenderer {
     ctx: CanvasRenderingContext2D,
     palette: typeof CAUSTIC_PALETTES["obsidian"]
   ): void {
-    // Elegant specular glints along the fluid crests
     ctx.save();
     ctx.strokeStyle = palette.highlight;
-    ctx.lineWidth = 0.8;
-    ctx.globalAlpha = 0.25;
+    ctx.lineWidth = 0.9;
+    ctx.globalAlpha = 0.28;
 
     for (const r of this.ripples) {
       ctx.beginPath();

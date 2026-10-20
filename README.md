@@ -1,32 +1,34 @@
 # 🥷 Krizaka Motion
 
 > **Next-generation generative canvas, 3D, particle systems & audio-visual synthesis for the Krizaka ecosystem.**
-> Drop-in replacement for the Orazaka foundation engine flow on [krizaka.com](https://krizaka.com), 3D acoustic voice presence for [dev.yororis.com](https://dev.yororis.com), Jarvis-inspired Iron Man holographic HUD, liquid glass chromatic caustics, and neural synapse lattice.
+> Drop-in replacement for the Orazaka foundation engine flow on [krizaka.com](https://krizaka.com), 3D acoustic voice presence for [dev.yororis.com](https://dev.yororis.com), Jarvis-inspired Iron Man Mark LXXXV holographic HUD, liquid glass chromatic caustics, and quantum neural synapse lattice.
 
 [![CI](https://github.com/krizaka/krizaka-motion/actions/workflows/ci.yml/badge.svg)](https://github.com/krizaka/krizaka-motion/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 [![Status](https://img.shields.io/badge/status-active-f97316)](https://krizaka.com)
 [![Krizaka UI](https://img.shields.io/badge/@krizaka/ui-compatible-2563eb)](https://ui.krizaka.com)
-[![Tests](https://img.shields.io/badge/tests-passing-emerald)](tests/)
+[![Tests](https://img.shields.io/badge/tests-15%20passing-emerald)](tests/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-3178c6)](package.json)
 
 ---
 
-## 1. Vue d'ensemble & Philosophie
+## 1. Overview & Architecture Philosophy
 
-`krizaka-motion` est la bibliothèque d'effets visuels, de physique particulaire et de synthèse audio-visuelle temps réel pour les produits de l'écosystème Krizaka.
+`@krizaka/motion` is the official real-time visual effects, particle physics, and audio-visual synthesis library for the Krizaka ecosystem.
 
-Elle a été conçue pour briser les codes du "vibe coding" standard en proposant des textures cinétiques authentiques, une physique différentielle réelle et des palettes minérales architecturales :
-1. **La règle « Krizaka UI d'abord »** : Les animations s'intègrent directement dans le système de mouvement commun de `@krizaka/ui` (`@krizaka/ui/motion`, `MotionObserver`). Pas de boucle RAF concurrente : les animations respectent `html[data-motion="ready"]`, se mettent en pause instantanément hors écran (`[data-offscreen]`) et basculent sur un rendu statique soigné sous `prefers-reduced-motion: reduce`.
-2. **Physique Différentielle du Second Ordre (`SpringSolver`)** : Élimination des courbes `ease` linéaires ou cubiques simplistes au profit de véritables équations physiques d'inertie, de rebond élastique et d'amortissement critique.
-3. **Portabilité Totale (React & React Native)** : Moteurs mathématiques découplés du DOM, légers (zéro dépendance lourde 3D externe), exécutant des calculs de flux en Canvas 2D/WebGL natif à 60-120 FPS sur Web (Next.js) et Mobile (React Native Skia & WebView).
+Built to break away from generic AI/vibe-coding patterns, it provides physical kinetic textures, authentic differential equations, and architectural mineral palettes:
+
+1. **"Krizaka UI First" Governance Rule**: Animations integrate directly with `@krizaka/ui`'s unified motion system (`@krizaka/ui/motion`, `MotionObserver`). No competing requestAnimationFrame loops: all animations listen to `html[data-motion="ready"]`, automatically pause when out of the viewport (`[data-offscreen]`), and fall back to crisp static vector rendering under `prefers-reduced-motion: reduce`.
+2. **Second-Order Differential Spring Physics (`SpringSolver`)**: Replaces simplistic linear or cubic easing curves with true physical equations of mass, stiffness, velocity, and critical damping.
+3. **Full Portability (React & React Native)**: Mathematical engines decoupled from DOM state, lightweight with zero bloated 3D dependencies, running 60–120 FPS Canvas 2D/WebGL on Web (Next.js) and Mobile (React Native Skia & WebView).
+4. **100% npm Dependency Integrity**: `@krizaka/ui`, `@krizaka/tokens`, and `@krizaka/motion` are consumed directly from published packages on npm with no local copies or monorepo symlink leaks.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                   ÉCOSYSTÈME KRIZAKA                                       │
+│                                     KRIZAKA ECOSYSTEM                                      │
 ├─────────────────────┬─────────────────────┬────────────────────┬───────────────────────────┤
-│ ORAZAKA NEURAL FLOW │ YORORIS VOICE ORB   │ JARVIS HOLOGRAPHIC │ LIQUID CHROMATIC CAUSTICS │
-│  (krizaka.com/core) │  (dev.yororis.com)  │  (Iron Man Mark 85)│      (Spatial UX)         │
+│ ORAZAKA NEURAL FLOW │  YORORIS VOICE ORB  │ JARVIS HOLOGRAPHIC │ LIQUID CHROMATIC CAUSTICS │
+│  (krizaka.com/core) │  (dev.yororis.com)  │  (Iron Man Mark 85)│       (Spatial UX)        │
 ├─────────────────────┴─────────────────────┴────────────────────┴───────────────────────────┤
 │             @krizaka/motion CORE (Second-Order Springs, Bezier, Perlin, Snell, Audio)      │
 ├────────────────────────────────────────────────────────────────────────────────────────────┤
@@ -36,26 +38,26 @@ Elle a été conçue pour briser les codes du "vibe coding" standard en proposan
 
 ---
 
-## 2. Les Composants Majeurs
+## 2. Core Components
 
 ### 2.1 Orazaka Neural Convergence Flow (`<OrazakaEngineFlow />`)
-*Remplacement direct de l'animation SVG actuelle sur [krizaka.com](https://krizaka.com) (`ProductVisuals.tsx`)*.
+*Drop-in replacement for the current static/SVG visualizer on [krizaka.com](https://krizaka.com) (`ProductVisuals.tsx`)*.
 
-- **Direction & Topologie Paramétrables** :
-  - `direction="left-to-right"` : Sources à gauche, Orazaka à droite (Standard Krizaka).
-  - `direction="right-to-left"` : Sources à droite, Orazaka à gauche.
-  - `direction="top-to-bottom"` : Sources en haut, Orazaka en bas.
-  - `direction="radial"` : Sources disposées en couronne circulaire orbitant autour d'Orazaka.
-- **Routage Bi-directionnel des Requêtes (`flowMode`)** :
-  - `inbound` : Requêtes des produits vers Orazaka.
-  - `outbound` : Inférences et réponses envoyées aux produits.
-  - `bidirectional` : Requêtes et flux de retours simultanés avec colorimétrie différentielle.
-- **Icônes et Libellés Personnalisables** :
-  - Chaque nœud peut porter son icône vectorielle (`doc`, `video`, `chart`, `calendar`, `chat`, `voice`, `brain`, `cpu`, `shield`, `zap`).
-  - Libellés et sous-titres configurables (`nodeConfigs`), éditables en direct via l'inspecteur interactif.
-- **Styles de Particules & Conduits** :
-  - `particleStyle` : `photons` (sphères luminescentes), `data-blocks` (paquets hexadécimaux `0x9F`), `beams` (faisceaux lasers).
-  - `conduitStyle` : `smooth-bezier` (courbes S fluides), `straight` (lignes laser), `cyber-grid` (traces PCB à 90°).
+- **Configurable Flow Directions & Topologies**:
+  - `direction="left-to-right"`: Product sources on the left, Orazaka on the right (Krizaka Standard).
+  - `direction="right-to-left"`: Product sources on the right, Orazaka on the left.
+  - `direction="top-to-bottom"`: Product sources on top, Orazaka at the bottom.
+  - `direction="radial"`: Sources arranged in a concentric orbital ring around Orazaka.
+- **Bi-directional Request Routing (`flowMode`)**:
+  - `inbound`: Ingestion requests from products towards Orazaka.
+  - `outbound`: Model inference and analytics dispatched back to products.
+  - `bidirectional`: Simultaneous two-way traffic with differential photon coloring.
+- **Customizable Vector Icons & Labels**:
+  - Each product node renders customizable vector badges (`doc`, `video`, `chart`, `calendar`, `chat`, `voice`, `brain`, `cpu`, `shield`, `zap`).
+  - Labels, subtitles, and telemetry are dynamic and editable live via the interactive node inspector.
+- **Particle & Conduit Styles**:
+  - `particleStyle`: `photons` (glowing spheres), `data-blocks` (hexadecimal byte packets `0x9F`), `beams` (laser trajectories).
+  - `conduitStyle`: `smooth-bezier` (fluid S-curves), `straight` (direct laser), `cyber-grid` (90° PCB traces).
 
 ```tsx
 import { OrazakaEngineFlow } from "@krizaka/motion";
@@ -79,24 +81,38 @@ export function Engine({ playing }: { playing: boolean }) {
 ---
 
 ### 2.2 Yororis Acoustic Voice & Harmonic Sphere (`<YororisPresenceOrb />`)
-*Présence vocale et apaisement pour [dev.yororis.com](https://dev.yororis.com)*.
+*Generative vocal presence, empathy, and calming space for [dev.yororis.com](https://dev.yororis.com)*.
 
-- **Sphère Harmonique 3D Déformable** : Déformation organique par bruit harmonique 3D à plusieurs octaves, représentant le visage et la voix de Léa.
-- **4 Modes de Présence Clinique** :
-  - `idle` : Repos et écoute calme, respiration harmonique douce (0.2 Hz).
-  - `speaking` : Présence vocale dynamique basée sur les formants acoustiques (F0 ~ 216 Hz).
-  - `breathing` : Guide respiratoire 4-7-8 (4s inspiration, 7s rétention, 8s expiration) avec halo thérapeutique expansif.
-  - `reflecting` : Pulsations synaptiques douces pour le recueillement.
-- **Synthèse Sonore Procédurale Intégrée** : Génération audio Web Audio API d'un drone acoustique apaisant avec harmoniques pures.
+- **Real-Time Microphone Frequency Analysis (`toggleMicrophone`)**: Real-time Web Audio API capture with FFT decomposition matching human vocal formants.
+- **Bioluminescent Spore Cloud (`showSpores`)**: Ambient Brownian spore swarm floating dynamically around the acoustic sphere.
+- **Facial Empathy Gaze Tracking (`showAuraFace`)**: Soft facial presence halo tracking mouse focus or user presence.
+- **4 Harmonic Voice Profiles (`voiceTone`)**:
+  - `lea`: 216 Hz — Léa's signature fundamental frequency F0 (calming grounding tone).
+  - `theta`: 432 Hz — Theta brainwave entrainment and deep relaxation.
+  - `solfeggio`: 528 Hz — Transformation frequency and somatic restoration.
+  - `aurora`: 639 Hz — Interpersonal resonance and clinical empathy.
+- **Clinical 4-7-8 Breathing Pacer**: 4s ventral inhale, 7s gentle retention, 8s slow exhale with rhythmic visual guidance.
+- **Built-in Procedural Audio Drone**: Pure binaural harmonic frequencies generated without external audio files.
 
 ```tsx
-import { YororisPresenceOrb } from "@krizaka/motion";
+import { YororisPresenceOrb, type YororisPresenceOrbHandle } from "@krizaka/motion";
+import { useRef } from "react";
 
 export function YororisVoiceSpace() {
+  const orbRef = useRef<YororisPresenceOrbHandle>(null);
+
+  const startLiveAnalysis = async () => {
+    await orbRef.current?.toggleMicrophone(true);
+  };
+
   return (
     <YororisPresenceOrb
-      state="speaking" // "idle" | "listening" | "speaking" | "breathing" | "reflecting"
+      ref={orbRef}
+      state="speaking"
+      voiceTone="lea"
       enableAudio={true}
+      showSpores={true}
+      showAuraFace={true}
       showRings={true}
     />
   );
@@ -106,24 +122,34 @@ export function YororisVoiceSpace() {
 ---
 
 ### 2.3 Jarvis Holographic HUD (`<JarvisHUD />`)
-*Interface holographique 3D tactique inspirée du HUD de Jarvis dans Iron Man (Mark LXXXV)*.
+*Cinema-grade Iron Man Mark LXXXV tactical combat holographic HUD*.
 
-- **Réacteur Arc Central** : Cœur de plasma à fusion pulsante, 10 électroaimants de cuivre rotatifs et décharges coronales quantiques.
-- **7 Anneaux Concentriques Indépendants** : Échelles angulaires, jauges d'azimut en rotation différentielle, grilles hexagonales et analyseur de spectre radial.
-- **Parallaxe 3D Gyroscopique** : L'interface s'incline en 3D temps réel suivant le mouvement de la souris ou l'orientation du smartphone.
-- **Mode Overdrive & Palettes** : Alerte rouge vif / crimson avec flash d'urgence et saturation de flux, ou thèmes Stark Cyan, Orazaka Plasma Orange, Yororis Sage et Golden Magpie.
+- **Interactive Click-to-Lock Target Acquisition (`lockTargetAt`)**: Click anywhere on the interface to acquire ballistic coordinates with real-time distance tracking, approach vectors, and threat assessment (`CRITICAL`, `ELEVATED`, `MINIMAL`).
+- **4 Tactical Combat Modes (`tacticalMode`)**:
+  - `standard`: Cruising flight telemetry and navigation.
+  - `combat`: Rapid engagement reticle and nanotech weaponry.
+  - `stealth`: Low-signature radar absorption with dimmed emitters.
+  - `overdrive`: Max Arc Reactor unibeam discharge with crimson alert strobing.
+- **Arc Reactor Energy Shunt Matrix**: Live monitoring of power allocation to repulsors (85%), nanotech shields (94%), central unibeam (60%), and thrusters (78%).
+- **Multi-Plane 3D Gyroscopic Projection**: Real-time perspective tilt of 7 concentric rings based on pointer or mobile gyroscope input.
 
 ```tsx
-import { JarvisHUD } from "@krizaka/motion";
+import { JarvisHUD, type JarvisHUDHandle } from "@krizaka/motion";
+import { useRef } from "react";
 
 export function IronManCore() {
+  const hudRef = useRef<JarvisHUDHandle>(null);
+
   return (
     <JarvisHUD
+      ref={hudRef}
       theme="cyan"
+      tacticalMode="combat"
       interactive3D={true}
-      overdrive={false}
       rotationSpeed={1.0}
       showDiagnostics={true}
+      showEnergyMatrix={true}
+      onTargetLocked={(target) => console.log("Target locked:", target)}
     />
   );
 }
@@ -131,41 +157,183 @@ export function IronManCore() {
 
 ---
 
-### 2.4 Caustiques Fluides & Réfraction Chromatique (`<LiquidCausticsView />`)
-*Design spatial tactile inspiré de la réfraction optique physique (loi de Snell-Descartes)*.
+### 2.4 Liquid Glass Caustics & Snell Refraction (`<LiquidCausticsView />`)
+*Spatial UX tactile design based on Snell's optical refraction law and Navier-Stokes viscous damping*.
 
-- **Dispersion de Longueur d'Onde** : Séparation chromatique RGB naturelle le long des crêtes de fluides (`IOR: 1.51 - 1.53`).
-- **Amortissement Visqueux de Navier-Stokes** : Ondulations réactives au curseur et aux clics avec tension de surface.
-- **Palettes Minérales Architecturales** :
-  - *Obsidian Titanium* : Encres minérales sombres, titane brut et éclats d'ambre bioluminescent.
-  - *Prussian Mineral* : Bleu prussien profond, blanc sel et reflets émeraude.
-  - *Yororis Quartz* : Quartz sableux, sauge et pierre de rivière.
-  - *Bioluminescent Amber* : Braises ambrées et plasma chaud.
+- **Physical Fluid Mediums (`fluidMedium`)**:
+  - `glass`: Borosilicate glass ($n = 1.52$) — crisp caustic highlights and mineral facets.
+  - `water`: Fresh water ($n = 1.33$) — soft swells and gentle surface ripples.
+  - `mercury`: Liquid metal mercury ($n = 1.95$) — extreme surface tension and high reflectivity.
+  - `helium`: Superfluid helium ($n = 1.03$) — ultra-light quantum dispersion.
+- **Underlying Typography Optical Distortion (`showUnderlyingText`)**: Text and UI components placed beneath the fluid layer undergo real-time chromatic RGB refraction.
+- **Navier-Stokes Damping & Impulse Waves**: Realistic hydrodynamic wave propagation triggered by pointer velocity or programmatic shocks.
 
----
+```tsx
+import { LiquidCausticsView, type LiquidCausticsViewHandle } from "@krizaka/motion";
+import { useRef } from "react";
 
-### 2.5 Maillage Synaptique Quantique (`<NeuralLatticeView />`)
-*Visualisation des connexions cognitives d'Orazaka et Yororis*.
+export function SpatialGlassPanel() {
+  const causticsRef = useRef<LiquidCausticsViewHandle>(null);
 
-- Topologie dynamique Delaunay & K-NN avec propagation d'impulsions (potentiels d'action).
-- Champ d'excitation magnétique réactif au curseur de souris.
-
----
-
-## 3. Installation & Utilisation
-
-```bash
-# Dans votre projet Krizaka
-pnpm add @krizaka/motion @krizaka/ui @krizaka/tokens
+  return (
+    <LiquidCausticsView
+      ref={causticsRef}
+      palette="amber"
+      fluidMedium="glass"
+      refractionStrength={1.2}
+      viscosity={0.98}
+      showUnderlyingText={true}
+    />
+  );
+}
 ```
 
 ---
 
-## 4. Intégration React Native (Mobile)
+### 2.5 Quantum Neural Synapse Lattice (`<NeuralLatticeView />`)
+*Hodgkin-Huxley computational neuro-simulation for Orazaka and Yororis cognitive connections*.
 
-Pour intégrer ces animations dans les applications mobiles Krizaka (`orazaka-mobile`, `yororis-mobile`, `orochia-mobile`), deux approches sont fournies :
+- **Membrane Potential Action Dynamics**: Simulates membrane potential fluctuations from -70 mV to +30 mV with saltatory synaptic transmission.
+- **Hebbian Synaptic Plasticity (`enableHebbianPlasticity`)**: *"Neurons that fire together, wire together"* — repeatedly activated synapses strengthen their conductance and optical caliber over time.
+- **Synchronous Neuro-Cascade Avalanche (`triggerCascadeAvalanche`)**: Trigger synchronized depolarization waves across the entire network.
+- **Cognitive Brand Clusters**:
+  - `Orazaka Core` (Brand Orange `#f97316`)
+  - `Yororis Empathy` (Brand Sage `#7c9082`)
+  - `Jarvis Hologram` (Brand Cyan `#00f0ff`)
 
-### Option 1 : Adaptateur WebView Ultra-Léger (Zéro configuration native)
+```tsx
+import { NeuralLatticeView, type NeuralLatticeViewHandle } from "@krizaka/motion";
+import { useRef } from "react";
+
+export function SynapseBoard() {
+  const latticeRef = useRef<NeuralLatticeViewHandle>(null);
+
+  return (
+    <NeuralLatticeView
+      ref={latticeRef}
+      nodeCount={52}
+      enableHebbianPlasticity={true}
+      theme="obsidian-gold"
+    />
+  );
+}
+```
+
+---
+
+## 3. How to Use @krizaka/motion with @krizaka/ui
+
+> **Core Governance Principle**: `@krizaka/ui` and `@krizaka/motion` are installed strictly from **npm**. No repository cloning, no local symlinks, and zero duplicated animation conductors.
+
+### 3.1 Install via npm
+
+```bash
+pnpm add @krizaka/ui @krizaka/tokens @krizaka/motion
+```
+
+### 3.2 Recipe 1: Glassmorphism Card with Caustic Backdrop
+
+Position the `LiquidCausticsView` in `absolute inset-0` behind the `@krizaka/ui/card` component:
+
+```tsx
+import React from "react";
+import { Card } from "@krizaka/ui/card";
+import { Button } from "@krizaka/ui/button";
+import { Badge } from "@krizaka/ui/badge";
+import { LiquidCausticsView } from "@krizaka/motion";
+
+export function MotionGlassCard() {
+  return (
+    <Card.Root className="relative overflow-hidden border border-amber-500/30 rounded-2xl bg-[#0c0d10]/90">
+      {/* Background reactive krizaka-motion canvas */}
+      <div className="absolute inset-0 pointer-events-auto opacity-50">
+        <LiquidCausticsView palette="amber" fluidMedium="glass" />
+      </div>
+
+      {/* Foreground Krizaka UI content */}
+      <Card.Body className="relative z-10 p-6 space-y-4 backdrop-blur-[2px]">
+        <Badge tone="accent">Liquid Glass</Badge>
+        <Card.Title className="text-xl font-bold text-white">
+          Spatial Refractive Interface
+        </Card.Title>
+        <Card.Description className="text-sm text-zinc-400">
+          This @krizaka/ui card component reflects Snell optical refraction upon cursor interaction.
+        </Card.Description>
+        <Card.Footer className="pt-2">
+          <Button variant="primary" shape="cut">
+            Confirm Action
+          </Button>
+        </Card.Footer>
+      </Card.Body>
+    </Card.Root>
+  );
+}
+```
+
+### 3.3 Recipe 2: Chamfered Button with Second-Order Spring Physics
+
+Apply the `SpringSolver` physics engine to the chamfered cut buttons of `@krizaka/ui/button` (`shape="cut"`):
+
+```tsx
+import React, { useRef, useState } from "react";
+import { Button } from "@krizaka/ui/button";
+import { SpringSolver } from "@krizaka/motion/core";
+
+export function KineticSpringButton() {
+  const [offsetY, setOffsetY] = useState(0);
+  const spring = useRef(new SpringSolver({ stiffness: 280, damping: 22, mass: 1 }));
+
+  return (
+    <Button
+      variant="primary"
+      shape="cut"
+      size="lg"
+      onPointerDown={() => spring.current.setTarget(4)}
+      onPointerUp={() => spring.current.setTarget(0)}
+      style={{ transform: `translateY(${offsetY}px)` }}
+    >
+      Kinetic Spring Button
+    </Button>
+  );
+}
+```
+
+### 3.4 Recipe 3: Acoustic Voice Bubble with Metric Chips
+
+Embed the harmonic presence sphere inside dialogue bubbles using `@krizaka/ui/chip`:
+
+```tsx
+import React from "react";
+import { Chip } from "@krizaka/ui/chip";
+import { YororisPresenceOrb } from "@krizaka/motion";
+
+export function YororisVoiceMessage() {
+  return (
+    <div className="flex items-center gap-3 p-4 rounded-2xl bg-[#090d0b] border border-[#7c9082]/30">
+      <div className="w-12 h-12 rounded-full overflow-hidden shrink-0">
+        <YororisPresenceOrb state="speaking" voiceTone="lea" showSpores={false} />
+      </div>
+      <div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-semibold text-white">Léa · Vocal Presence</span>
+          <Chip size="sm">216 Hz F0</Chip>
+        </div>
+        <p className="text-xs text-[#b8c5b9] mt-0.5">
+          "Take a slow, deep breath into your lower abdomen..."
+        </p>
+      </div>
+    </div>
+  );
+}
+```
+
+---
+
+## 4. React Native Integration (Mobile)
+
+For integrating these visual engines into Krizaka mobile applications (`orazaka-mobile`, `yororis-mobile`, `orochia-mobile`), two options are provided:
+
+### Option 1: Ultra-Lightweight WebView Adapter (Zero Native Configuration)
 ```tsx
 import React from "react";
 import { View, StyleSheet } from "react-native";
@@ -195,37 +363,37 @@ const styles = StyleSheet.create({
 });
 ```
 
-### Option 2 : Moteur Natif Skia (`@shopify/react-native-skia`)
-Toutes les structures de données (`src/core/types.ts`) fournissent des coordonnées pures (points, chemins de Bézier, fréquences), transposables directement en primitives `SkCanvas` (`canvas.drawCircle`, `canvas.drawPath`).
+### Option 2: Skia Native Canvas (`@shopify/react-native-skia`)
+All data structures in `src/core/types.ts` emit pure mathematical coordinates (points, Bézier curves, frequencies), transposable directly into `SkCanvas` commands (`canvas.drawCircle`, `canvas.drawPath`).
 
 ---
 
-## 5. Démarrage de la Démo Interactive Locale
+## 5. Running the Interactive Demo Locally
 
-Pour lancer le banc d'essai interactif complet avec toutes les animations en temps réel :
+To launch the full interactive testbed with all animations running in real time:
 
 ```bash
-# Dans le dossier products/krizaka-motion
+# Inside products/krizaka-motion
 pnpm install
 pnpm run dev
 ```
 
-L'application de démo s'ouvre sur `http://localhost:5173` avec les commandes interactives, les sélecteurs de direction, le configurateur d'icônes et libellés, les thèmes de Jarvis, les caustiques de verre liquide, le drone sonore de Yororis et le compteur d'images par seconde (FPS).
+Open `http://localhost:5173` to explore the directional pipeline selector, node customizer, Krizaka UI showcase, Jarvis holographic HUD, liquid glass caustics, real-time microphone analysis, and live FPS counter.
 
 ---
 
-## 6. Scripts & Tests Unitaires
+## 6. Scripts & Test Suite
 
-- `pnpm run dev` : Lance le serveur de développement Vite avec l'application de démonstration.
-- `pnpm run test` : Exécute la suite de tests unitaires (solveur de ressorts physiques, calculs de Bézier, validation des tokens de couleurs).
-- `pnpm run build` : Compile la bibliothèque (`dist/`), les types TypeScript (`.d.ts`), et l'application démo (`dist-demo/`).
-- `pnpm run typecheck` : Vérifie la rigueur du typage TypeScript sans émettre de fichiers.
-- `pnpm run preview` : Prévisualise le build de production localement.
+- `pnpm run dev`: Launch the Vite development server with the interactive showcase.
+- `pnpm run test`: Run the test suite (15 unit tests covering spring physics, Bézier math, Snell refraction, Hodgkin-Huxley potentials, and color token contrast).
+- `pnpm run build`: Compile the dual CJS/ESM library bundle (`dist/`), TypeScript declaration files (`.d.ts`), and static demo (`dist-demo/`).
+- `pnpm run typecheck`: Run strict TypeScript validation (`tsc --noEmit`).
+- `pnpm run preview`: Preview the production demo bundle locally.
 
 ---
 
-## 7. Licence
+## 7. License
 
-[Apache-2.0](LICENSE) — voir [NOTICE](NOTICE).
+[Apache-2.0](LICENSE) — see [NOTICE](NOTICE).
 
-<sub>Fait avec passion pour l'écosystème Krizaka · [krizaka.com](https://www.krizaka.com)</sub>
+<sub>Engineered with precision for the Krizaka ecosystem · [krizaka.com](https://www.krizaka.com)</sub>

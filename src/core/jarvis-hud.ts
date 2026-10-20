@@ -1,20 +1,33 @@
 /**
- * @krizaka/motion — Jarvis Holographic HUD Engine (Iron Man Mark LXXXV)
- * Ultra-realistic holographic AI interface with Arc Reactor, concentric telemetry rings,
- * 3D gyroscopic tilt tracking, and dynamic cyber-optics.
+ * @krizaka/motion — Jarvis Holographic HUD Engine (V2 Next-Level)
+ * Cinema-grade Iron Man Mark LXXXV interface with interactive click-to-lock targeting,
+ * flight telemetry, energy shunt matrix, and multi-plane 3D gyroscopic projection.
  * 100% self-contained in krizaka-motion.
  */
 
 import { JarvisTheme, Point2D } from "./types";
 import { JARVIS_THEMES } from "./color-palettes";
 
+export type JarvisTacticalMode = "standard" | "combat" | "stealth" | "overdrive";
+
+export interface TargetLock {
+  x: number;
+  y: number;
+  distanceMeters: number;
+  threatLevel: "MINIMAL" | "ELEVATED" | "CRITICAL";
+  lockedAt: number;
+}
+
 export interface JarvisHUDOptions {
   theme?: JarvisTheme;
+  tacticalMode?: JarvisTacticalMode;
   interactive3D?: boolean;
   overdrive?: boolean;
   rotationSpeed?: number;
   showDiagnostics?: boolean;
+  showEnergyMatrix?: boolean;
   targetPoint?: Point2D;
+  onTargetLocked?: (target: TargetLock) => void;
 }
 
 export class JarvisHUDRenderer {
@@ -28,7 +41,7 @@ export class JarvisHUDRenderer {
   private theme: JarvisTheme = "cyan";
   private time = 0;
 
-  // 3D Gyroscope & Parallax mouse tracking
+  // 3D Gyroscope & Parallax
   private mouseX = 0;
   private mouseY = 0;
   private targetTiltX = 0;
@@ -36,9 +49,17 @@ export class JarvisHUDRenderer {
   private currentTiltX = 0;
   private currentTiltY = 0;
 
-  // Telemetry simulation data
-  private coreTemp = 3200;
-  private fluxLevel = 98.4;
+  // Active Target Locks
+  private targetLock: TargetLock | null = null;
+
+  // Energy distribution shunts (%)
+  private energyDistribution = {
+    repulsors: 85,
+    shields: 94,
+    unibeam: 60,
+    thrusters: 78,
+  };
+
   private audioSpectrum: number[] = new Array(48).fill(0);
 
   constructor(canvas: HTMLCanvasElement, options: JarvisHUDOptions = {}) {
@@ -46,12 +67,15 @@ export class JarvisHUDRenderer {
     const context = canvas.getContext("2d", { alpha: true });
     if (!context) throw new Error("Could not get 2d context");
     this.ctx = context;
+
     this.options = {
       theme: "cyan",
+      tacticalMode: "standard",
       interactive3D: true,
       overdrive: false,
       rotationSpeed: 1.0,
       showDiagnostics: true,
+      showEnergyMatrix: true,
       ...options,
     };
     this.theme = this.options.theme || "cyan";
@@ -67,13 +91,16 @@ export class JarvisHUDRenderer {
     }
   }
 
-  public setTheme(theme: JarvisTheme): void {
-    this.theme = theme;
-    this.options.theme = theme;
-  }
-
-  public setOverdrive(overdrive: boolean): void {
-    this.options.overdrive = overdrive;
+  public setTacticalMode(mode: JarvisTacticalMode): void {
+    this.options.tacticalMode = mode;
+    if (mode === "overdrive") {
+      this.options.overdrive = true;
+    } else if (mode === "stealth") {
+      this.theme = "yororis";
+      this.options.overdrive = false;
+    } else {
+      this.options.overdrive = false;
+    }
   }
 
   public setDimensions(width: number, height: number, dpr: number): void {
@@ -89,14 +116,11 @@ export class JarvisHUDRenderer {
   }
 
   private setupEvents(): void {
-    if (!this.options.interactive3D) return;
-
     const onPointerMove = (clientX: number, clientY: number) => {
       const rect = this.canvas.getBoundingClientRect();
       const x = clientX - rect.left - rect.width / 2;
       const y = clientY - rect.top - rect.height / 2;
 
-      // Max tilt angles: ~24 degrees
       this.targetTiltX = (y / (rect.height / 2)) * 0.42;
       this.targetTiltY = (-x / (rect.width / 2)) * 0.42;
       this.mouseX = clientX - rect.left;
@@ -110,6 +134,28 @@ export class JarvisHUDRenderer {
       }
     });
 
+    // Click anywhere to lock onto target
+    this.canvas.addEventListener("click", (e) => {
+      const rect = this.canvas.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const clickY = e.clientY - rect.top;
+
+      const dist = Math.round(800 + Math.random() * 2400);
+      const threat = dist < 1200 ? "CRITICAL" : dist < 1800 ? "ELEVATED" : "MINIMAL";
+
+      const lock: TargetLock = {
+        x: clickX,
+        y: clickY,
+        distanceMeters: dist,
+        threatLevel: threat,
+        lockedAt: performance.now(),
+      };
+      this.targetLock = lock;
+      if (this.options.onTargetLocked) {
+        this.options.onTargetLocked(lock);
+      }
+    });
+
     const resetTilt = () => {
       this.targetTiltX = 0;
       this.targetTiltY = 0;
@@ -118,16 +164,43 @@ export class JarvisHUDRenderer {
     this.canvas.addEventListener("touchend", resetTilt);
   }
 
+  /** Locks onto a spatial coordinate */
+  public lockTargetAt(x: number, y: number): TargetLock {
+    const dist = Math.round(800 + Math.random() * 2400);
+    const threat = dist < 1200 ? "CRITICAL" : dist < 1800 ? "ELEVATED" : "MINIMAL";
+
+    const lock: TargetLock = {
+      x,
+      y,
+      distanceMeters: dist,
+      threatLevel: threat,
+      lockedAt: performance.now(),
+    };
+    this.targetLock = lock;
+    if (this.options.onTargetLocked) {
+      this.options.onTargetLocked(lock);
+    }
+    return lock;
+  }
+
+  /** Clears active lock */
+  public clearTargetLock(): void {
+    this.targetLock = null;
+  }
+
+  /** Returns current lock */
+  public getTargetLock(): TargetLock | null {
+    return this.targetLock;
+  }
+
   public render(deltaTime: number, timestamp: number): void {
     this.time += deltaTime * (this.options.rotationSpeed || 1.0);
     const ctx = this.ctx;
     const dpr = this.dpr;
 
-    // Smooth tilt interpolation
     this.currentTiltX += (this.targetTiltX - this.currentTiltX) * Math.min(deltaTime * 8, 0.35);
     this.currentTiltY += (this.targetTiltY - this.currentTiltY) * Math.min(deltaTime * 8, 0.35);
 
-    // Update telemetry and audio equalizer simulation
     this.updateAudioEqualizer(deltaTime);
 
     ctx.save();
@@ -138,16 +211,16 @@ export class JarvisHUDRenderer {
     const cy = this.height / 2;
     const baseRadius = Math.min(this.width, this.height) * 0.38;
 
-    const themeColors = this.options.overdrive ? JARVIS_THEMES.crimson : JARVIS_THEMES[this.theme];
+    const isOverdrive = this.options.overdrive || this.options.tacticalMode === "overdrive";
+    const themeColors = isOverdrive ? JARVIS_THEMES.crimson : JARVIS_THEMES[this.theme];
 
-    // 1. Draw background cyber grid & ambient HUD field
+    // 1. Draw cyber grid & ambient HUD field
     this.drawCyberGrid(ctx, cx, cy, baseRadius, themeColors);
 
     // Apply 3D perspective transform
     ctx.save();
     ctx.translate(cx, cy);
 
-    // Simulated 3D tilt using skew and scaling
     const tiltScaleX = Math.cos(this.currentTiltY);
     const tiltScaleY = Math.cos(this.currentTiltX);
     const skewX = this.currentTiltY * 0.3;
@@ -155,7 +228,7 @@ export class JarvisHUDRenderer {
 
     ctx.transform(tiltScaleX, skewY, skewX, tiltScaleY, 0, 0);
 
-    // 2. Draw outer boundary reticles and compass arcs
+    // 2. Draw outer boundary brackets & tactical compass
     this.drawOuterReticles(ctx, baseRadius, themeColors);
 
     // 3. Draw concentric rotating telemetry rings
@@ -167,14 +240,16 @@ export class JarvisHUDRenderer {
     // 5. Draw Central ARC Reactor Core
     this.drawArcReactor(ctx, baseRadius * 0.32, themeColors);
 
-    // 6. Draw targeting reticle
-    this.drawTargetReticle(ctx, themeColors);
-
     ctx.restore();
 
-    // 7. Draw HUD Overlay telemetry text & diagnostics
+    // 6. Draw interactive locked target reticle
+    if (this.targetLock) {
+      this.drawTargetLock(ctx, themeColors);
+    }
+
+    // 7. Draw HUD Overlay telemetry & power matrix
     if (this.options.showDiagnostics) {
-      this.drawDiagnosticsHUD(ctx, themeColors);
+      this.drawDiagnosticsHUD(ctx, themeColors, isOverdrive);
     }
 
     ctx.restore();
@@ -198,7 +273,6 @@ export class JarvisHUDRenderer {
     theme: typeof JARVIS_THEMES["cyan"]
   ): void {
     ctx.save();
-    // Ambient radial glow
     const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, r * 1.5);
     grad.addColorStop(0, theme.bgGlow);
     grad.addColorStop(0.7, theme.bgGlow);
@@ -209,15 +283,14 @@ export class JarvisHUDRenderer {
     ctx.arc(cx, cy, r * 1.5, 0, Math.PI * 2);
     ctx.fill();
 
-    // Crosshair axes
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(cx - r * 1.3, cy);
-    ctx.lineTo(cx + r * 1.3, cy);
-    ctx.moveTo(cx, cy - r * 1.3);
-    ctx.lineTo(cx, cy + r * 1.3);
-    ctx.stroke();
+    // Tactile hexagonal coordinate circles
+    for (let i = 1; i <= 3; i++) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r * (i * 0.35), 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
 
     ctx.restore();
   }
@@ -228,10 +301,8 @@ export class JarvisHUDRenderer {
     theme: typeof JARVIS_THEMES["cyan"]
   ): void {
     ctx.save();
-
-    // 4 Corner Brackets
     const bracketSize = r * 1.18;
-    const cornerArm = 24;
+    const cornerArm = 26;
     ctx.strokeStyle = theme.primary;
     ctx.lineWidth = 2;
     ctx.shadowColor = theme.primary;
@@ -251,14 +322,6 @@ export class JarvisHUDRenderer {
       ctx.lineTo(c.x + c.dx * cornerArm, c.y);
       ctx.stroke();
     }
-
-    // Outer segmented perimeter ring
-    ctx.beginPath();
-    ctx.arc(0, 0, r * 1.05, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
     ctx.restore();
   }
 
@@ -269,7 +332,7 @@ export class JarvisHUDRenderer {
   ): void {
     ctx.save();
 
-    // Ring 1: High-speed counter-clockwise ring with azimuth notches
+    // Ring 1: Fast counter-clockwise azimuth
     ctx.save();
     ctx.rotate(-this.time * 0.7);
     ctx.beginPath();
@@ -279,7 +342,6 @@ export class JarvisHUDRenderer {
     ctx.setLineDash([16, 28, 4, 12]);
     ctx.stroke();
 
-    // Azimuth ticks (72 ticks)
     for (let i = 0; i < 72; i++) {
       const angle = (i * Math.PI * 2) / 72;
       const isMajor = i % 6 === 0;
@@ -296,7 +358,7 @@ export class JarvisHUDRenderer {
     }
     ctx.restore();
 
-    // Ring 2: Clockwise primary ring with precision sector arcs
+    // Ring 2: Clockwise precision sectors
     ctx.save();
     ctx.rotate(this.time * 0.45);
     ctx.beginPath();
@@ -307,20 +369,6 @@ export class JarvisHUDRenderer {
     ctx.shadowColor = theme.primary;
     ctx.shadowBlur = 10;
     ctx.stroke();
-    ctx.restore();
-
-    // Ring 3: Segmented hex brackets
-    ctx.save();
-    ctx.rotate(-this.time * 0.3);
-    for (let i = 0; i < 4; i++) {
-      const startAngle = (i * Math.PI) / 2 + 0.1;
-      const endAngle = startAngle + Math.PI / 2 - 0.2;
-      ctx.beginPath();
-      ctx.arc(0, 0, r * 0.72, startAngle, endAngle);
-      ctx.strokeStyle = theme.secondary;
-      ctx.lineWidth = 1.6;
-      ctx.stroke();
-    }
     ctx.restore();
 
     ctx.restore();
@@ -338,24 +386,18 @@ export class JarvisHUDRenderer {
     for (let i = 0; i < count; i++) {
       const angle = (i * Math.PI * 2) / count;
       const amp = this.audioSpectrum[i];
-      const barLen = amp * 18;
+      const barLen = amp * 20;
 
       const r1 = r;
       const r2 = r + barLen;
 
-      const x1 = Math.cos(angle) * r1;
-      const y1 = Math.sin(angle) * r1;
-      const x2 = Math.cos(angle) * r2;
-      const y2 = Math.sin(angle) * r2;
-
       ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
+      ctx.moveTo(Math.cos(angle) * r1, Math.sin(angle) * r1);
+      ctx.lineTo(Math.cos(angle) * r2, Math.sin(angle) * r2);
       ctx.strokeStyle = i % 2 === 0 ? theme.primary : theme.accent;
       ctx.lineWidth = 1.6;
       ctx.stroke();
     }
-
     ctx.restore();
   }
 
@@ -366,7 +408,7 @@ export class JarvisHUDRenderer {
   ): void {
     ctx.save();
 
-    // 1. Outer reactor rim
+    // 1. Outer rim
     ctx.beginPath();
     ctx.arc(0, 0, r, 0, Math.PI * 2);
     ctx.fillStyle = "#060a0f";
@@ -377,7 +419,7 @@ export class JarvisHUDRenderer {
     ctx.fill();
     ctx.stroke();
 
-    // 2. 10 Rotating Copper Electromagnets
+    // 2. 10 Rotating copper coils
     ctx.save();
     ctx.rotate(this.time * 0.5);
     const coilCount = 10;
@@ -387,18 +429,16 @@ export class JarvisHUDRenderer {
       ctx.rotate(angle);
       ctx.translate(r * 0.75, 0);
 
-      ctx.fillStyle = "#b45309"; // Copper/Gold
+      ctx.fillStyle = "#b45309";
       ctx.fillRect(-4, -6, 8, 12);
-
       ctx.strokeStyle = "#fef08a";
       ctx.lineWidth = 1;
       ctx.strokeRect(-4, -6, 8, 12);
-
       ctx.restore();
     }
     ctx.restore();
 
-    // 3. Central Plasma Core (Glowing nuclear singularity)
+    // 3. Central plasma singularity
     const pulse = Math.sin(this.time * 8) * 0.12;
     const coreR = r * 0.42 * (1 + pulse);
 
@@ -413,7 +453,7 @@ export class JarvisHUDRenderer {
     ctx.fillStyle = plasmaGrad;
     ctx.fill();
 
-    // 4. Triangular Arc Reactor Core Emblem
+    // 4. Triangular Arc reactor emblem
     ctx.save();
     ctx.rotate(-this.time * 1.2);
     ctx.beginPath();
@@ -433,59 +473,94 @@ export class JarvisHUDRenderer {
     ctx.restore();
   }
 
-  private drawTargetReticle(
-    ctx: CanvasRenderingContext2D,
-    theme: typeof JARVIS_THEMES["cyan"]
-  ): void {
+  private drawTargetLock(ctx: CanvasRenderingContext2D, theme: typeof JARVIS_THEMES["cyan"]): void {
+    if (!this.targetLock) return;
+
+    const { x, y, distanceMeters, threatLevel } = this.targetLock;
+    const boxSize = 28;
+
     ctx.save();
-    // Micro reticle in center
+    ctx.strokeStyle = threatLevel === "CRITICAL" ? "#ef4444" : theme.accent;
+    ctx.lineWidth = 1.6;
+    ctx.shadowColor = ctx.strokeStyle;
+    ctx.shadowBlur = 10;
+
+    // Target box corners
+    const arm = 8;
     ctx.beginPath();
-    ctx.arc(0, 0, 8, 0, Math.PI * 2);
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.75)";
-    ctx.lineWidth = 1;
+    // Top-left
+    ctx.moveTo(x - boxSize, y - boxSize + arm);
+    ctx.lineTo(x - boxSize, y - boxSize);
+    ctx.lineTo(x - boxSize + arm, y - boxSize);
+    // Top-right
+    ctx.moveTo(x + boxSize - arm, y - boxSize);
+    ctx.lineTo(x + boxSize, y - boxSize);
+    ctx.lineTo(x + boxSize, y - boxSize + arm);
+    // Bottom-right
+    ctx.moveTo(x + boxSize, y + boxSize - arm);
+    ctx.lineTo(x + boxSize, y + boxSize);
+    ctx.lineTo(x + boxSize - arm, y + boxSize);
+    // Bottom-left
+    ctx.moveTo(x - boxSize + arm, y + boxSize);
+    ctx.lineTo(x - boxSize, y + boxSize);
+    ctx.lineTo(x - boxSize, y + boxSize - arm);
     ctx.stroke();
 
+    // Target center pip
     ctx.beginPath();
-    ctx.arc(0, 0, 2, 0, Math.PI * 2);
-    ctx.fillStyle = "#ffffff";
+    ctx.arc(x, y, 3, 0, Math.PI * 2);
+    ctx.fillStyle = ctx.strokeStyle;
     ctx.fill();
+
+    // Target data label
+    ctx.font = "9.5px SF Mono, monospace";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(`LOCKED · ${distanceMeters} M`, x + boxSize + 6, y - 6);
+    ctx.fillStyle = threatLevel === "CRITICAL" ? "#ef4444" : theme.primary;
+    ctx.fillText(`THREAT: ${threatLevel}`, x + boxSize + 6, y + 8);
+
     ctx.restore();
   }
 
   private drawDiagnosticsHUD(
     ctx: CanvasRenderingContext2D,
-    theme: typeof JARVIS_THEMES["cyan"]
+    theme: typeof JARVIS_THEMES["cyan"],
+    isOverdrive: boolean
   ): void {
     ctx.save();
     ctx.font = "10.5px SF Mono, monospace";
     ctx.fillStyle = theme.primary;
     ctx.textBaseline = "top";
 
-    const isOverdrive = this.options.overdrive;
-
     // Top-Left Telemetry
     ctx.fillText("J.A.R.V.I.S. // MARK LXXXV", 22, 22);
     ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
-    ctx.fillText(`CORE TEMP: ${this.coreTemp} K`, 22, 40);
-    ctx.fillText(`FLUX OUTPUT: ${this.fluxLevel}%`, 22, 56);
-    ctx.fillText(`ORAZAKA NEURAL LINK: CONNECTED`, 22, 72);
+    ctx.fillText(`FLUX CAPACITANCE: 1.21 GW`, 22, 40);
+    ctx.fillText(`NEURAL CORE: 99.4% NOMINAL`, 22, 56);
+
+    // Energy Shunt readout
+    if (this.options.showEnergyMatrix) {
+      ctx.fillStyle = theme.secondary;
+      ctx.fillText(`REPULSORS: [${this.energyDistribution.repulsors}%]`, 22, 74);
+      ctx.fillText(`SHIELDS:   [${this.energyDistribution.shields}%]`, 22, 90);
+    }
 
     // Top-Right Status
     ctx.textAlign = "right";
     ctx.fillStyle = isOverdrive ? "#ef4444" : theme.primary;
-    ctx.fillText(isOverdrive ? "OVERDRIVE // WARNING" : "SYSTEM: OPTIMAL", this.width - 22, 22);
+    ctx.fillText(isOverdrive ? "OVERDRIVE // WARNING" : "TACTICAL: OPTIMAL", this.width - 22, 22);
     ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
-    ctx.fillText(`TILT X: ${(this.currentTiltX * 57.3).toFixed(1)}°`, this.width - 22, 40);
-    ctx.fillText(`TILT Y: ${(this.currentTiltY * 57.3).toFixed(1)}°`, this.width - 22, 56);
-    ctx.fillText(`AUDIO FORMANT: ACTIVE`, this.width - 22, 72);
+    ctx.fillText(`PITCH: ${(this.currentTiltX * 57.3).toFixed(1)}°`, this.width - 22, 40);
+    ctx.fillText(`YAW:   ${(this.currentTiltY * 57.3).toFixed(1)}°`, this.width - 22, 56);
+    ctx.fillText(`MODE:  ${(this.options.tacticalMode || "standard").toUpperCase()}`, this.width - 22, 72);
 
-    // Bottom Status Bar
+    // Bottom Status
     ctx.textAlign = "center";
     ctx.fillStyle = theme.secondary;
     ctx.fillText(
       isOverdrive
         ? "CRITICAL PLASMA SATURATION · PROTOCOL 11 ENGAGED"
-        : "AUTONOMOUS QUANTUM CORE · ECOSYSTEM KRIZAKA",
+        : "CLIQUEZ N'IMPORTE OÙ POUR VERROUILLER UNE CIBLE TACTIQUE",
       this.width / 2,
       this.height - 24
     );
