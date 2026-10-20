@@ -1,0 +1,78 @@
+{
+  "name": "@krizaka/motion",
+  "version": "1.0.0",
+  "description": "Next-generation generative canvas, 3D, particle systems & audio-visual synthesis for the Krizaka ecosystem",
+  "author": "Krizaka <contact@krizaka.com>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krizaka/krizaka-motion.git"
+  },
+  "bugs": {
+    "url": "https://github.com/krizaka/krizaka-motion/issues"
+  },
+  "homepage": "https://github.com/krizaka/krizaka-motion#readme",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js",
+      "require": "./dist/react/index.cjs"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js",
+      "require": "./dist/core/index.cjs"
+    },
+    "./native": {
+      "types": "./dist/native/ReactNativeAdapters.d.ts",
+      "import": "./dist/native/index.js",
+      "require": "./dist/native/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "pnpm run build:lib && pnpm run build:types && pnpm run build:demo",
+    "build:lib": "vite build --config vite.config.lib.ts",
+    "build:types": "tsc -p tsconfig.build.json",
+    "build:demo": "vite build --outDir dist-demo",
+    "preview": "vite preview --outDir dist-demo",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@krizaka/icons": "^0.6.0",
+    "@krizaka/tokens": "^3.26.0",
+    "@krizaka/ui": "^3.26.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.16.0"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.3",
+    "vite": "^6.2.0"
+  }
+}
