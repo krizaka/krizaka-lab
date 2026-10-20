@@ -22,12 +22,12 @@ export function Home() {
     <>
       <PageHero eyebrow={h.eyebrow} title={h.title} lead={h.lead} align="center">
         <div className="lab-actions">
-          <Button asChild variant="primary" size="lg" shape="cut" shimmer magnetic>
+          <Button asChild variant="primary" size="lg">
             <a href={href("orazaka")} onClick={go("orazaka")}>
               {h.primary} <ForwardIcon size={16} />
             </a>
           </Button>
-          <Button asChild variant="secondary" size="lg" shape="cut">
+          <Button asChild variant="secondary" size="lg">
             <a href={href("kz-ui")} onClick={go("kz-ui")}>
               {h.galleryCta}
             </a>
@@ -70,7 +70,7 @@ export function Home() {
 
       <Section id="shipped" eyebrow={h.shippedEyebrow} title={h.shippedTitle} lead={h.shippedLead} divider
         actions={
-          <Button asChild variant="secondary" shape="cut">
+          <Button asChild variant="secondary">
             <a href="https://ui.krizaka.com/components/engine-flow">
               {h.shippedCta} <ForwardIcon size={14} />
             </a>

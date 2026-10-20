@@ -47,7 +47,7 @@ interface Item {
 function ButtonLive({ s }: { s: Sample }) {
   const [busy, setBusy] = useState(false);
   return (
-    <Button variant="primary" shape="cut" shimmer magnetic loading={busy} onClick={() => { setBusy(true); window.setTimeout(() => setBusy(false), 1600); }}>
+    <Button variant="primary" loading={busy} onClick={() => { setBusy(true); window.setTimeout(() => setBusy(false), 1600); }}>
       {busy ? s.saving : s.save}
     </Button>
   );
@@ -281,7 +281,7 @@ const MOTION = "// The lab's views are not on npm: krizaka/krizaka-motion src/re
 
 export const GALLERY: Item[] = [
   { id: "button", group: "feedback", Live: ButtonLive, props: ["variant", "shape=\"cut\"", "shimmer", "magnetic", "loading"],
-    code: `import { Button } from "@krizaka/ui/button";\n\n<Button variant="primary" shape="cut" shimmer magnetic loading={saving}>\n  Save\n</Button>` },
+    code: `import { Button } from "@krizaka/ui/button";\n\n<Button variant="primary" loading={saving}>\n  Save\n</Button>` },
   { id: "toast", group: "feedback", Live: ToastLive, props: ["label", "closeLabel", "position", "undoLabel", "onUndo"],
     code: `import { Toaster, undoToast } from "@krizaka/ui/toast";\n\n<Toaster label="Notifications" closeLabel="Close" />\nundoToast("Message archived", { undoLabel: "Undo", onUndo: restore });` },
   { id: "progress", group: "feedback", Live: ProgressLive, props: ["value", "label", "showLabel", "max", "variant"],
