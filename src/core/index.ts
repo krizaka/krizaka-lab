@@ -11,3 +11,4 @@ export * from "./yororis-synthesis";
 export * from "./jarvis-hud";
 export * from "./liquid-caustics";
 export * from "./neural-lattice";
+export * from "./router";

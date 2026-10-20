@@ -81,20 +81,73 @@ import {
   Crosshair,
   Terminal,
   Box,
+  Link as LinkIcon,
+  Share2,
 } from "lucide-react";
-
-type TabId =
-  | "orazaka"
-  | "yororis"
-  | "jarvis"
-  | "caustics"
-  | "lattice"
-  | "kz-ui"
-  | "architecture";
+import {
+  type TabId,
+  TAB_ROUTES,
+  resolveTabFromLocation,
+  getHrefForTab,
+} from "./core/router";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<TabId>("orazaka");
+  const [activeTab, setActiveTab] = useState<TabId>(() => {
+    if (typeof window !== "undefined") {
+      return resolveTabFromLocation(window.location);
+    }
+    return "orazaka";
+  });
+  const [copiedRoute, setCopiedRoute] = useState(false);
   const [fps, setFps] = useState(60);
+
+  const navigateToTab = (tab: TabId, updateHistory = true) => {
+    setActiveTab(tab);
+    const route = TAB_ROUTES[tab];
+    if (typeof document !== "undefined") {
+      document.title = route.title;
+    }
+    if (updateHistory && typeof window !== "undefined") {
+      const targetUrl = getHrefForTab(tab, window.location.pathname);
+      if (
+        window.location.pathname !== targetUrl &&
+        !window.location.pathname.endsWith(`/${route.path}`)
+      ) {
+        window.history.pushState({ tab }, route.title, targetUrl);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const tab = resolveTabFromLocation(window.location);
+      setActiveTab(tab);
+      if (typeof document !== "undefined") {
+        document.title = TAB_ROUTES[tab].title;
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    window.addEventListener("hashchange", handlePopState);
+
+    // Sync title with initial tab
+    const initialTab = resolveTabFromLocation(window.location);
+    navigateToTab(initialTab, false);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("hashchange", handlePopState);
+    };
+  }, []);
+
+  const copyCurrentShareLink = () => {
+    if (typeof window === "undefined") return;
+    const path = getHrefForTab(activeTab, window.location.pathname);
+    const url = `${window.location.origin}${path}`;
+    navigator.clipboard.writeText(url);
+    setCopiedRoute(true);
+    setTimeout(() => setCopiedRoute(false), 2200);
+  };
 
   // ==========================================
   // 1. Orazaka Engine Controls
@@ -326,83 +379,70 @@ export function Engine({ playing }: { playing: boolean }) {
           </div>
         </div>
 
-        {/* Tabs Bar */}
+        {/* RESTful Tabs Bar */}
         <nav className="flex items-center gap-1 bg-[#121519] p-1 rounded-xl border border-[#22272e] overflow-x-auto max-w-full">
-          <button
-            onClick={() => setActiveTab("orazaka")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-              activeTab === "orazaka"
-                ? "bg-orange-500 text-white shadow-[0_0_12px_rgba(249,115,22,0.4)]"
-                : "text-[#88929e] hover:text-white"
-            }`}
-          >
-            Orazaka Engine
-          </button>
-          <button
-            onClick={() => setActiveTab("yororis")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-              activeTab === "yororis"
-                ? "bg-[#7c9082] text-white shadow-[0_0_12px_rgba(124,144,130,0.4)]"
-                : "text-[#88929e] hover:text-white"
-            }`}
-          >
-            Yororis Voice
-          </button>
-          <button
-            onClick={() => setActiveTab("jarvis")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-              activeTab === "jarvis"
-                ? "bg-cyan-500 text-black font-semibold shadow-[0_0_12px_rgba(6,182,212,0.4)]"
-                : "text-[#88929e] hover:text-white"
-            }`}
-          >
-            Jarvis HUD
-          </button>
-          <button
-            onClick={() => setActiveTab("caustics")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-              activeTab === "caustics"
-                ? "bg-amber-500 text-black font-semibold shadow-[0_0_12px_rgba(245,158,11,0.4)]"
-                : "text-[#88929e] hover:text-white"
-            }`}
-          >
-            Liquid Glass
-          </button>
-          <button
-            onClick={() => setActiveTab("lattice")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-              activeTab === "lattice"
-                ? "bg-indigo-500 text-white shadow-[0_0_12px_rgba(99,102,241,0.4)]"
-                : "text-[#88929e] hover:text-white"
-            }`}
-          >
-            Neural Lattice
-          </button>
-          <button
-            onClick={() => setActiveTab("kz-ui")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
-              activeTab === "kz-ui"
-                ? "bg-gradient-to-r from-orange-500 to-cyan-500 text-white font-semibold shadow-[0_0_14px_rgba(249,115,22,0.4)]"
-                : "text-orange-400/90 hover:text-white"
-            }`}
-          >
-            <Sparkles className="w-3 h-3" />
-            Krizaka UI + Motion
-          </button>
-          <button
-            onClick={() => setActiveTab("architecture")}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
-              activeTab === "architecture"
-                ? "bg-[#262b32] text-white"
-                : "text-[#88929e] hover:text-white"
-            }`}
-          >
-            Mobile & Specs
-          </button>
+          {(
+            [
+              { id: "orazaka", activeClass: "bg-orange-500 text-white shadow-[0_0_12px_rgba(249,115,22,0.4)]" },
+              { id: "yororis", activeClass: "bg-[#7c9082] text-white shadow-[0_0_12px_rgba(124,144,130,0.4)]" },
+              { id: "jarvis", activeClass: "bg-cyan-500 text-black font-semibold shadow-[0_0_12px_rgba(6,182,212,0.4)]" },
+              { id: "caustics", activeClass: "bg-amber-500 text-black font-semibold shadow-[0_0_12px_rgba(245,158,11,0.4)]" },
+              { id: "lattice", activeClass: "bg-indigo-500 text-white shadow-[0_0_12px_rgba(99,102,241,0.4)]" },
+              { id: "kz-ui", activeClass: "bg-gradient-to-r from-orange-500 to-cyan-500 text-white font-semibold shadow-[0_0_14px_rgba(249,115,22,0.4)]", icon: Sparkles },
+              { id: "architecture", activeClass: "bg-[#262b32] text-white" },
+            ] as const
+          ).map((tab) => {
+            const def = TAB_ROUTES[tab.id];
+            const isActive = activeTab === tab.id;
+            const Icon = "icon" in tab ? tab.icon : null;
+            const href = getHrefForTab(
+              tab.id,
+              typeof window !== "undefined" ? window.location.pathname : ""
+            );
+            return (
+              <a
+                key={tab.id}
+                href={href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateToTab(tab.id);
+                }}
+                title={`${def.title} — Route: /${def.path}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                  isActive ? tab.activeClass : "text-[#88929e] hover:text-white"
+                }`}
+              >
+                {Icon && <Icon className="w-3 h-3" />}
+                {def.label}
+              </a>
+            );
+          })}
         </nav>
 
-        {/* FPS & GitHub link */}
-        <div className="flex items-center gap-3">
+        {/* Route Actions & FPS */}
+        <div className="flex items-center gap-2 md:gap-3">
+          {/* Share REST Route Link Button */}
+          <button
+            onClick={copyCurrentShareLink}
+            title="Copier l'URL directe de cette démo pour partage"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs bg-[#161a20] hover:bg-[#20252c] border border-[#262b32] hover:border-orange-500/50 text-[#88929e] hover:text-[#f0f2f5] transition-all cursor-pointer"
+          >
+            {copiedRoute ? (
+              <>
+                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-emerald-400 font-medium">Lien copié !</span>
+              </>
+            ) : (
+              <>
+                <LinkIcon className="w-3.5 h-3.5 text-orange-400" />
+                <span className="hidden xl:inline text-orange-400/90 font-mono text-[11px]">
+                  /{TAB_ROUTES[activeTab].path}
+                </span>
+                <span className="hidden sm:inline">Partager</span>
+              </>
+            )}
+          </button>
+
           <div className="hidden md:flex items-center gap-2 text-xs font-mono text-[#88929e]">
             <Activity className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
             <span>{fps} FPS</span>
