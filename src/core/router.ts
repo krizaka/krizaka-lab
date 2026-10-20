@@ -9,6 +9,9 @@ export type TabId =
   | "caustics"
   | "lattice"
   | "maps"
+  | "conversation"
+  | "journey"
+  | "figures"
   | "data"
   | "kz-ui"
   | "architecture";
@@ -71,6 +74,30 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     description: "Pins that drop, a route that draws itself, a courier, a heat pulse — on the Krizaka UI map",
     aliases: ["maps", "map", "route", "delivery"],
   },
+  conversation: {
+    id: "conversation",
+    path: "conversation",
+    label: "Conversation",
+    title: "Streaming messages and terminal replay — Krizaka Motion",
+    description: "A model's answer streaming into a bubble, a terminal session played back",
+    aliases: ["conversation", "chat", "stream", "terminal"],
+  },
+  journey: {
+    id: "journey",
+    path: "journey",
+    label: "Journey",
+    title: "A job as a journey — Krizaka Motion",
+    description: "Steps that complete, a step in progress, a step that fails",
+    aliases: ["journey", "stepper", "steps", "job"],
+  },
+  figures: {
+    id: "figures",
+    path: "figures",
+    label: "Figures",
+    title: "Figures that climb — Krizaka Motion",
+    description: "NumberTicker, Meter and GoalGauge driven by one live total",
+    aliases: ["figures", "ticker", "meter", "gauge"],
+  },
   data: {
     id: "data",
     path: "data-motion",
@@ -104,6 +131,9 @@ export const TAB_ORDER: TabId[] = [
   "caustics",
   "lattice",
   "maps",
+  "conversation",
+  "journey",
+  "figures",
   "data",
   "kz-ui",
   "architecture",
