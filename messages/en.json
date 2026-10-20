@@ -250,6 +250,20 @@
       "title": "Figures that climb.",
       "lead": "Digits that climb or roll, a meter whose tone turns with its thresholds, a goal counted in steps.",
       "card": "NumberTicker, Meter, GoalGauge."
+    },
+    "overlays": {
+      "name": "Overlays",
+      "eyebrow": "Krizaka UI dialog",
+      "title": "Panels that arrive.",
+      "lead": "A dialog, a sheet and a drawer enter from their edge; one indicator slides under the active item of NavBar and Tabs.",
+      "card": "Dialog placements, sliding indicator."
+    },
+    "transitions": {
+      "name": "Transitions",
+      "eyebrow": "Page transitions",
+      "title": "Views that cross.",
+      "lead": "A view change plays through the View Transitions API: fade, slide or reveal, inside one stage.",
+      "card": "Fade, slide, reveal; duration and easing."
     }
   },
   "footer": {

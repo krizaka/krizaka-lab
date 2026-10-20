@@ -12,6 +12,8 @@ export type TabId =
   | "conversation"
   | "journey"
   | "figures"
+  | "overlays"
+  | "transitions"
   | "data"
   | "kz-ui"
   | "architecture";
@@ -98,6 +100,22 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     description: "NumberTicker, Meter and GoalGauge driven by one live total",
     aliases: ["figures", "ticker", "meter", "gauge"],
   },
+  overlays: {
+    id: "overlays",
+    path: "overlays",
+    label: "Overlays",
+    title: "Dialog, sheet and indicator — Krizaka Motion",
+    description: "A dialog in four placements, the sliding indicator of NavBar and Tabs",
+    aliases: ["overlays","dialog","sheet","navbar","indicator"],
+  },
+  transitions: {
+    id: "transitions",
+    path: "transitions",
+    label: "Transitions",
+    title: "Page transitions — Krizaka Motion",
+    description: "View changes that cross inside a stage, through the View Transitions API",
+    aliases: ["transitions","page-transitions","view-transitions"],
+  },
   data: {
     id: "data",
     path: "data-motion",
@@ -134,6 +152,8 @@ export const TAB_ORDER: TabId[] = [
   "conversation",
   "journey",
   "figures",
+  "overlays",
+  "transitions",
   "data",
   "kz-ui",
   "architecture",

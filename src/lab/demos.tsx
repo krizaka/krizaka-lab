@@ -34,6 +34,8 @@ import { ConversationStage } from "./conversation";
 import { DataStage } from "./data-motion";
 import { FiguresStage } from "./figures";
 import { JourneyStage } from "./journey";
+import { OverlaysStage } from "./overlays";
+import { TransitionsStage } from "./transitions";
 import { MapsStage } from "./maps";
 import { type Knob, Playground } from "./playground";
 
@@ -335,6 +337,8 @@ export const DEMOS: Record<TabId, Demo> = {
   conversation: { Preview: () => <div className="lab-g-col"><TypingIndicator label="The assistant is typing" /></div>, Stage: ConversationStage, lab: false },
   journey: { Preview: () => <div className="lab-g-col"><Progress label="Transcoding" value={58} size="sm" /></div>, Stage: JourneyStage, lab: false },
   figures: { Preview: () => <div className="lab-g-col"><Stat label="Raised" value={<NumberTicker value={3150} />} /></div>, Stage: FiguresStage, lab: false },
+  overlays: { Preview: () => <div className="lab-g-col"><Chip>Sheet</Chip></div>, Stage: OverlaysStage, lab: false },
+  transitions: { Preview: () => <div className="lab-g-col"><Chip>Fade · slide · reveal</Chip></div>, Stage: TransitionsStage, lab: false },
   data: { Preview: () => <div className="lab-g-col lab-grow"><Sparkline data={[12, 18, 15, 26, 31, 29, 44, 52]} width={220} height={64} variant="area" title="Plays" trendTone /></div>, Stage: DataStage, lab: false },
   "kz-ui": { Preview: () => <Flow compact={false} particles="photons" />, Stage: Gallery, lab: false },
   architecture: { Preview: () => null, Stage: SpecsStage, lab: false },

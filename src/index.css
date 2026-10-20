@@ -134,3 +134,29 @@ body { margin: 0; background: var(--kz-surface-0); color: var(--kz-text-primary)
 .lab-journey > * { max-width: 100%; }
 .lab-figures { display: flex; flex-direction: column; gap: 18px; align-items: flex-start; max-width: 28rem; width: 100%; }
 .lab-figures > :not(button) { width: 100%; }
+
+/* Overlays */
+.lab-overlay { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; max-width: 36rem; min-width: 0; }
+.lab-indicator-nav { max-width: 100%; }
+
+/* Page transitions: the stage is the one transitioning element; its old and new views cross by style. */
+.lab-vt { display: flex; flex-direction: column; gap: 12px; max-width: 32rem; }
+.lab-vt-stage { view-transition-name: lab-stage; min-height: 8rem; contain: layout; }
+::view-transition-group(lab-stage) { animation-duration: var(--lab-vt-duration, 360ms); animation-timing-function: var(--lab-vt-ease, ease-out); }
+::view-transition-old(lab-stage), ::view-transition-new(lab-stage) { animation-duration: var(--lab-vt-duration, 360ms); animation-timing-function: var(--lab-vt-ease, ease-out); mix-blend-mode: normal; }
+html[data-vt^="fade"]::view-transition-old(lab-stage) { animation-name: lab-vt-out; }
+html[data-vt^="fade"]::view-transition-new(lab-stage) { animation-name: lab-vt-in; }
+html[data-vt="slide-forward"]::view-transition-old(lab-stage) { animation-name: lab-vt-left-out; }
+html[data-vt="slide-forward"]::view-transition-new(lab-stage) { animation-name: lab-vt-right-in; }
+html[data-vt="slide-back"]::view-transition-old(lab-stage) { animation-name: lab-vt-right-out; }
+html[data-vt="slide-back"]::view-transition-new(lab-stage) { animation-name: lab-vt-left-in; }
+html[data-vt^="reveal"]::view-transition-old(lab-stage) { animation-name: lab-vt-out; }
+html[data-vt^="reveal"]::view-transition-new(lab-stage) { animation-name: lab-vt-reveal; }
+@keyframes lab-vt-out { to { opacity: 0; } }
+@keyframes lab-vt-in { from { opacity: 0; } }
+@keyframes lab-vt-left-out { to { opacity: 0; translate: -24px 0; } }
+@keyframes lab-vt-right-in { from { opacity: 0; translate: 24px 0; } }
+@keyframes lab-vt-right-out { to { opacity: 0; translate: 24px 0; } }
+@keyframes lab-vt-left-in { from { opacity: 0; translate: -24px 0; } }
+@keyframes lab-vt-reveal { from { opacity: 0; scale: 0.96; } }
+@media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } }
