@@ -157,3 +157,16 @@ export function getHrefForTab(tab: TabId, currentPathname: string = ""): string 
   const prefix = isKrizakaMotionBase ? "/krizaka-motion/" : "/";
   return `${prefix}${TAB_ROUTES[tab].path}`;
 }
+
+/**
+ * GitHub Pages serves `404.html` for a deep link it has no folder for, and that page sends the visitor to
+ * `<base>/?/<route>` (scripts/generate-routes.mjs). The address to show instead — the REST path — or `null` when the
+ * location is a normal one. `main.tsx` applies it with `history.replaceState` before the first render.
+ */
+export function cleanSpaRedirect(loc: { pathname: string; search: string; hash?: string }): string | null {
+  if (!loc.search.startsWith("?/")) return null;
+  const [route = "", ...rest] = loc.search.slice(2).split("&");
+  const base = loc.pathname.endsWith("/") ? loc.pathname : `${loc.pathname}/`;
+  const query = rest.length ? `?${rest.join("&")}` : "";
+  return `${base}${route.replace(/~and~/g, "&")}${query}${loc.hash ?? ""}`;
+}

@@ -60,3 +60,19 @@ describe("RESTful Routing & URL Resolution", () => {
     assert.equal(getHrefForTab("caustics", "/krizaka-motion/orazaka"), "/krizaka-motion/liquid-glass");
   });
 });
+
+// GitHub Pages serves 404.html for a deep link it has no folder for; that page sends the visitor to `<base>/?/<route>`.
+// The app then shows the clean address again (history.replaceState), so a shared link stays a REST path.
+import { cleanSpaRedirect } from "../dist/core/index.js";
+
+describe("GitHub Pages 404 fallback", () => {
+  it("turns ?/<route> back into the REST path under the project base", () => {
+    assert.equal(cleanSpaRedirect({ pathname: "/krizaka-motion/", search: "?/jarvis", hash: "" }), "/krizaka-motion/jarvis");
+    assert.equal(cleanSpaRedirect({ pathname: "/krizaka-motion/", search: "?/specs&x=1", hash: "#top" }), "/krizaka-motion/specs?x=1#top");
+  });
+
+  it("leaves a normal address alone", () => {
+    assert.equal(cleanSpaRedirect({ pathname: "/krizaka-motion/orazaka", search: "", hash: "" }), null);
+    assert.equal(cleanSpaRedirect({ pathname: "/krizaka-motion/", search: "?tab=yororis", hash: "" }), null);
+  });
+});
