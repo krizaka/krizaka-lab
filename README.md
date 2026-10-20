@@ -1,12 +1,13 @@
 # 🥷 Krizaka Motion
 
 > **Next-generation generative canvas, 3D, particle systems & audio-visual synthesis for the Krizaka ecosystem.**
-> Drop-in replacement for the Orazaka foundation engine flow on [krizaka.com](https://krizaka.com), 3D acoustic voice presence for [dev.yororis.com](https://dev.yororis.com), and Jarvis-inspired Iron Man holographic HUD.
+> Drop-in replacement for the Orazaka foundation engine flow on [krizaka.com](https://krizaka.com), 3D acoustic voice presence for [dev.yororis.com](https://dev.yororis.com), Jarvis-inspired Iron Man holographic HUD, liquid glass chromatic caustics, and neural synapse lattice.
 
 [![CI](https://github.com/krizaka/krizaka-motion/actions/workflows/ci.yml/badge.svg)](https://github.com/krizaka/krizaka-motion/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 [![Status](https://img.shields.io/badge/status-active-f97316)](https://krizaka.com)
 [![Krizaka UI](https://img.shields.io/badge/@krizaka/ui-compatible-2563eb)](https://ui.krizaka.com)
+[![Tests](https://img.shields.io/badge/tests-passing-emerald)](tests/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-3178c6)](package.json)
 
 ---
@@ -15,44 +16,58 @@
 
 `krizaka-motion` est la bibliothèque d'effets visuels, de physique particulaire et de synthèse audio-visuelle temps réel pour les produits de l'écosystème Krizaka.
 
-Elle a été conçue selon deux principes cardinaux :
+Elle a été conçue pour briser les codes du "vibe coding" standard en proposant des textures cinétiques authentiques, une physique différentielle réelle et des palettes minérales architecturales :
 1. **La règle « Krizaka UI d'abord »** : Les animations s'intègrent directement dans le système de mouvement commun de `@krizaka/ui` (`@krizaka/ui/motion`, `MotionObserver`). Pas de boucle RAF concurrente : les animations respectent `html[data-motion="ready"]`, se mettent en pause instantanément hors écran (`[data-offscreen]`) et basculent sur un rendu statique soigné sous `prefers-reduced-motion: reduce`.
-2. **Portabilité Totale (React & React Native)** : Moteurs mathématiques découplés du DOM, légers (zéro dépendance lourde 3D externe type Three.js géant), exécutant des calculs de flux en Canvas 2D/WebGL natif à 60-120 FPS sur Web (Next.js) et Mobile (React Native Skia & WebView).
+2. **Physique Différentielle du Second Ordre (`SpringSolver`)** : Élimination des courbes `ease` linéaires ou cubiques simplistes au profit de véritables équations physiques d'inertie, de rebond élastique et d'amortissement critique.
+3. **Portabilité Totale (React & React Native)** : Moteurs mathématiques découplés du DOM, légers (zéro dépendance lourde 3D externe), exécutant des calculs de flux en Canvas 2D/WebGL natif à 60-120 FPS sur Web (Next.js) et Mobile (React Native Skia & WebView).
 
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│                          ÉCOSYSTÈME KRIZAKA                            │
-├─────────────────────────┬─────────────────────────┬────────────────────┤
-│   ORAZAKA NEURAL FLOW   │  YORORIS ACOUSTIC ORB   │ JARVIS HOLOGRAPHIC │
-│ (krizaka.com/foundation)│   (dev.yororis.com)     │  (Iron Man Mark 85)│
-├─────────────────────────┴─────────────────────────┴────────────────────┤
-│          @krizaka/motion CORE (Physics, Bezier, Perlin, Audio)         │
-├────────────────────────────────────────────────────────────────────────┤
-│           @krizaka/ui (Tokens, MotionObserver, Design System)          │
-└────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                   ÉCOSYSTÈME KRIZAKA                                       │
+├─────────────────────┬─────────────────────┬────────────────────┬───────────────────────────┤
+│ ORAZAKA NEURAL FLOW │ YORORIS VOICE ORB   │ JARVIS HOLOGRAPHIC │ LIQUID CHROMATIC CAUSTICS │
+│  (krizaka.com/core) │  (dev.yororis.com)  │  (Iron Man Mark 85)│      (Spatial UX)         │
+├─────────────────────┴─────────────────────┴────────────────────┴───────────────────────────┤
+│             @krizaka/motion CORE (Second-Order Springs, Bezier, Perlin, Snell, Audio)      │
+├────────────────────────────────────────────────────────────────────────────────────────────┤
+│                    @krizaka/ui (Tokens, MotionObserver, Design System)                     │
+└────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 2. Les Trois Composants Majeurs
+## 2. Les Composants Majeurs
 
 ### 2.1 Orazaka Neural Convergence Flow (`<OrazakaEngineFlow />`)
 *Remplacement direct de l'animation SVG actuelle sur [krizaka.com](https://krizaka.com) (`ProductVisuals.tsx`)*.
 
-- **Flux Quantique Multicanal** : Relie les 6 produits Krizaka (Yomizaka, Orochia, Kachizaka, Akinaza, Yasakia, Yororis) au réacteur central Orazaka via des trajectoires de Bézier cubiques fluides.
-- **Physique Particulaire & Absorption** : Des photons de requêtes AI voyagent le long des canaux, pénètrent le cœur Orazaka et déclenchent des ondes de choc concentriques avec rebond élastique physique.
-- **Interactivité & Télémétrie** : Survoler une source isole son pipeline, affiche la latence simulée (`req_id`, `12ms`, `tokens/s`), et le champ magnétique réagit au curseur de la souris.
-- **Totalement Responsive** : S'adapte instantanément du mobile 320px au grand écran 4K sans saut de mise en page (CLS 0).
+- **Direction & Topologie Paramétrables** :
+  - `direction="left-to-right"` : Sources à gauche, Orazaka à droite (Standard Krizaka).
+  - `direction="right-to-left"` : Sources à droite, Orazaka à gauche.
+  - `direction="top-to-bottom"` : Sources en haut, Orazaka en bas.
+  - `direction="radial"` : Sources disposées en couronne circulaire orbitant autour d'Orazaka.
+- **Routage Bi-directionnel des Requêtes (`flowMode`)** :
+  - `inbound` : Requêtes des produits vers Orazaka.
+  - `outbound` : Inférences et réponses envoyées aux produits.
+  - `bidirectional` : Requêtes et flux de retours simultanés avec colorimétrie différentielle.
+- **Icônes et Libellés Personnalisables** :
+  - Chaque nœud peut porter son icône vectorielle (`doc`, `video`, `chart`, `calendar`, `chat`, `voice`, `brain`, `cpu`, `shield`, `zap`).
+  - Libellés et sous-titres configurables (`nodeConfigs`), éditables en direct via l'inspecteur interactif.
+- **Styles de Particules & Conduits** :
+  - `particleStyle` : `photons` (sphères luminescentes), `data-blocks` (paquets hexadécimaux `0x9F`), `beams` (faisceaux lasers).
+  - `conduitStyle` : `smooth-bezier` (courbes S fluides), `straight` (lignes laser), `cyber-grid` (traces PCB à 90°).
 
 ```tsx
 import { OrazakaEngineFlow } from "@krizaka/motion";
 
-// Remplacement drop-in dans krizaka-com/app/components/home/visuals/ProductVisuals.tsx
 export function Engine({ playing }: { playing: boolean }) {
   return (
     <OrazakaEngineFlow
       playing={playing}
-      interactive
+      direction="left-to-right"
+      flowMode="bidirectional"
+      particleStyle="photons"
+      conduitStyle="smooth-bezier"
       showTelemetry
       particleDensity={1.2}
       className="pv-engine-nextgen"
@@ -104,7 +119,7 @@ import { JarvisHUD } from "@krizaka/motion";
 export function IronManCore() {
   return (
     <JarvisHUD
-      theme="cyan" // "cyan" | "orazaka" | "yororis" | "crimson" | "gold"
+      theme="cyan"
       interactive3D={true}
       overdrive={false}
       rotationSpeed={1.0}
@@ -113,6 +128,27 @@ export function IronManCore() {
   );
 }
 ```
+
+---
+
+### 2.4 Caustiques Fluides & Réfraction Chromatique (`<LiquidCausticsView />`)
+*Design spatial tactile inspiré de la réfraction optique physique (loi de Snell-Descartes)*.
+
+- **Dispersion de Longueur d'Onde** : Séparation chromatique RGB naturelle le long des crêtes de fluides (`IOR: 1.51 - 1.53`).
+- **Amortissement Visqueux de Navier-Stokes** : Ondulations réactives au curseur et aux clics avec tension de surface.
+- **Palettes Minérales Architecturales** :
+  - *Obsidian Titanium* : Encres minérales sombres, titane brut et éclats d'ambre bioluminescent.
+  - *Prussian Mineral* : Bleu prussien profond, blanc sel et reflets émeraude.
+  - *Yororis Quartz* : Quartz sableux, sauge et pierre de rivière.
+  - *Bioluminescent Amber* : Braises ambrées et plasma chaud.
+
+---
+
+### 2.5 Maillage Synaptique Quantique (`<NeuralLatticeView />`)
+*Visualisation des connexions cognitives d'Orazaka et Yororis*.
+
+- Topologie dynamique Delaunay & K-NN avec propagation d'impulsions (potentiels d'action).
+- Champ d'excitation magnétique réactif au curseur de souris.
 
 ---
 
@@ -137,7 +173,10 @@ import { WebView } from "react-native-webview";
 import { generateNativeWebViewHTML } from "@krizaka/motion/native";
 
 export function MobileOrazakaEngine() {
-  const html = generateNativeWebViewHTML("engine", { playing: true });
+  const html = generateNativeWebViewHTML("engine", { 
+    direction: "left-to-right",
+    flowMode: "bidirectional" 
+  });
   return (
     <View style={styles.container}>
       <WebView
@@ -163,7 +202,7 @@ Toutes les structures de données (`src/core/types.ts`) fournissent des coordonn
 
 ## 5. Démarrage de la Démo Interactive Locale
 
-Pour lancer le banc d'essai interactif complet avec les trois animations en temps réel :
+Pour lancer le banc d'essai interactif complet avec toutes les animations en temps réel :
 
 ```bash
 # Dans le dossier products/krizaka-motion
@@ -171,13 +210,14 @@ pnpm install
 pnpm run dev
 ```
 
-L'application de démo s'ouvre sur `http://localhost:5173` avec les commandes interactives, les curseurs de densité, les thèmes de Jarvis, le drone sonore de Yororis et le compteur d'images par seconde (FPS).
+L'application de démo s'ouvre sur `http://localhost:5173` avec les commandes interactives, les sélecteurs de direction, le configurateur d'icônes et libellés, les thèmes de Jarvis, les caustiques de verre liquide, le drone sonore de Yororis et le compteur d'images par seconde (FPS).
 
 ---
 
-## 6. Scripts Disponibles
+## 6. Scripts & Tests Unitaires
 
 - `pnpm run dev` : Lance le serveur de développement Vite avec l'application de démonstration.
+- `pnpm run test` : Exécute la suite de tests unitaires (solveur de ressorts physiques, calculs de Bézier, validation des tokens de couleurs).
 - `pnpm run build` : Compile la bibliothèque (`dist/`), les types TypeScript (`.d.ts`), et l'application démo (`dist-demo/`).
 - `pnpm run typecheck` : Vérifie la rigueur du typage TypeScript sans émettre de fichiers.
 - `pnpm run preview` : Prévisualise le build de production localement.

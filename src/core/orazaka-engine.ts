@@ -1,42 +1,60 @@
 /**
- * @krizaka/motion — Orazaka Engine Canvas & Particle System
- * Next-level responsive neural pipeline simulation connecting all Krizaka products.
+ * @krizaka/motion — Orazaka Engine Canvas & Particle System (V2 Next-Level)
+ * Supports multiple flow directions, bi-directional routing, customizable vector icons,
+ * custom text labels, particle styles, and individual node inspection.
  * 100% self-contained in krizaka-motion.
  */
 
-import { ProductId, ProductSourceNode, Particle } from "./types";
+import {
+  ProductId,
+  ProductSourceNode,
+  Particle,
+  FlowDirection,
+  FlowMode,
+  ParticleStyle,
+  ConduitStyle,
+  IconType,
+  Point2D,
+} from "./types";
 import { PRODUCT_BRANDS } from "./color-palettes";
 
-const PRODUCT_LIST: ProductId[] = [
-  "yomizaka",
-  "orochia",
-  "kachizaka",
-  "akinaza",
-  "yasakia",
-  "yororis",
+const DEFAULT_PRODUCTS: Array<{ id: ProductId; name: string; subtitle: string; icon: IconType }> = [
+  { id: "yomizaka", name: "Yomizaka", subtitle: "Doc AI", icon: "doc" },
+  { id: "orochia", name: "Orochia", subtitle: "Video 4K", icon: "video" },
+  { id: "kachizaka", name: "Kachizaka", subtitle: "Points", icon: "chart" },
+  { id: "akinaza", name: "Akinaza", subtitle: "Fiscal/Agenda", icon: "calendar" },
+  { id: "yasakia", name: "Yasakia", subtitle: "Chat/Social", icon: "chat" },
+  { id: "yororis", name: "Yororis", subtitle: "Espace Vocal", icon: "voice" },
 ];
 
 export interface OrazakaEngineOptions {
+  direction?: FlowDirection;
+  flowMode?: FlowMode;
+  particleStyle?: ParticleStyle;
+  conduitStyle?: ConduitStyle;
   interactive?: boolean;
   showTelemetry?: boolean;
-  particleDensity?: number; // 0.5 to 2.0
+  showLabels?: boolean;
+  particleDensity?: number;
   speedMultiplier?: number;
   highlightedSource?: ProductId | null;
+  nodeConfigs?: Partial<Record<ProductId, Partial<ProductSourceNode>>>;
   onSelectSource?: (sourceId: ProductId | null) => void;
+  onNodeClick?: (node: ProductSourceNode) => void;
 }
 
 export class OrazakaEngineRenderer {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
   private options: OrazakaEngineOptions;
-  private width = 400;
-  private height = 200;
+  private width = 600;
+  private height = 350;
   private dpr = 1;
 
   private sources: ProductSourceNode[] = [];
   private coreX = 0;
   private coreY = 0;
-  private coreRadius = 26;
+  private coreRadius = 28;
   private corePulse = 0;
   private shockwaves: Array<{ radius: number; maxRadius: number; alpha: number; color: string }> = [];
 
@@ -55,20 +73,31 @@ export class OrazakaEngineRenderer {
     const context = canvas.getContext("2d", { alpha: true });
     if (!context) throw new Error("Could not get 2d context");
     this.ctx = context;
+
     this.options = {
+      direction: "left-to-right",
+      flowMode: "inbound",
+      particleStyle: "photons",
+      conduitStyle: "smooth-bezier",
       interactive: true,
       showTelemetry: true,
+      showLabels: true,
       particleDensity: 1.0,
       speedMultiplier: 1.0,
       ...options,
     };
 
-    this.initLayout(canvas.clientWidth || 400, canvas.clientHeight || 200, window.devicePixelRatio || 1);
+    this.initLayout(canvas.clientWidth || 600, canvas.clientHeight || 350, window.devicePixelRatio || 1);
     this.setupEvents();
   }
 
   public setOptions(options: Partial<OrazakaEngineOptions>): void {
+    const directionChanged = options.direction && options.direction !== this.options.direction;
     this.options = { ...this.options, ...options };
+
+    if (directionChanged || options.nodeConfigs) {
+      this.initLayout(this.width, this.height, this.dpr);
+    }
   }
 
   public setDimensions(width: number, height: number, dpr: number): void {
@@ -80,34 +109,75 @@ export class OrazakaEngineRenderer {
     this.height = h;
     this.dpr = dpr;
 
-    const isCompact = w < 480;
+    const dir = this.options.direction || "left-to-right";
+    const nodeCount = DEFAULT_PRODUCTS.length;
 
-    // Layout source nodes on the left side
-    const sourceX = isCompact ? 28 : Math.max(34, w * 0.08);
-    const topMargin = isCompact ? 16 : 22;
-    const bottomMargin = isCompact ? 16 : 22;
-    const availableHeight = h - topMargin - bottomMargin;
-    const stepY = availableHeight / (PRODUCT_LIST.length - 1);
+    // Build or update source nodes
+    this.sources = DEFAULT_PRODUCTS.map((def, index) => {
+      const brand = PRODUCT_BRANDS[def.id];
+      const custom = this.options.nodeConfigs?.[def.id];
 
-    this.sources = PRODUCT_LIST.map((id, index) => {
-      const brand = PRODUCT_BRANDS[id];
+      let x = 0;
+      let y = 0;
+
+      if (dir === "left-to-right") {
+        const sourceX = Math.max(48, w * 0.12);
+        const topMargin = 30;
+        const availableHeight = h - topMargin * 2;
+        const stepY = availableHeight / (nodeCount - 1);
+
+        x = sourceX;
+        y = topMargin + index * stepY;
+        this.coreX = w - Math.max(54, w * 0.14);
+        this.coreY = h / 2;
+      } else if (dir === "right-to-left") {
+        const sourceX = w - Math.max(48, w * 0.12);
+        const topMargin = 30;
+        const availableHeight = h - topMargin * 2;
+        const stepY = availableHeight / (nodeCount - 1);
+
+        x = sourceX;
+        y = topMargin + index * stepY;
+        this.coreX = Math.max(54, w * 0.14);
+        this.coreY = h / 2;
+      } else if (dir === "top-to-bottom") {
+        const sourceY = Math.max(45, h * 0.14);
+        const leftMargin = 40;
+        const availableWidth = w - leftMargin * 2;
+        const stepX = availableWidth / (nodeCount - 1);
+
+        x = leftMargin + index * stepX;
+        y = sourceY;
+        this.coreX = w / 2;
+        this.coreY = h - Math.max(50, h * 0.18);
+      } else if (dir === "radial") {
+        this.coreX = w / 2;
+        this.coreY = h / 2;
+        const radius = Math.min(w, h) * 0.38;
+        const angleStep = (Math.PI * 2) / nodeCount;
+        const angle = index * angleStep - Math.PI / 2;
+
+        x = this.coreX + Math.cos(angle) * radius;
+        y = this.coreY + Math.sin(angle) * radius;
+      }
+
       return {
-        id,
-        name: brand.name,
-        x: sourceX,
-        y: topMargin + index * stepY,
-        color: brand.primary,
+        id: def.id,
+        name: custom?.name ?? def.name,
+        subtitle: custom?.subtitle ?? def.subtitle,
+        iconType: custom?.iconType ?? def.icon,
+        x,
+        y,
+        color: custom?.color ?? brand.primary,
         accent: brand.secondary,
-        status: "streaming",
-        packetRate: 1.2 + Math.sin(index) * 0.4,
-        activeRequests: 12 + Math.floor(Math.random() * 25),
+        status: custom?.status ?? "streaming",
+        enabled: custom?.enabled ?? true,
+        packetRate: custom?.packetRate ?? (1.0 + Math.sin(index) * 0.3),
+        activeRequests: 14 + index * 4,
       };
     });
 
-    // Orazaka core on the right
-    this.coreX = isCompact ? w - 36 : w - Math.max(50, w * 0.12);
-    this.coreY = h / 2;
-    this.coreRadius = isCompact ? 20 : 28;
+    this.coreRadius = Math.min(w, h) * 0.08 + 14;
   }
 
   private setupEvents(): void {
@@ -119,12 +189,12 @@ export class OrazakaEngineRenderer {
       this.mouseY = e.clientY - rect.top;
       this.isHovered = true;
 
-      // Check if hovering over a source node
       let found: ProductId | null = null;
       for (const src of this.sources) {
+        if (!src.enabled) continue;
         const dx = this.mouseX - src.x;
         const dy = this.mouseY - src.y;
-        if (dx * dx + dy * dy < 20 * 20) {
+        if (dx * dx + dy * dy < 22 * 22) {
           found = src.id;
           break;
         }
@@ -132,6 +202,23 @@ export class OrazakaEngineRenderer {
       this.hoveredSourceId = found;
       if (this.options.onSelectSource) {
         this.options.onSelectSource(found);
+      }
+    });
+
+    this.canvas.addEventListener("click", (e) => {
+      const rect = this.canvas.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const clickY = e.clientY - rect.top;
+
+      for (const src of this.sources) {
+        const dx = clickX - src.x;
+        const dy = clickY - src.y;
+        if (dx * dx + dy * dy < 24 * 24) {
+          if (this.options.onNodeClick) {
+            this.options.onNodeClick(src);
+          }
+          break;
+        }
       }
     });
 
@@ -146,30 +233,32 @@ export class OrazakaEngineRenderer {
     });
   }
 
-  public emitPacket(sourceIndex: number): void {
+  public emitPacket(sourceIndex: number, isOutbound = false): void {
     const src = this.sources[sourceIndex];
-    if (!src) return;
+    if (!src || !src.enabled) return;
 
     const brand = PRODUCT_BRANDS[src.id];
-    const speed = (0.28 + Math.random() * 0.18) * (this.options.speedMultiplier || 1);
+    const speed = (0.3 + Math.random() * 0.2) * (this.options.speedMultiplier || 1);
 
     this.particles.push({
       id: this.nextParticleId++,
       sourceId: src.id,
-      x: src.x,
-      y: src.y,
+      x: isOutbound ? this.coreX : src.x,
+      y: isOutbound ? this.coreY : src.y,
       vx: 0,
       vy: 0,
       progress: 0,
       speed,
-      size: 2.2 + Math.random() * 1.8,
-      alpha: 0.9,
-      color: brand.primary,
-      glowColor: brand.glow,
+      size: 2.4 + Math.random() * 1.8,
+      alpha: 0.95,
+      color: isOutbound ? "#38bdf8" : src.color,
+      glowColor: isOutbound ? "rgba(56, 189, 248, 0.5)" : brand.glow,
+      isOutbound,
       dataPayload: {
-        requestId: `req_${Math.random().toString(16).substring(2, 7)}`,
-        latencyMs: Math.round(6 + Math.random() * 12),
-        tokens: Math.round(180 + Math.random() * 400),
+        requestId: `0x${Math.random().toString(16).substring(2, 6)}`,
+        latencyMs: Math.round(5 + Math.random() * 14),
+        tokens: Math.round(150 + Math.random() * 320),
+        label: src.name.substring(0, 3).toUpperCase(),
       },
     });
   }
@@ -183,19 +272,19 @@ export class OrazakaEngineRenderer {
     ctx.scale(dpr, dpr);
     ctx.clearRect(0, 0, this.width, this.height);
 
-    // 1. Draw connecting neural pathways (Cubic Bezier curves)
+    // 1. Draw connecting conduits
     this.drawConduits(ctx);
 
     // 2. Spawn and update particles
     this.updateParticles(deltaTime);
 
-    // 3. Draw particles with bloom / glow
+    // 3. Draw particles
     this.drawParticles(ctx);
 
     // 4. Update and draw Orazaka Core reactor
     this.drawCore(ctx, deltaTime);
 
-    // 5. Draw Product Source Nodes
+    // 5. Draw Product Source Nodes & Icons
     this.drawSources(ctx);
 
     // 6. Draw telemetry overlay if enabled
@@ -206,106 +295,147 @@ export class OrazakaEngineRenderer {
     ctx.restore();
   }
 
+  private getConduitPoints(src: ProductSourceNode): { p0: Point2D; p1: Point2D; p2: Point2D; p3: Point2D } {
+    const dir = this.options.direction || "left-to-right";
+    const p0: Point2D = { x: src.x, y: src.y };
+    const p3: Point2D = { x: this.coreX, y: this.coreY };
+
+    let p1: Point2D;
+    let p2: Point2D;
+
+    if (dir === "left-to-right") {
+      const dx = p3.x - p0.x;
+      p1 = { x: p0.x + dx * 0.45, y: p0.y };
+      p2 = { x: p0.x + dx * 0.75, y: p3.y + (src.y - this.coreY) * 0.15 };
+    } else if (dir === "right-to-left") {
+      const dx = p3.x - p0.x;
+      p1 = { x: p0.x + dx * 0.45, y: p0.y };
+      p2 = { x: p0.x + dx * 0.75, y: p3.y + (src.y - this.coreY) * 0.15 };
+    } else if (dir === "top-to-bottom") {
+      const dy = p3.y - p0.y;
+      p1 = { x: p0.x, y: p0.y + dy * 0.45 };
+      p2 = { x: p3.x + (src.x - this.coreX) * 0.15, y: p0.y + dy * 0.75 };
+    } else {
+      // Radial
+      const mx = (p0.x + p3.x) / 2;
+      const my = (p0.y + p3.y) / 2;
+      p1 = { x: mx, y: my };
+      p2 = { x: mx, y: my };
+    }
+
+    return { p0, p1, p2, p3 };
+  }
+
   private drawConduits(ctx: CanvasRenderingContext2D): void {
     const activeTarget = this.options.highlightedSource || this.hoveredSourceId;
+    const style = this.options.conduitStyle || "smooth-bezier";
 
-    for (let i = 0; i < this.sources.length; i++) {
-      const src = this.sources[i];
+    for (const src of this.sources) {
+      if (!src.enabled) continue;
+
       const isTargeted = activeTarget === src.id;
       const isDimmed = activeTarget !== null && !isTargeted;
+      const { p0, p1, p2, p3 } = this.getConduitPoints(src);
 
-      const p0 = { x: src.x + 8, y: src.y };
-      const p3 = { x: this.coreX - this.coreRadius * 0.8, y: this.coreY };
-
-      // Bezier control points create graceful S-curve convergence
-      const dx = p3.x - p0.x;
-      const p1 = { x: p0.x + dx * 0.45, y: p0.y };
-      const p2 = { x: p0.x + dx * 0.75, y: p3.y + (src.y - this.coreY) * 0.15 };
-
-      // Background conduit trace (ambient filament)
+      ctx.save();
       ctx.beginPath();
       ctx.moveTo(p0.x, p0.y);
-      ctx.bezierCurveTo(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
 
-      ctx.lineWidth = isTargeted ? 2.4 : 1.2;
+      if (style === "straight" || this.options.direction === "radial") {
+        ctx.lineTo(p3.x, p3.y);
+      } else if (style === "cyber-grid") {
+        const midX = (p0.x + p3.x) / 2;
+        ctx.lineTo(midX, p0.y);
+        ctx.lineTo(midX, p3.y);
+        ctx.lineTo(p3.x, p3.y);
+      } else {
+        ctx.bezierCurveTo(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
+      }
+
+      ctx.lineWidth = isTargeted ? 2.6 : 1.2;
       ctx.strokeStyle = isTargeted
         ? src.color
         : isDimmed
         ? "rgba(255, 255, 255, 0.05)"
-        : "rgba(249, 115, 22, 0.18)";
+        : "rgba(249, 115, 22, 0.2)";
       ctx.setLineDash([4, 6]);
-      ctx.lineDashOffset = -this.time * 24;
+      ctx.lineDashOffset = -this.time * 26;
       ctx.stroke();
-      ctx.setLineDash([]);
 
-      // Subtle luminescence along conduit
       if (isTargeted) {
-        ctx.beginPath();
-        ctx.moveTo(p0.x, p0.y);
-        ctx.bezierCurveTo(p1.x, p1.y, p2.x, p2.y, p3.x, p3.y);
-        ctx.lineWidth = 6;
+        ctx.lineWidth = 8;
         ctx.strokeStyle = src.color;
-        ctx.globalAlpha = 0.2;
+        ctx.globalAlpha = 0.18;
         ctx.stroke();
-        ctx.globalAlpha = 1.0;
       }
+
+      ctx.restore();
     }
   }
 
   private updateParticles(deltaTime: number): void {
-    // Spawn probability per frame
     const density = this.options.particleDensity || 1.0;
-    const spawnChance = 0.35 * density;
+    const spawnChance = 0.4 * density;
+    const flowMode = this.options.flowMode || "inbound";
 
     if (Math.random() < spawnChance) {
-      const randomSource = Math.floor(Math.random() * this.sources.length);
-      this.emitPacket(randomSource);
+      const activeSources = this.sources.filter((s) => s.enabled);
+      if (activeSources.length > 0) {
+        const randomSource = Math.floor(Math.random() * this.sources.length);
+        if (flowMode === "inbound" || (flowMode === "bidirectional" && Math.random() < 0.6)) {
+          this.emitPacket(randomSource, false);
+        } else {
+          this.emitPacket(randomSource, true);
+        }
+      }
     }
 
-    // Move existing particles along Bezier curves
     const kept: Particle[] = [];
     for (const p of this.particles) {
       p.progress += p.speed * deltaTime;
 
       if (p.progress >= 1) {
-        // Reached Orazaka core: trigger absorption shockwave
-        this.corePulse = Math.min(this.corePulse + 0.18, 1.2);
-        this.totalRequests++;
+        if (!p.isOutbound) {
+          this.corePulse = Math.min(this.corePulse + 0.18, 1.2);
+          this.totalRequests++;
 
-        if (this.shockwaves.length < 5 && Math.random() < 0.4) {
-          this.shockwaves.push({
-            radius: this.coreRadius * 0.8,
-            maxRadius: this.coreRadius * 2.8,
-            alpha: 0.65,
-            color: p.color,
-          });
+          if (this.shockwaves.length < 6 && Math.random() < 0.4) {
+            this.shockwaves.push({
+              radius: this.coreRadius * 0.7,
+              maxRadius: this.coreRadius * 2.6,
+              alpha: 0.7,
+              color: p.color,
+            });
+          }
         }
         continue;
       }
 
-      // Calculate position along cubic bezier
       const src = this.sources.find((s) => s.id === p.sourceId);
       if (src) {
-        const p0 = { x: src.x + 8, y: src.y };
-        const p3 = { x: this.coreX - this.coreRadius * 0.7, y: this.coreY };
-        const dx = p3.x - p0.x;
-        const p1 = { x: p0.x + dx * 0.45, y: p0.y };
-        const p2 = { x: p0.x + dx * 0.75, y: p3.y + (src.y - this.coreY) * 0.15 };
+        const { p0, p1, p2, p3 } = this.getConduitPoints(src);
 
-        const t = p.progress;
+        // If outbound: start from core (p3) to source (p0)
+        const t = p.isOutbound ? 1 - p.progress : p.progress;
         const mt = 1 - t;
-        p.x = mt * mt * mt * p0.x + 3 * mt * mt * t * p1.x + 3 * mt * t * t * p2.x + t * t * t * p3.x;
-        p.y = mt * mt * mt * p0.y + 3 * mt * mt * t * p1.y + 3 * mt * t * t * p2.y + t * t * t * p3.y;
 
-        // Mouse magnetic attraction effect
+        if (this.options.conduitStyle === "straight" || this.options.direction === "radial") {
+          p.x = p0.x + (p3.x - p0.x) * t;
+          p.y = p0.y + (p3.y - p0.y) * t;
+        } else {
+          p.x = mt * mt * mt * p0.x + 3 * mt * mt * t * p1.x + 3 * mt * t * t * p2.x + t * t * t * p3.x;
+          p.y = mt * mt * mt * p0.y + 3 * mt * mt * t * p1.y + 3 * mt * t * t * p2.y + t * t * t * p3.y;
+        }
+
+        // Magnetic attraction to cursor
         if (this.isHovered) {
-          const dmx = this.mouseX - p.x;
-          const dmy = this.mouseY - p.y;
-          const distSq = dmx * dmx + dmy * dmy;
+          const dx = this.mouseX - p.x;
+          const dy = this.mouseY - p.y;
+          const distSq = dx * dx + dy * dy;
           if (distSq < 70 * 70 && distSq > 1) {
             const force = (1 - Math.sqrt(distSq) / 70) * 8;
-            p.x += (dmx / Math.sqrt(distSq)) * force;
-            p.y += (dmy / Math.sqrt(distSq)) * force;
+            p.x += (dx / Math.sqrt(distSq)) * force;
+            p.y += (dy / Math.sqrt(distSq)) * force;
           }
         }
       }
@@ -317,6 +447,7 @@ export class OrazakaEngineRenderer {
 
   private drawParticles(ctx: CanvasRenderingContext2D): void {
     const activeTarget = this.options.highlightedSource || this.hoveredSourceId;
+    const style = this.options.particleStyle || "photons";
 
     for (const p of this.particles) {
       const isTargeted = activeTarget === p.sourceId;
@@ -324,26 +455,43 @@ export class OrazakaEngineRenderer {
       const alpha = isDimmed ? 0.15 : isTargeted ? 1.0 : 0.85;
 
       ctx.save();
-      // Outer chromatic aura
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size * 2.2, 0, Math.PI * 2);
-      ctx.fillStyle = p.glowColor;
-      ctx.globalAlpha = alpha * 0.55;
-      ctx.fill();
 
-      // Core photon
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fillStyle = isTargeted ? "#ffffff" : p.color;
-      ctx.globalAlpha = alpha;
-      ctx.fill();
+      if (style === "data-blocks") {
+        // Hex byte data packet
+        ctx.fillStyle = isTargeted ? "#ffffff" : p.color;
+        ctx.font = "8px SF Mono, monospace";
+        ctx.globalAlpha = alpha;
+        ctx.fillText(p.dataPayload?.requestId || "0x9F", p.x - 10, p.y - 4);
+        ctx.fillRect(p.x - 2, p.y - 2, 5, 5);
+      } else if (style === "beams") {
+        // Elongated laser segment
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 1.8, 0, Math.PI * 2);
+        ctx.fillStyle = p.glowColor;
+        ctx.globalAlpha = alpha * 0.4;
+        ctx.fill();
 
-      // Tail trailing
-      ctx.beginPath();
-      ctx.arc(p.x - 3 * (1 - p.progress), p.y, p.size * 0.6, 0, Math.PI * 2);
-      ctx.fillStyle = p.color;
-      ctx.globalAlpha = alpha * 0.4;
-      ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(p.x - 8, p.y);
+        ctx.lineTo(p.x + 8, p.y);
+        ctx.strokeStyle = p.color;
+        ctx.lineWidth = p.size;
+        ctx.globalAlpha = alpha;
+        ctx.stroke();
+      } else {
+        // Default glowing photons
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = p.glowColor;
+        ctx.globalAlpha = alpha * 0.55;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = isTargeted ? "#ffffff" : p.color;
+        ctx.globalAlpha = alpha;
+        ctx.fill();
+      }
 
       ctx.restore();
     }
@@ -352,15 +500,14 @@ export class OrazakaEngineRenderer {
   private drawCore(ctx: CanvasRenderingContext2D, deltaTime: number): void {
     const brand = PRODUCT_BRANDS.orazaka;
 
-    // Decay core pulse
     this.corePulse = Math.max(0, this.corePulse - deltaTime * 1.5);
-    const pulseScale = 1 + this.corePulse * 0.14 + Math.sin(this.time * 3) * 0.04;
+    const pulseScale = 1 + this.corePulse * 0.15 + Math.sin(this.time * 3) * 0.04;
     const currentRadius = this.coreRadius * pulseScale;
 
-    // 1. Draw shockwaves radiating outwards
+    // Shockwaves
     const aliveWaves: typeof this.shockwaves = [];
     for (const wave of this.shockwaves) {
-      wave.radius += deltaTime * 45;
+      wave.radius += deltaTime * 50;
       wave.alpha -= deltaTime * 0.85;
 
       if (wave.alpha > 0 && wave.radius < wave.maxRadius) {
@@ -377,66 +524,50 @@ export class OrazakaEngineRenderer {
     }
     this.shockwaves = aliveWaves;
 
-    // 2. Volumetric background bloom
+    // Ambient radial bloom
     const grad = ctx.createRadialGradient(
       this.coreX,
       this.coreY,
       2,
       this.coreX,
       this.coreY,
-      currentRadius * 2.5
+      currentRadius * 2.4
     );
-    grad.addColorStop(0, "rgba(249, 115, 22, 0.42)");
-    grad.addColorStop(0.5, "rgba(249, 115, 22, 0.12)");
+    grad.addColorStop(0, "rgba(249, 115, 22, 0.45)");
+    grad.addColorStop(0.5, "rgba(249, 115, 22, 0.14)");
     grad.addColorStop(1, "rgba(249, 115, 22, 0)");
 
     ctx.save();
     ctx.beginPath();
-    ctx.arc(this.coreX, this.coreY, currentRadius * 2.5, 0, Math.PI * 2);
+    ctx.arc(this.coreX, this.coreY, currentRadius * 2.4, 0, Math.PI * 2);
     ctx.fillStyle = grad;
     ctx.fill();
 
-    // 3. Rotating energy rings around Orazaka
+    // Rotating orbital ring
     ctx.save();
     ctx.translate(this.coreX, this.coreY);
     ctx.rotate(this.time * 0.8);
-
-    // Outer orbital ring
     ctx.beginPath();
     ctx.arc(0, 0, currentRadius * 1.25, 0, Math.PI * 2);
     ctx.strokeStyle = "rgba(249, 115, 22, 0.35)";
     ctx.setLineDash([8, 12]);
     ctx.lineWidth = 1.4;
     ctx.stroke();
-    ctx.setLineDash([]);
-
-    // Orbiting quantum satellites
-    for (let i = 0; i < 3; i++) {
-      const angle = (i * Math.PI * 2) / 3 + this.time * 1.2;
-      const ox = Math.cos(angle) * (currentRadius * 1.25);
-      const oy = Math.sin(angle) * (currentRadius * 1.25);
-      ctx.beginPath();
-      ctx.arc(ox, oy, 2.2, 0, Math.PI * 2);
-      ctx.fillStyle = "#ffedd5";
-      ctx.shadowColor = brand.primary;
-      ctx.shadowBlur = 6;
-      ctx.fill();
-    }
     ctx.restore();
 
-    // 4. Central Solid Reactor Body
+    // Core body
     ctx.beginPath();
     ctx.arc(this.coreX, this.coreY, currentRadius, 0, Math.PI * 2);
     ctx.fillStyle = "#120b06";
     ctx.strokeStyle = brand.primary;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 2.2;
     ctx.shadowColor = brand.primary;
-    ctx.shadowBlur = 12;
+    ctx.shadowBlur = 14;
     ctx.fill();
     ctx.stroke();
     ctx.shadowBlur = 0;
 
-    // 5. Stylized Orazaka Mark (Three converging nodes)
+    // Center Mark (converging nodes)
     this.drawOrazakaMark(ctx, this.coreX, this.coreY, currentRadius * 0.55);
 
     ctx.restore();
@@ -456,7 +587,6 @@ export class OrazakaEngineRenderer {
       ctx.fillStyle = brand.primary;
       ctx.fill();
 
-      // Connector to center
       ctx.beginPath();
       ctx.moveTo(cx, cy);
       ctx.lineTo(nx, ny);
@@ -465,7 +595,6 @@ export class OrazakaEngineRenderer {
       ctx.stroke();
     }
 
-    // Center node
     ctx.beginPath();
     ctx.arc(cx, cy, r * 0.85, 0, Math.PI * 2);
     ctx.fillStyle = "#ffffff";
@@ -474,43 +603,179 @@ export class OrazakaEngineRenderer {
 
   private drawSources(ctx: CanvasRenderingContext2D): void {
     const activeTarget = this.options.highlightedSource || this.hoveredSourceId;
+    const showLabels = this.options.showLabels !== false;
 
     for (const src of this.sources) {
+      if (!src.enabled) continue;
+
       const isTargeted = activeTarget === src.id;
       const isDimmed = activeTarget !== null && !isTargeted;
+      const alpha = isDimmed ? 0.35 : 1.0;
+      const nodeR = 14;
 
       ctx.save();
-      const alpha = isDimmed ? 0.35 : 1.0;
 
-      // Glow halo on hover
+      // Outer interactive halo
       if (isTargeted) {
         ctx.beginPath();
-        ctx.arc(src.x, src.y, 16, 0, Math.PI * 2);
+        ctx.arc(src.x, src.y, nodeR + 6, 0, Math.PI * 2);
         ctx.fillStyle = src.color;
         ctx.globalAlpha = 0.25;
         ctx.fill();
       }
 
-      // Outer ring
+      // Solid Node Body
       ctx.beginPath();
-      ctx.arc(src.x, src.y, 9, 0, Math.PI * 2);
+      ctx.arc(src.x, src.y, nodeR, 0, Math.PI * 2);
       ctx.fillStyle = "#0c0d0f";
       ctx.strokeStyle = isTargeted ? "#ffffff" : src.color;
       ctx.lineWidth = isTargeted ? 2.2 : 1.4;
       ctx.globalAlpha = alpha;
+      ctx.shadowColor = src.color;
+      ctx.shadowBlur = isTargeted ? 12 : 4;
       ctx.fill();
       ctx.stroke();
+      ctx.shadowBlur = 0;
 
-      // Center glowing pip
-      ctx.beginPath();
-      ctx.arc(src.x, src.y, 4, 0, Math.PI * 2);
-      ctx.fillStyle = src.color;
-      ctx.shadowColor = src.color;
-      ctx.shadowBlur = isTargeted ? 8 : 4;
-      ctx.fill();
+      // Draw vector icon inside node
+      this.drawVectorIcon(ctx, src.x, src.y, src.iconType, src.color, isTargeted ? "#ffffff" : src.color);
+
+      // Draw custom text labels & subtitle
+      if (showLabels) {
+        ctx.font = "bold 11px Inter, system-ui, sans-serif";
+        ctx.fillStyle = isTargeted ? "#ffffff" : "#f0f2f5";
+        ctx.globalAlpha = alpha;
+
+        const dir = this.options.direction || "left-to-right";
+        if (dir === "left-to-right") {
+          ctx.textAlign = "right";
+          ctx.fillText(src.name, src.x - 20, src.y - 1);
+          ctx.font = "9px SF Mono, monospace";
+          ctx.fillStyle = src.color;
+          ctx.fillText(src.subtitle, src.x - 20, src.y + 11);
+        } else if (dir === "right-to-left") {
+          ctx.textAlign = "left";
+          ctx.fillText(src.name, src.x + 20, src.y - 1);
+          ctx.font = "9px SF Mono, monospace";
+          ctx.fillStyle = src.color;
+          ctx.fillText(src.subtitle, src.x + 20, src.y + 11);
+        } else {
+          ctx.textAlign = "center";
+          ctx.fillText(src.name, src.x, src.y - 18);
+        }
+      }
 
       ctx.restore();
     }
+  }
+
+  private drawVectorIcon(
+    ctx: CanvasRenderingContext2D,
+    cx: number,
+    cy: number,
+    type: IconType,
+    primaryColor: string,
+    strokeColor: string
+  ): void {
+    ctx.save();
+    ctx.strokeStyle = strokeColor;
+    ctx.fillStyle = strokeColor;
+    ctx.lineWidth = 1.3;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    const s = 6;
+
+    if (type === "doc") {
+      // Document sheet with fold
+      ctx.beginPath();
+      ctx.rect(cx - s * 0.7, cy - s, s * 1.4, s * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(cx - s * 0.4, cy - s * 0.3);
+      ctx.lineTo(cx + s * 0.4, cy - s * 0.3);
+      ctx.moveTo(cx - s * 0.4, cy + s * 0.3);
+      ctx.lineTo(cx + s * 0.4, cy + s * 0.3);
+      ctx.stroke();
+    } else if (type === "video") {
+      // Play triangle
+      ctx.beginPath();
+      ctx.moveTo(cx - s * 0.5, cy - s * 0.7);
+      ctx.lineTo(cx + s * 0.8, cy);
+      ctx.lineTo(cx - s * 0.5, cy + s * 0.7);
+      ctx.closePath();
+      ctx.fill();
+    } else if (type === "chart") {
+      // Trendline / bars
+      ctx.beginPath();
+      ctx.moveTo(cx - s, cy + s * 0.6);
+      ctx.lineTo(cx - s * 0.3, cy - s * 0.2);
+      ctx.lineTo(cx + s * 0.3, cy + s * 0.2);
+      ctx.lineTo(cx + s, cy - s * 0.7);
+      ctx.stroke();
+    } else if (type === "calendar") {
+      // Calendar grid
+      ctx.beginPath();
+      ctx.rect(cx - s, cy - s * 0.7, s * 2, s * 1.6);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(cx - s, cy - s * 0.1);
+      ctx.lineTo(cx + s, cy - s * 0.1);
+      ctx.stroke();
+    } else if (type === "chat") {
+      // Message bubble
+      ctx.beginPath();
+      ctx.arc(cx, cy - 1, s * 0.9, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(cx - 2, cy + s * 0.7);
+      ctx.lineTo(cx - 6, cy + s * 1.1);
+      ctx.lineTo(cx + 1, cy + s * 0.8);
+      ctx.stroke();
+    } else if (type === "voice") {
+      // Waveform bars
+      for (let i = -2; i <= 2; i++) {
+        const barH = (3 - Math.abs(i)) * 2.8;
+        ctx.beginPath();
+        ctx.moveTo(cx + i * 2.5, cy - barH);
+        ctx.lineTo(cx + i * 2.5, cy + barH);
+        ctx.stroke();
+      }
+    } else if (type === "brain") {
+      // Brain hemispheres
+      ctx.beginPath();
+      ctx.arc(cx - 2, cy, 4, 0, Math.PI * 2);
+      ctx.arc(cx + 2, cy, 4, 0, Math.PI * 2);
+      ctx.stroke();
+    } else if (type === "zap") {
+      // Lightning bolt
+      ctx.beginPath();
+      ctx.moveTo(cx + 1, cy - s);
+      ctx.lineTo(cx - 3, cy);
+      ctx.lineTo(cx, cy);
+      ctx.lineTo(cx - 1, cy + s);
+      ctx.lineTo(cx + 3, cy - 1);
+      ctx.lineTo(cx, cy - 1);
+      ctx.closePath();
+      ctx.fill();
+    } else if (type === "shield") {
+      // Shield
+      ctx.beginPath();
+      ctx.moveTo(cx, cy - s);
+      ctx.lineTo(cx + s, cy - s * 0.5);
+      ctx.lineTo(cx, cy + s);
+      ctx.lineTo(cx - s, cy - s * 0.5);
+      ctx.closePath();
+      ctx.stroke();
+    } else {
+      // CPU
+      ctx.beginPath();
+      ctx.rect(cx - s * 0.8, cy - s * 0.8, s * 1.6, s * 1.6);
+      ctx.stroke();
+      ctx.fillRect(cx - 2, cy - 2, 4, 4);
+    }
+
+    ctx.restore();
   }
 
   private drawTelemetryOverlay(ctx: CanvasRenderingContext2D): void {
@@ -523,24 +788,22 @@ export class OrazakaEngineRenderer {
     if (activeTarget) {
       const src = this.sources.find((s) => s.id === activeTarget);
       if (src) {
-        // Source info chip
-        const text = `${src.name.toUpperCase()} → ORAZAKA · 12ms · 99.8%`;
-        ctx.fillStyle = "rgba(12, 13, 15, 0.85)";
+        const text = `${src.name.toUpperCase()} [${src.subtitle}] · 11ms · STREAM ACTIVE`;
+        ctx.fillStyle = "rgba(12, 13, 15, 0.88)";
         ctx.strokeStyle = src.color;
         ctx.lineWidth = 1;
         const textW = ctx.measureText(text).width;
-        ctx.roundRect(this.width / 2 - textW / 2 - 8, this.height - 24, textW + 16, 18, 4);
+        ctx.roundRect(this.width / 2 - textW / 2 - 10, this.height - 24, textW + 20, 20, 5);
         ctx.fill();
         ctx.stroke();
 
-        ctx.fillStyle = src.accent;
-        ctx.fillText(text, this.width / 2 - textW / 2, this.height - 15);
+        ctx.fillStyle = src.color;
+        ctx.fillText(text, this.width / 2 - textW / 2, this.height - 14);
       }
     } else {
-      // Compact overall stream stats
       ctx.fillStyle = "rgba(249, 115, 22, 0.65)";
-      const stats = `PIPELINE ACTIVE · ${this.totalRequests} REQ · 6 STREAMS`;
-      ctx.fillText(stats, 12, this.height - 10);
+      const stats = `ORAZAKA NEURAL ENGINE · ${this.totalRequests} REQ · 6 PIPELINES`;
+      ctx.fillText(stats, 12, this.height - 12);
     }
 
     ctx.restore();

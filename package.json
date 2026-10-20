@@ -51,6 +51,7 @@
     "build:types": "tsc -p tsconfig.build.json",
     "build:demo": "vite build --outDir dist-demo",
     "preview": "vite preview --outDir dist-demo",
+    "test": "node --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

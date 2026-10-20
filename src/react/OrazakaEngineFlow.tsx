@@ -3,34 +3,49 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { OrazakaEngineRenderer, type OrazakaEngineOptions } from "../core/orazaka-engine";
 import { MotionController } from "../core/motion-controller";
-import { type ProductId } from "../core/types";
+import {
+  type ProductId,
+  type FlowDirection,
+  type FlowMode,
+  type ParticleStyle,
+  type ConduitStyle,
+  type ProductSourceNode,
+} from "../core/types";
 
 export interface OrazakaEngineFlowProps {
-  /**
-   * Conforms to @krizaka/ui/motion governance:
-   * Whether the animation is playing (e.g. hovered on fine pointer, active on touch).
-   * Pauses cleanly under prefers-reduced-motion or when offscreen.
-   * @default true
-   */
   playing?: boolean;
+  direction?: FlowDirection;
+  flowMode?: FlowMode;
+  particleStyle?: ParticleStyle;
+  conduitStyle?: ConduitStyle;
   interactive?: boolean;
   showTelemetry?: boolean;
+  showLabels?: boolean;
   particleDensity?: number;
   speedMultiplier?: number;
   highlightedSource?: ProductId | null;
+  nodeConfigs?: Partial<Record<ProductId, Partial<ProductSourceNode>>>;
   onSelectSource?: (sourceId: ProductId | null) => void;
+  onNodeClick?: (node: ProductSourceNode) => void;
   className?: string;
   style?: CSSProperties;
 }
 
 export function OrazakaEngineFlow({
   playing = true,
+  direction = "left-to-right",
+  flowMode = "inbound",
+  particleStyle = "photons",
+  conduitStyle = "smooth-bezier",
   interactive = true,
   showTelemetry = true,
+  showLabels = true,
   particleDensity = 1.0,
   speedMultiplier = 1.0,
   highlightedSource = null,
+  nodeConfigs,
   onSelectSource,
+  onNodeClick,
   className = "",
   style,
 }: OrazakaEngineFlowProps) {
@@ -43,21 +58,26 @@ export function OrazakaEngineFlow({
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Instantiate high-performance physics renderer
     const renderer = new OrazakaEngineRenderer(canvas, {
+      direction,
+      flowMode,
+      particleStyle,
+      conduitStyle,
       interactive,
       showTelemetry,
+      showLabels,
       particleDensity,
       speedMultiplier,
       highlightedSource: selectedSource,
+      nodeConfigs,
       onSelectSource: (src) => {
         setSelectedSource(src);
         if (onSelectSource) onSelectSource(src);
       },
+      onNodeClick,
     });
     rendererRef.current = renderer;
 
-    // Connect to @krizaka/ui/motion conductor loop
     const controller = new MotionController({
       canvas,
       playing,
@@ -82,14 +102,34 @@ export function OrazakaEngineFlow({
   useEffect(() => {
     if (rendererRef.current) {
       rendererRef.current.setOptions({
+        direction,
+        flowMode,
+        particleStyle,
+        conduitStyle,
         interactive,
         showTelemetry,
+        showLabels,
         particleDensity,
         speedMultiplier,
         highlightedSource: selectedSource,
+        nodeConfigs,
+        onNodeClick,
       });
     }
-  }, [interactive, showTelemetry, particleDensity, speedMultiplier, selectedSource]);
+  }, [
+    direction,
+    flowMode,
+    particleStyle,
+    conduitStyle,
+    interactive,
+    showTelemetry,
+    showLabels,
+    particleDensity,
+    speedMultiplier,
+    selectedSource,
+    nodeConfigs,
+    onNodeClick,
+  ]);
 
   // Synchronize playing state with @krizaka/ui motion system
   useEffect(() => {
