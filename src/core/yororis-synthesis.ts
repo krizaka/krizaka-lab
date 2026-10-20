@@ -549,21 +549,21 @@ export class YororisAcousticRenderer {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
-    let label = "YORORIS · ECOUTE ACTIVE";
+    let label = "LISTENING";
     if (this.isMicActive) {
-      label = "MICROPHONE CONNECTE · ECOUTE EN TEMPS REEL";
+      label = "MICROPHONE ON · LISTENING";
     } else if (this.state === "speaking") {
-      label = "YORORIS · PRESENCE VOCALE (LÉA)";
+      label = "SPEAKING";
     } else if (this.state === "breathing") {
-      let breathPhase = "INSPIRER (4s)";
+      let breathPhase = "INHALE (4s)";
       if (this.breathingTimer >= 4 && this.breathingTimer < 11) {
-        breathPhase = "RETENIR (7s)";
+        breathPhase = "HOLD (7s)";
       } else if (this.breathingTimer >= 11) {
-        breathPhase = "EXPIRER (8s)";
+        breathPhase = "EXHALE (8s)";
       }
-      label = `PACER 4-7-8 · ${breathPhase}`;
+      label = `4-7-8 BREATHING · ${breathPhase}`;
     } else if (this.state === "reflecting") {
-      label = "YORORIS · REFLEXION CLINIQUEMENT ENCADREE";
+      label = "REFLECTING";
     }
 
     ctx.fillStyle = "rgba(184, 197, 185, 0.8)";

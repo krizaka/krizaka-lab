@@ -1,13 +1,22 @@
 <!DOCTYPE html>
-<html lang="fr" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23f97316'/><circle cx='50' cy='50' r='20' fill='%2308090a'/></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Krizaka Motion — Generative Canvas & Visual Synthesis</title>
-    <meta name="description" content="Next-generation responsive animations, 3D generative canvas & Jarvis Holographic HUD for the Krizaka ecosystem" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>Krizaka Motion — the lab</title>
+    <meta name="description" content="Krizaka Motion, the lab: generative visuals played live — an engine's flow, a voice's presence, light through glass. What proves itself moves into Krizaka UI." />
+    <!-- The theme before the first paint (the choice kept as kz-theme, else the system's): never a flash. -->
+    <script>
+      try {
+        var m = localStorage.getItem("kz-theme") || "system";
+        var light = m === "light" || (m === "system" && matchMedia("(prefers-color-scheme: light)").matches);
+        document.documentElement.classList.toggle("light", light);
+        document.documentElement.classList.toggle("dark", !light);
+      } catch (e) {}
+    </script>
   </head>
-  <body class="bg-[#08090a] text-[#f0f2f5] antialiased selection:bg-orange-500/30">
+  <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

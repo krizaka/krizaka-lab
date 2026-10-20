@@ -8,21 +8,21 @@ importers:
 
   .:
     dependencies:
+      '@krizaka/fonts':
+        specifier: ^0.2.1
+        version: 0.2.1
       '@krizaka/icons':
         specifier: ^0.6.0
         version: 0.6.0(react@19.3.1)
+      '@krizaka/tailwind':
+        specifier: ^3.27.0
+        version: 3.27.0(@krizaka/tokens@3.27.0)(@krizaka/ui@3.27.0)(tailwindcss@4.3.3)
       '@krizaka/tokens':
-        specifier: ^3.26.0
-        version: 3.26.0
+        specifier: ^3.27.0
+        version: 3.27.0
       '@krizaka/ui':
-        specifier: ^3.26.0
-        version: 3.26.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.3)
-      clsx:
-        specifier: ^2.1.1
-        version: 2.1.1
-      lucide-react:
-        specifier: ^1.16.0
-        version: 1.59.0(@types/react@19.3.0)(react@19.3.1)
+        specifier: ^3.27.0
+        version: 3.27.0(@krizaka/tailwind@3.27.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.3)
     devDependencies:
       '@tailwindcss/vite':
         specifier: ^4.0.0
@@ -36,6 +36,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^4.3.4
         version: 4.7.0(vite@6.4.4(jiti@2.7.0)(lightningcss@1.32.0))
+      playwright:
+        specifier: 1.60.0
+        version: 1.60.0
       react:
         specifier: ^19.0.0
         version: 19.3.1
@@ -324,6 +327,10 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
+  '@krizaka/fonts@0.2.1':
+    resolution: {integrity: sha512-bU/+5zn27g6BWtAQh0N1de/zbcpTJRGFuy+Bvp6CL7M+7SBNfnJ98czZUP81YTAKqApNlKtm3pVf5rMFI7fpyA==}
+    engines: {node: '>=22'}
+
   '@krizaka/icons@0.6.0':
     resolution: {integrity: sha512-p6k8IJWvbSbehguKkMAye/9+ltBvzj2vSVZX1Ds3l9F5/gFSo6++7r3uDGRnrcjUt3kfRBXK8CLSc5hV8qfjag==}
     engines: {node: '>=22'}
@@ -347,16 +354,24 @@ packages:
       react:
         optional: true
 
-  '@krizaka/tokens@3.26.0':
-    resolution: {integrity: sha512-c//DLfWilv8czxH8Y//XyfgEY1m/aw7i5keNf7H1YC1MyHWfjSletcCZwHIcf2tVXd7F7oz4Xo6iZOP77erwiw==}
+  '@krizaka/tailwind@3.27.0':
+    resolution: {integrity: sha512-Woqi1mbuZpi93iGr7gTjacXyuWw8A+5DIugX7mri8FAYwPzbreHtfKQPs0Qrq27gNNFBXRJs+9Jur5Q2CujF5A==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      '@krizaka/tokens': ^3.27.0
+      '@krizaka/ui': ^3.27.0
+      tailwindcss: ^4.1
+
+  '@krizaka/tokens@3.27.0':
+    resolution: {integrity: sha512-5UU2WrAcV48Q4g3NVZZmDQkm2ommXFO7a2ia2FdJVDpjvHYkQbaZ1RDgmLZPMwNckRkAAjo8aYCdflGjYMqatw==}
     engines: {node: '>=22'}
 
-  '@krizaka/ui@3.26.0':
-    resolution: {integrity: sha512-d5+AE1GSJqlAj61trEykGJU6t5892/Zk7+pmaVnpY/MMxedE/E3X7iLkTk7BvsIG6eBVgH7a3Xg9UzgY93z0Cw==}
+  '@krizaka/ui@3.27.0':
+    resolution: {integrity: sha512-MswZqv5/RMvB3dwSh0k8vJLB0bSixsW68Tu4S1ikbCILylnBnetlN7ZQLBj2Lka6GOoia+IFDHl6abhCvm8IcA==}
     engines: {node: '>=22'}
     peerDependencies:
       '@krizaka/query': '>=0.2.1'
-      '@krizaka/tailwind': '>=3.26.0'
+      '@krizaka/tailwind': '>=3.27.0'
       '@maplibre/maplibre-react-native': '>=11'
       '@shopify/flash-list': '>=2'
       expo-camera: '>=16'
@@ -1518,6 +1533,11 @@ packages:
   fflate@0.8.3:
     resolution: {integrity: sha512-tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA==}
 
+  fsevents@2.3.2:
+    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
+    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
+    os: [darwin]
+
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
@@ -1628,15 +1648,6 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
-  lucide-react@1.59.0:
-    resolution: {integrity: sha512-5qgMyyCPU6OvnKpLS2t693+ZtiqA8oaSweWoUows0BLFKFf6V75m4+CptpmohZHpD5IuOVIBXHBBiv2vpLJmtw==}
-    peerDependencies:
-      '@types/react': '*'
-      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
@@ -1658,6 +1669,16 @@ packages:
   picomatch@4.0.7:
     resolution: {integrity: sha512-qcJu88Q2IWqJsDD529JKMdwGm/dvInW4HvQnRwiH9JtihJvzGOscDtHE3x1pBKeUOTysQ8kVmLnJ2kJu7yhcGA==}
     engines: {node: '>=12'}
+
+  playwright-core@1.60.0:
+    resolution: {integrity: sha512-9bW6zvX/m0lEbgTKJ6YppOKx8H3VOPBMOCFh2irXFOT4BbHgrx5hPjwJYLT40Lu+4qtD36qKc/Hn56StUW57IA==}
+    engines: {node: '>=18'}
+    hasBin: true
+
+  playwright@1.60.0:
+    resolution: {integrity: sha512-hheHdokM8cdqCb0lcE3s+zT4t4W+vvjpGxsZlDnikarzx8tSzMebh3UiFtgqwFwnTnjYQcsyMF8ei2mCO/tpeA==}
+    engines: {node: '>=18'}
+    hasBin: true
 
   pmtiles@4.5.0:
     resolution: {integrity: sha512-CBeD4SoUluFziGdy/8k7FOjQxQy486n+929W/tWophauvMICpkZ26vGBWhDt/6b1FZQWNaf4jFdT/5+q0Wii5w==}
@@ -2081,6 +2102,8 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.6.0
 
+  '@krizaka/fonts@0.2.1': {}
+
   '@krizaka/icons@0.6.0(react@19.3.1)':
     dependencies:
       react: 19.3.1
@@ -2093,13 +2116,19 @@ snapshots:
     optionalDependencies:
       react: 19.3.1
 
-  '@krizaka/tokens@3.26.0': {}
+  '@krizaka/tailwind@3.27.0(@krizaka/tokens@3.27.0)(@krizaka/ui@3.27.0)(tailwindcss@4.3.3)':
+    dependencies:
+      '@krizaka/tokens': 3.27.0
+      '@krizaka/ui': 3.27.0(@krizaka/tailwind@3.27.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.3)
+      tailwindcss: 4.3.3
 
-  '@krizaka/ui@3.26.0(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.3)':
+  '@krizaka/tokens@3.27.0': {}
+
+  '@krizaka/ui@3.27.0(@krizaka/tailwind@3.27.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.3)':
     dependencies:
       '@krizaka/intl': 0.2.1
       '@krizaka/pacer': 0.1.0(react@19.3.1)
-      '@krizaka/tokens': 3.26.0
+      '@krizaka/tokens': 3.27.0
       '@protomaps/basemaps': 5.7.2
       '@tanstack/highlight': 1.1.0
       '@tanstack/markdown': 1.0.0(react@19.3.1)
@@ -2115,6 +2144,7 @@ snapshots:
       sonner: 2.0.8(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       tailwind-variants: 3.3.1(tailwindcss@4.3.3)
     optionalDependencies:
+      '@krizaka/tailwind': 3.27.0(@krizaka/tokens@3.27.0)(@krizaka/ui@3.27.0)(tailwindcss@4.3.3)
       react-dom: 19.3.1(react@19.3.1)
       tailwindcss: 4.3.3
     transitivePeerDependencies:
@@ -3217,6 +3247,9 @@ snapshots:
 
   fflate@0.8.3: {}
 
+  fsevents@2.3.2:
+    optional: true
+
   fsevents@2.3.3:
     optional: true
 
@@ -3287,12 +3320,6 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lucide-react@1.59.0(@types/react@19.3.0)(react@19.3.1):
-    dependencies:
-      react: 19.3.1
-    optionalDependencies:
-      '@types/react': 19.3.0
-
   magic-string@0.30.21:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.6.0
@@ -3306,6 +3333,14 @@ snapshots:
   picocolors@1.1.1: {}
 
   picomatch@4.0.7: {}
+
+  playwright-core@1.60.0: {}
+
+  playwright@1.60.0:
+    dependencies:
+      playwright-core: 1.60.0
+    optionalDependencies:
+      fsevents: 2.3.2
 
   pmtiles@4.5.0:
     dependencies:

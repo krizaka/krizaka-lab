@@ -76,3 +76,20 @@ describe("GitHub Pages 404 fallback", () => {
     assert.equal(cleanSpaRedirect({ pathname: "/krizaka-motion/", search: "?tab=yororis", hash: "" }), null);
   });
 });
+
+// The lab has a home (the demos as cards) at the base; every demo keeps its REST path.
+import { resolvePage, homeHref } from "../dist/core/index.js";
+
+describe("Lab pages", () => {
+  it("the base is the home, a demo path its demo", () => {
+    assert.equal(resolvePage({ pathname: "/krizaka-motion/", search: "", hash: "" }), "home");
+    assert.equal(resolvePage({ pathname: "/", search: "", hash: "" }), "home");
+    assert.equal(resolvePage({ pathname: "/krizaka-motion/liquid-glass", search: "", hash: "" }), "caustics");
+    assert.equal(resolvePage({ pathname: "/krizaka-motion/", search: "?tab=yororis", hash: "" }), "yororis");
+    assert.equal(resolvePage({ pathname: "/krizaka-motion/unknown", search: "", hash: "" }), "home");
+  });
+  it("the home's address keeps the project base", () => {
+    assert.equal(homeHref("/krizaka-motion/jarvis"), "/krizaka-motion/");
+    assert.equal(homeHref("/jarvis"), "/");
+  });
+});
