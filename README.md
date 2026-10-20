@@ -1,15 +1,25 @@
-# 🥷 Krizaka Motion
+<div align="center">
 
-> **Next-generation generative canvas, 3D, particle systems & audio-visual synthesis for the Krizaka ecosystem.**
-> Drop-in replacement for the Orazaka foundation engine flow on [krizaka.com](https://krizaka.com), 3D acoustic voice presence for [dev.yororis.com](https://dev.yororis.com), Jarvis-inspired Iron Man Mark LXXXV holographic HUD, liquid glass chromatic caustics, and quantum neural synapse lattice.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/krizaka/.github/main/profile/assets/krizaka-dark.svg">
+  <img src="https://raw.githubusercontent.com/krizaka/.github/main/profile/assets/krizaka-light.svg" alt="Krizaka" width="96">
+</picture>
+
+# krizaka-motion
+
+**The Krizaka motion lab.** Experimental generative visuals — the Orazaka neural flow, a voice presence, a holographic
+HUD, liquid glass, a neural lattice — played live, each one a shareable address.
+
+**A lab, not a package**: nothing here is published on npm. What proves itself moves into
+[Krizaka UI](https://ui.krizaka.com) as SVG + CSS on the one motion system — the flow already did:
+[`@krizaka/ui/engine-flow`](https://ui.krizaka.com/components/engine-flow). Audit: [docs/AUDIT-2026-10-20.md](docs/AUDIT-2026-10-20.md).
 
 [![CI](https://github.com/krizaka/krizaka-motion/actions/workflows/ci.yml/badge.svg)](https://github.com/krizaka/krizaka-motion/actions/workflows/ci.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/krizaka/krizaka-motion/badge)](https://scorecard.dev/viewer/?uri=github.com/krizaka/krizaka-motion)
+[![Lab](https://img.shields.io/badge/lab-krizaka.github.io%2Fkrizaka--motion-196df5)](https://krizaka.github.io/krizaka-motion/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
-[![Status](https://img.shields.io/badge/status-active-f97316)](https://krizaka.com)
-[![Krizaka UI](https://img.shields.io/badge/@krizaka/ui-compatible-2563eb)](https://ui.krizaka.com)
-[![Tests](https://img.shields.io/badge/tests-15%20passing-emerald)](tests/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-3178c6)](package.json)
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-krizaka.github.io%2Fkrizaka--motion-orange?style=for-the-badge&logo=github)](https://krizaka.github.io/krizaka-motion/)
+
+</div>
 
 ---
 

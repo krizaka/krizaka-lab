@@ -1,2 +1,6 @@
-allowBuilds:
-  esbuild: true
+packages:
+  - "."
+
+# pnpm 10 runs no install scripts unless allowed: esbuild (Vite) needs its binary.
+onlyBuiltDependencies:
+  - esbuild

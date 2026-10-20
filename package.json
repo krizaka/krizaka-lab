@@ -1,7 +1,8 @@
 {
   "name": "@krizaka/motion",
   "version": "1.0.0",
-  "description": "Next-generation generative canvas, 3D, particle systems & audio-visual synthesis for the Krizaka ecosystem",
+  "private": true,
+  "description": "The Krizaka motion lab: experimental generative visuals (canvas demos). Not published: its generic flow ships as @krizaka/ui/engine-flow.",
   "author": "Krizaka <contact@krizaka.com>",
   "license": "Apache-2.0",
   "repository": {
@@ -11,7 +12,7 @@
   "bugs": {
     "url": "https://github.com/krizaka/krizaka-motion/issues"
   },
-  "homepage": "https://github.com/krizaka/krizaka-motion#readme",
+  "homepage": "https://krizaka.github.io/krizaka-motion/",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -75,5 +76,6 @@
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.3",
     "vite": "^6.2.0"
-  }
+  },
+  "packageManager": "pnpm@10.34.6"
 }
