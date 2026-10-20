@@ -25,6 +25,8 @@ const ROUTES = [
   "conversation",
   "journey",
   "figures",
+  "overlays",
+  "transitions",
   "data-motion",
   "specs",
   "architecture",
