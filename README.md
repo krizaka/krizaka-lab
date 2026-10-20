@@ -51,7 +51,7 @@ HUD, liquid glass, a neural lattice — played live, each one a shareable addres
 ```text
 src/core/      the renderers (canvas) and their maths — springs, Bézier lengths, optics, routes
 src/react/     the React views over them (OrazakaEngineFlow, YororisPresenceOrb, JarvisHUD, LiquidCausticsView, NeuralLatticeView)
-src/lab/       the shell on @krizaka/ui: home, demo pages (demos.tsx), the gallery (gallery.tsx), i18n binding
+src/lab/       the shell on @krizaka/ui: home, demo pages (demos.tsx), the gallery (gallery.tsx), English-only i18n binding
 messages/      en.json (the reference) and fr.json
 scripts/       generate-routes.mjs (a folder per route + 404.html for Pages), check-overflow.mjs (360–1440 px)
 docs/          AUDIT-2026-10-20.md

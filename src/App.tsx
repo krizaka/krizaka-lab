@@ -7,7 +7,6 @@
 import { MoonIcon, SunIcon } from "@krizaka/icons";
 import { KrizakaLogo } from "@krizaka/ui";
 import { Button } from "@krizaka/ui/button";
-import { languageNames } from "@krizaka/ui/language-switch";
 import { MotionObserver } from "@krizaka/ui/motion";
 import { NavBar } from "@krizaka/ui/nav-bar";
 import { SiteFooter } from "@krizaka/ui/site-footer";
@@ -19,26 +18,12 @@ import { getHrefForTab, homeHref, type LabPage, resolvePage, type TabId } from "
 import { DemoPage } from "./lab/DemoPage";
 import { Home } from "./lab/Home";
 import { LabContext } from "./lab/context";
-import { i18n, LOCALES, type Locale, pickLocale } from "./lab/messages";
+import { i18n, LOCALE } from "./lab/messages";
 
 const REPO = "https://github.com/krizaka/krizaka-motion";
-const LANG_KEY = "kz-lab-lang";
-
-function readLocale(): Locale {
-  let stored: string | null = null;
-  try {
-    stored = localStorage.getItem(LANG_KEY);
-  } catch {}
-  const locale = pickLocale(window.location.search, stored);
-  try {
-    if (new URLSearchParams(window.location.search).get("lang")) localStorage.setItem(LANG_KEY, locale);
-  } catch {}
-  return locale;
-}
-
 function Shell() {
   const [page, setPage] = useState<LabPage>(() => resolvePage(window.location));
-  const [locale] = useState<Locale>(readLocale);
+  const locale = LOCALE;
   const t = i18n.getDictionary(locale);
   const { mode, setMode } = useTheme();
   const dark = mode === "dark" || (mode === "system" && !window.matchMedia("(prefers-color-scheme: light)").matches);
@@ -67,7 +52,6 @@ function Shell() {
     return { t, locale, href, go };
   }, [t, locale]);
 
-  const languages = LOCALES.map((code) => ({ code, name: languageNames[code] ?? code, href: `?lang=${code}` }));
   const nav: { id: LabPage; label: string }[] = [
     { id: "home", label: t.bar.demos },
     { id: "kz-ui", label: t.bar.gallery },
@@ -108,7 +92,6 @@ function Shell() {
             >
               {dark ? <SunIcon size={16} /> : <MoonIcon size={16} />}
             </Button>
-            <NavBar.Language label={t.bar.language} current={locale} languages={languages} />
             <NavBar.Mobile openLabel={t.bar.openMenu} closeLabel={t.bar.closeMenu}>
               {nav.map((n) => (
                 <NavBar.MobileLink key={n.id} href={lab.href(n.id)}>
