@@ -170,3 +170,23 @@ export function cleanSpaRedirect(loc: { pathname: string; search: string; hash?:
   const query = rest.length ? `?${rest.join("&")}` : "";
   return `${base}${route.replace(/~and~/g, "&")}${query}${loc.hash ?? ""}`;
 }
+
+/** A page of the lab: its home (the demos as cards) or a demo. */
+export type LabPage = TabId | "home";
+
+/** The page at a location: the demo its query, hash or last path segment names, else the home. */
+export function resolvePage(loc: { pathname?: string; search?: string; hash?: string }): LabPage {
+  const segments = (loc.pathname ?? "").split("/").filter(Boolean).filter((s) => s !== "krizaka-motion" && s !== "index.html");
+  const named = Boolean(segments.length) || /[?&]tab=/.test(loc.search ?? "") || (loc.search ?? "").startsWith("?/") || Boolean((loc.hash ?? "").replace(/^#\/?/, ""));
+  if (!named) return "home";
+  const tab = resolveTabFromLocation(loc);
+  // resolveTabFromLocation falls back to "orazaka": only trust it when something really named it.
+  if (tab !== "orazaka") return tab;
+  const words = [...segments, (loc.search ?? "").replace(/^\?(tab=|\/)?/, ""), (loc.hash ?? "").replace(/^#\/?/, "")].map((w) => w.toLowerCase());
+  return words.some((w) => TAB_ROUTES.orazaka.aliases.includes(w) || w === "orazaka") ? "orazaka" : "home";
+}
+
+/** The lab's home under the current base (`/krizaka-motion/` on GitHub Pages, `/` locally). */
+export function homeHref(currentPathname = ""): string {
+  return currentPathname.includes("/krizaka-motion") ? "/krizaka-motion/" : "/";
+}

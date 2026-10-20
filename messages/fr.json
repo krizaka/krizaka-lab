@@ -1,0 +1,381 @@
+{
+  "bar": {
+    "label": "Krizaka Motion",
+    "mainAria": "Krizaka Motion, navigation principale",
+    "homeAria": "Krizaka Motion, l'accueil du labo",
+    "demos": "Démos",
+    "inUi": "Dans Krizaka UI",
+    "specs": "Spécifications",
+    "githubAria": "Le code du labo sur GitHub",
+    "language": "Langue",
+    "lightMode": "Passer au thème clair",
+    "darkMode": "Passer au thème sombre",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "gallery": "Krizaka UI + Motion"
+  },
+  "home": {
+    "eyebrow": "Krizaka Motion · le labo",
+    "title": "Le mouvement qui donne vie aux écrans Krizaka.",
+    "lead": "Essayez chaque animation en direct, changez ses réglages, copiez son code. Ce qui fait ses preuves ici est livré dans Krizaka UI.",
+    "primary": "Voir le flux du moteur",
+    "source": "Le code sur GitHub",
+    "demosEyebrow": "Les démos",
+    "demosTitle": "Six expériences, chacune à sa propre adresse.",
+    "demosLead": "Aperçus en direct : ils jouent à l'écran et restent immobiles si le mouvement est réduit.",
+    "open": "Ouvrir la démo",
+    "shippedEyebrow": "Du labo à Krizaka UI",
+    "shippedTitle": "Le flux du moteur est déjà livré.",
+    "shippedLead": "Refait en SVG et CSS pour tous les sites Krizaka : @krizaka/ui/engine-flow. Pas de canevas, pas de boucle d'animation, en pause hors écran.",
+    "shippedCta": "Lire sa page sur ui.krizaka.com",
+    "experimental": "Expérimental — canevas, pour le labo seulement",
+    "shipped": "Dans Krizaka UI",
+    "galleryCta": "Voir Krizaka UI en mouvement"
+  },
+  "demo": {
+    "back": "Toutes les démos",
+    "controls": "Réglages",
+    "usage": "Utilisation",
+    "usageLead": "Les vues du labo sont des composants React sur un moteur de rendu canevas.",
+    "status": "Statut",
+    "statusLab": "Une expérience du labo : un canevas en pause hors écran et immobile si le mouvement est réduit. Pas pour les sites Krizaka, qui utilisent Krizaka UI.",
+    "copy": "Copier",
+    "copied": "Copié",
+    "pause": "Pause",
+    "play": "Lecture",
+    "settings": "Réglages",
+    "settingsLead": "Changez l'animation en direct.",
+    "whatFor": "À quoi ça sert",
+    "close": "Fermer"
+  },
+  "controls": {
+    "layout": "Disposition",
+    "layouts": {
+      "radial": "Radiale",
+      "top-to-bottom": "Haut → bas",
+      "left-to-right": "Gauche → droite"
+    },
+    "mode": "Ce qui circule",
+    "modes": {
+      "in": "Requêtes entrantes",
+      "out": "Résultats sortants",
+      "both": "Dans les deux sens"
+    },
+    "particles": "Particules",
+    "particleNames": {
+      "photons": "Photons",
+      "none": "Aucune"
+    },
+    "conduit": "Conduits",
+    "conduits": {
+      "bezier": "Bézier S",
+      "straight": "Droits"
+    },
+    "hint": "Pointez un produit pour voir ce qu'il fait tourner sur le moteur.",
+    "flowLabel": "Un moteur et les produits qu'il fait tourner",
+    "engine": "Orazaka",
+    "engineCaption": "le moteur",
+    "uses": {
+      "orochia": "Recherche et recommandations.",
+      "yomizaka": "Vérification de documents, chacune une exécution tracée.",
+      "kachizaka": "Flux de matchs en direct.",
+      "akinaza": "L'assistant fiscal (prévu).",
+      "yasakia": "L'agent de mise en relation (prévu).",
+      "yororis": "Le pack bien-être (prévu)."
+    },
+    "planned": "prévu",
+    "canvasTitle": "L'expérience canevas",
+    "canvasLead": "La première version du labo : un rendu canevas avec télémétrie, gardé pour comparer.",
+    "direction": "Direction",
+    "directions": {
+      "left-to-right": "Gauche → droite",
+      "right-to-left": "Droite → gauche",
+      "top-to-bottom": "Haut → bas",
+      "radial": "Radiale"
+    },
+    "canvasModes": {
+      "inbound": "Entrant",
+      "outbound": "Sortant",
+      "bidirectional": "Dans les deux sens"
+    },
+    "state": "État",
+    "states": {
+      "idle": "Repos",
+      "listening": "Écoute",
+      "speaking": "Parole",
+      "breathing": "Respiration",
+      "reflecting": "Réflexion"
+    },
+    "tone": "Timbre",
+    "tones": {
+      "lea": "Léa",
+      "theta": "Thêta",
+      "solfeggio": "Solfège",
+      "aurora": "Aurore"
+    },
+    "intensity": "Intensité",
+    "hudTheme": "Couleur",
+    "hudThemes": {
+      "cyan": "Cyan",
+      "orazaka": "Orange",
+      "yororis": "Sauge",
+      "crimson": "Cramoisi",
+      "gold": "Or"
+    },
+    "posture": "Posture",
+    "postures": {
+      "standard": "Standard",
+      "combat": "Alerte",
+      "stealth": "Discrète",
+      "overdrive": "Surrégime"
+    },
+    "medium": "Milieu",
+    "media": {
+      "water": "Eau",
+      "glass": "Verre",
+      "mercury": "Mercure",
+      "helium": "Hélium"
+    },
+    "palette": "Palette",
+    "palettes": {
+      "obsidian": "Obsidienne",
+      "prussian": "Prusse",
+      "yororis": "Sauge",
+      "amber": "Ambre"
+    },
+    "refraction": "Réfraction",
+    "latticeTheme": "Palette",
+    "latticeThemes": {
+      "obsidian-gold": "Or",
+      "sage-calm": "Sauge",
+      "prussian-cyan": "Cyan"
+    },
+    "nodes": "Neurones",
+    "plasticity": "Plasticité",
+    "cascade": "Déclencher une cascade"
+  },
+  "specs": {
+    "rules": "Les règles d'une vue du labo",
+    "items": [
+      "Un seul chef d'orchestre : les vues écoutent le MotionObserver de @krizaka/ui (data-offscreen, data-motion) — jamais leur propre observateur de la page.",
+      "Hors écran, en pause ; pendant que la page se pose, retenues ; mouvement réduit, une seule image fixe.",
+      "Chaque couleur vient des jetons ; chaque mot est une prop ; les marques viennent de @krizaka/ui, jamais redessinées.",
+      "Une version texte à côté de chaque dessin ; chaque réglage atteignable au clavier.",
+      "Ce dont un site Krizaka a besoin passe dans Krizaka UI en SVG et CSS — le canevas reste ici."
+    ],
+    "tests": "Tests",
+    "testsText": "Ressorts, longueurs de Bézier, optique, routes et palettes ont leurs tests unitaires ; les pages du labo sont vérifiées de 360 à 1440 px contre le défilement horizontal."
+  },
+  "demos": {
+    "orazaka": {
+      "name": "Flux du moteur",
+      "eyebrow": "Orazaka",
+      "title": "Un moteur, les produits qu'il fait tourner.",
+      "lead": "Les requêtes entrent, les résultats reviennent — le flux de l'accueil de krizaka.com, avec ses réglages.",
+      "card": "Radial, de haut en bas ou de gauche à droite ; entrant, sortant ou les deux."
+    },
+    "yororis": {
+      "name": "Présence vocale",
+      "eyebrow": "Yororis",
+      "title": "Une présence qui respire et écoute.",
+      "lead": "Une sphère acoustique qui suit les fréquences d'une voix — procédurale, ou votre micro si vous l'autorisez.",
+      "card": "Respirer, écouter, parler : une sphère qui suit la voix."
+    },
+    "jarvis": {
+      "name": "Affichage holographique",
+      "eyebrow": "Étude d'interface",
+      "title": "Un affichage tête haute, dessiné en direct.",
+      "lead": "Anneaux, réticules et télémétrie avec la parallaxe d'un gyroscope — une étude du mouvement dense et lisible.",
+      "card": "Réticules, anneaux et télémétrie en parallaxe."
+    },
+    "caustics": {
+      "name": "Verre liquide",
+      "eyebrow": "Optique",
+      "title": "La lumière courbée par une surface liquide.",
+      "lead": "La loi de Snell et la dispersion chromatique sur la page : touchez-la pour une onde.",
+      "card": "Réfraction et dispersion ; touchez pour une onde."
+    },
+    "lattice": {
+      "name": "Réseau neuronal",
+      "eyebrow": "Simulation",
+      "title": "Un réseau de neurones qui s'activent.",
+      "lead": "Potentiels de membrane, synapses qui se renforcent à l'usage, cascades à déclencher.",
+      "card": "Potentiels, plasticité et cascades."
+    },
+    "kz-ui": {
+      "name": "Mouvement Krizaka UI",
+      "eyebrow": "Krizaka UI",
+      "title": "Le mouvement déjà livré.",
+      "lead": "Les primitives du système de mouvement de @krizaka/ui, en direct : ce qu'utilisent les sites Krizaka.",
+      "card": "EngineFlow, NumberTicker, GlowCard — en direct."
+    },
+    "architecture": {
+      "name": "Spécifications",
+      "eyebrow": "Comment marche le labo",
+      "title": "Spécifications et règles.",
+      "lead": "Comment se comporte une vue du labo, et comment elle devient une primitive Krizaka UI.",
+      "card": "Les règles du mouvement, les tests, le chemin vers Krizaka UI."
+    }
+  },
+  "footer": {
+    "lab": "Le labo",
+    "demos": "Démos",
+    "source": "Code"
+  },
+  "gallery": {
+    "eyebrow": "Krizaka UI + Motion",
+    "title": "De vrais composants, rendus vivants.",
+    "lead": "Des composants de @krizaka/ui avec leur mouvement, et les vues du labo derrière eux — chacun avec son résultat en direct, les imports exacts, ses props et ce qu'il fait si le mouvement est réduit.",
+    "groups": {
+      "feedback": "Retour",
+      "emphasis": "Mise en avant",
+      "data": "Données",
+      "ambient": "Ambiance"
+    },
+    "groupLeads": {
+      "feedback": "Dire que quelque chose s'est passé — ou se passe.",
+      "emphasis": "Attirer l'œil sur l'essentiel, une fois.",
+      "data": "Rendre les chiffres et les flux lisibles quand ils changent.",
+      "ambient": "Donner un pouls à un écran sans réclamer l'attention."
+    },
+    "props": "Props",
+    "reduced": "Mouvement réduit",
+    "copy": "Copier",
+    "copied": "Copié",
+    "sample": {
+      "save": "Enregistrer",
+      "saving": "Enregistrement",
+      "archived": "Message archivé",
+      "undo": "Annuler",
+      "toasts": "Notifications",
+      "close": "Fermer",
+      "progress": "Téléversement",
+      "advance": "Avancer",
+      "open": "Ouvrir le panneau",
+      "dialogTitle": "Partager l'extrait",
+      "dialogText": "Le panneau glisse depuis le côté ; Échap le ferme.",
+      "done": "Terminé",
+      "new": "Nouveau",
+      "live": "En direct",
+      "week": "Semaine",
+      "month": "Mois",
+      "year": "Année",
+      "weekText": "Cette semaine : 1 284 lectures.",
+      "monthText": "Ce mois-ci : 5 940 lectures.",
+      "yearText": "Cette année : 61 200 lectures.",
+      "revenue": "Lectures ce mois-ci",
+      "glowTitle": "Une carte qui répond",
+      "glowText": "Pointez-la : l'anneau tourne, la lumière suit.",
+      "speaking": "Léa parle",
+      "listening": "Voix",
+      "bubbleA": "On peut passer à samedi ?",
+      "bubbleB": "Oui — 10 h 30, c'est bon.",
+      "typing": "Léa écrit",
+      "partners": "Construit sur",
+      "pause": "Pause",
+      "play": "Lecture",
+      "home": "Accueil",
+      "demos": "Démos",
+      "about": "À propos",
+      "nav": "Une barre de navigation",
+      "glass": "Du verre sur la lumière",
+      "glassText": "La carte reste lisible ; la lumière bouge dessous.",
+      "lattice": "Signaux en direct",
+      "latticeText": "1 284 événements la dernière minute.",
+      "name": "Nom",
+      "status": "Statut",
+      "plays": "Lectures",
+      "table": "Extraits récents",
+      "selectRow": "Sélectionner la ligne",
+      "selectAll": "Tout sélectionner",
+      "flow": "Un moteur et les applications qu'il sert"
+    },
+    "items": {
+      "button": {
+        "title": "Button",
+        "what": "L'action d'un écran : un reflet qui passe, une inclinaison vers le pointeur, un chargement pendant le travail.",
+        "reduced": "Pas de reflet ni d'inclinaison ; le chargement tourne plus lentement et reste lisible."
+      },
+      "toast": {
+        "title": "Toast",
+        "what": "Confirmer une action et proposer de l'annuler, sans quitter la page.",
+        "reduced": "Les toasts apparaissent et partent en fondu, sans glisser."
+      },
+      "progress": {
+        "title": "Progress",
+        "what": "Où en est une tâche, avec un remplissage fluide et une valeur annoncée.",
+        "reduced": "La barre saute à chaque valeur."
+      },
+      "dialog": {
+        "title": "Dialog (panneau latéral)",
+        "what": "Des réglages ou des détails qui glissent à côté du travail, le focus gardé dedans.",
+        "reduced": "Il apparaît sur place, sans glisser."
+      },
+      "glow-card": {
+        "title": "GlowCard",
+        "what": "Une carte mise en avant : un anneau du dégradé de la marque qui tourne, un halo sous le pointeur.",
+        "reduced": "L'anneau reste immobile ; le halo suit toujours le pointeur."
+      },
+      "badge": {
+        "title": "Badge et Chip",
+        "what": "Un statut en direct qui pulse, des choix dont la sélection glisse de l'un à l'autre.",
+        "reduced": "Le point reste allumé sans pulser ; la sélection change d'un coup."
+      },
+      "tabs": {
+        "title": "Tabs",
+        "what": "Les vues d'un même sujet, la lumière glissant sous celle choisie.",
+        "reduced": "L'indicateur change d'un coup."
+      },
+      "avatar-presence": {
+        "title": "Avatar avec une présence",
+        "what": "Quelqu'un qui parle : la présence vocale du labo respire derrière un avatar.",
+        "reduced": "Une sphère immobile derrière l'avatar."
+      },
+      "stat": {
+        "title": "Stat avec NumberTicker",
+        "what": "Un chiffre clé qui monte une fois quand il arrive à l'écran.",
+        "reduced": "Le chiffre final, tout de suite."
+      },
+      "data-table": {
+        "title": "Ligne de DataTable",
+        "what": "La ligne qui a changé, marquée dans un tableau qu'on lit.",
+        "reduced": "La mise en valeur apparaît sans transition."
+      },
+      "engine-flow": {
+        "title": "EngineFlow",
+        "what": "Un moteur et les applications qu'il sert : ce qui circule, et dans quel sens.",
+        "reduced": "Les photons restent posés le long des conduits."
+      },
+      "lattice-card": {
+        "title": "Carte sur un réseau vivant",
+        "what": "Une carte de chiffres sur le réseau neuronal du labo : une activité qu'on sent, des chiffres qu'on lit.",
+        "reduced": "Un réseau immobile sous la carte."
+      },
+      "waveform": {
+        "title": "Waveform",
+        "what": "Une voix ou un son qui joue : ses barres respirent pendant la lecture.",
+        "reduced": "Des barres immobiles à leur vraie hauteur."
+      },
+      "chat": {
+        "title": "MessageBubble et TypingIndicator",
+        "what": "Une conversation vivante : quelqu'un écrit.",
+        "reduced": "Les trois points restent immobiles."
+      },
+      "marquee": {
+        "title": "Marquee",
+        "what": "Un bandeau de noms qui défile, mis en pause par le pointeur, le focus ou son bouton.",
+        "reduced": "Une rangée immobile qu'on fait défiler à la main."
+      },
+      "navbar": {
+        "title": "NavBar",
+        "what": "La barre de la famille : une lumière qui glisse entre les liens et se pose sur la page courante.",
+        "reduced": "La lumière change d'un coup."
+      },
+      "glass-card": {
+        "title": "Carte sur du verre liquide",
+        "what": "Une carte qui flotte sur les caustiques du labo : de la profondeur pour un en-tête, un texte lisible.",
+        "reduced": "Une image de caustiques immobile sous la carte."
+      }
+    }
+  }
+}

@@ -381,9 +381,9 @@ export class NeuralLatticeRenderer {
     ctx.textBaseline = "middle";
 
     const legends: Array<{ cluster: CognitiveCluster; label: string }> = [
-      { cluster: "orazaka", label: "ORAZAKA (MOTEUR COGNITIF)" },
-      { cluster: "yororis", label: "YORORIS (EMPATHIE VOCALE)" },
-      { cluster: "jarvis", label: "JARVIS (RAISONNEMENT TACTIQUE)" },
+      { cluster: "orazaka", label: "ENGINE" },
+      { cluster: "yororis", label: "VOICE" },
+      { cluster: "jarvis", label: "REASONING" },
     ];
 
     let startX = 14;

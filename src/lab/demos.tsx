@@ -1,0 +1,304 @@
+/* The demos: for each, a live preview (the home's cards), the stage with its settings (the demo's page, @krizaka/ui
+   controls) and its usage. The canvas views are the lab's (src/react); the engine flow and the Krizaka UI page use the
+   shipped primitives of @krizaka/ui. Words come from the messages (useLab). */
+
+import { SettingsIcon } from "@krizaka/icons";
+import { ProductLogo } from "@krizaka/ui";
+import { Button } from "@krizaka/ui/button";
+import { Chip } from "@krizaka/ui/chip";
+import { EngineFlow, type FlowLayout } from "@krizaka/ui/engine-flow";
+import { Dialog } from "@krizaka/ui/dialog";
+import { Slider } from "@krizaka/ui/slider";
+import { Switch } from "@krizaka/ui/switch";
+import { type ReactNode, useRef, useState } from "react";
+
+import type { JarvisTacticalMode } from "../core/jarvis-hud";
+import type { CausticPalette, FluidMedium } from "../core/liquid-caustics";
+import type { TabId } from "../core/router";
+import type { FlowDirection, FlowMode as CanvasMode, JarvisTheme, YororisState } from "../core/types";
+import type { YororisVoiceTone } from "../core/yororis-synthesis";
+import { JarvisHUD } from "../react/JarvisHUD";
+import { LiquidCausticsView } from "../react/LiquidCausticsView";
+import { NeuralLatticeView, type NeuralLatticeViewHandle } from "../react/NeuralLatticeView";
+import { OrazakaEngineFlow } from "../react/OrazakaEngineFlow";
+import { YororisPresenceOrb } from "../react/YororisPresenceOrb";
+import { useLab } from "./context";
+import { Gallery } from "./gallery";
+
+type FlowMode = "in" | "out" | "both";
+const PRODUCTS = [
+  { id: "orochia", live: true },
+  { id: "yomizaka", live: true },
+  { id: "kachizaka", live: true },
+  { id: "akinaza", live: false },
+  { id: "yasakia", live: false },
+  { id: "yororis", live: false },
+] as const;
+const NAMES: Record<string, string> = { orochia: "Orochia", yomizaka: "Yomizaka", kachizaka: "Kachizaka", akinaza: "Akinaza", yasakia: "Yasakia", yororis: "Yororis" };
+
+/** The demo's settings, folded into a side panel (Dialog placement="right"): the animation stays large and centred. */
+function Settings({ children }: { children: ReactNode }) {
+  const { t } = useLab();
+  return (
+    <div className="lab-settings">
+      <Dialog.Root>
+        <Dialog.Trigger asChild>
+          <Button variant="secondary" size="sm" shape="pill">
+            <SettingsIcon size={14} /> {t.demo.settings}
+          </Button>
+        </Dialog.Trigger>
+        <Dialog.Content placement="right" closeLabel={t.demo.close}>
+          <Dialog.Header>
+            <Dialog.Title>{t.demo.settings}</Dialog.Title>
+            <Dialog.Description>{t.demo.settingsLead}</Dialog.Description>
+          </Dialog.Header>
+          <Dialog.Body>
+            <div className="lab-controls">{children}</div>
+          </Dialog.Body>
+        </Dialog.Content>
+      </Dialog.Root>
+    </div>
+  );
+}
+
+/** A row of choices: a single-choice Chip.Group with its label. */
+function Choice<T extends string>({ label, value, options, names, onChange }: { label: string; value: T; options: readonly T[]; names: Record<T, string>; onChange: (v: T) => void }) {
+  return (
+    <div className="lab-control">
+      <span className="lab-control-label" aria-hidden>
+        {label}
+      </span>
+      <Chip.Group type="single" required size="sm" label={label} value={value} onValueChange={(v) => v && onChange(v as T)}>
+        {options.map((o) => (
+          <Chip key={o} value={o}>
+            {names[o]}
+          </Chip>
+        ))}
+      </Chip.Group>
+    </div>
+  );
+}
+
+/** The box a canvas view plays in: a fixed aspect ratio (no layout shift), a scope MotionObserver pauses off screen. */
+function Box({ children, tall = false }: { children: ReactNode; tall?: boolean }) {
+  return (
+    <div className="lab-box" data-tall={tall ? "" : undefined} data-motion-scope="">
+      {children}
+    </div>
+  );
+}
+
+/** The engine flow of @krizaka/ui — the shipped primitive krizaka.com's home draws. */
+function Flow({ layout = "radial", mode = "both", particles = "photons", conduit = "bezier", compact = true }: { layout?: FlowLayout; mode?: FlowMode; particles?: "photons" | "none"; conduit?: "bezier" | "straight"; compact?: boolean }) {
+  const { t } = useLab();
+  const c = t.controls;
+  return (
+    <EngineFlow
+      className="brand-orazaka"
+      label={c.flowLabel}
+      layout={layout}
+      compactLayout={compact ? "top-to-bottom" : false}
+      particles={particles}
+      conduit={conduit}
+      hint={c.hint}
+      hub={{ label: c.engine, caption: c.engineCaption, mark: <ProductLogo id="orazaka" size={52} animated={false} /> }}
+      nodes={PRODUCTS.map((p) => ({
+        id: p.id,
+        label: NAMES[p.id]!,
+        className: `brand-${p.id}`,
+        mark: <ProductLogo id={p.id} size={26} animated={false} />,
+        flow: p.live ? mode : "in",
+        planned: !p.live,
+        status: p.live ? undefined : c.planned,
+        description: c.uses[p.id],
+        href: `https://dev.${p.id}.com`,
+        external: true,
+        linkLabel: `dev.${p.id}.com`,
+      }))}
+    />
+  );
+}
+
+function OrazakaStage() {
+  const { t } = useLab();
+  const c = t.controls;
+  const [layout, setLayout] = useState<FlowLayout>("radial");
+  const [mode, setMode] = useState<FlowMode>("both");
+  const [particles, setParticles] = useState<"photons" | "none">("photons");
+  const [conduit, setConduit] = useState<"bezier" | "straight">("bezier");
+  const [direction, setDirection] = useState<FlowDirection>("left-to-right");
+  const [canvasMode, setCanvasMode] = useState<CanvasMode>("bidirectional");
+  return (
+    <>
+      <div className="lab-stage">
+        <div className="lab-stage-view">
+          <Flow layout={layout} mode={mode} particles={particles} conduit={conduit} compact={false} />
+        </div>
+        <Settings>
+          <Choice label={c.layout} value={layout} options={["radial", "top-to-bottom", "left-to-right"] as const} names={c.layouts} onChange={setLayout} />
+          <Choice label={c.mode} value={mode} options={["in", "out", "both"] as const} names={c.modes} onChange={setMode} />
+          <Choice label={c.particles} value={particles} options={["photons", "none"] as const} names={c.particleNames} onChange={setParticles} />
+          <Choice label={c.conduit} value={conduit} options={["bezier", "straight"] as const} names={c.conduits} onChange={setConduit} />
+        </Settings>
+      </div>
+      <h3 className="lab-subtitle">{c.canvasTitle}</h3>
+      <p className="lab-sublead">{c.canvasLead}</p>
+      <div className="lab-stage">
+        <Box>
+          <OrazakaEngineFlow direction={direction} flowMode={canvasMode} showTelemetry={false} />
+        </Box>
+        <Settings>
+          <Choice label={c.direction} value={direction} options={["left-to-right", "right-to-left", "top-to-bottom", "radial"] as const} names={c.directions} onChange={setDirection} />
+          <Choice label={c.mode} value={canvasMode} options={["inbound", "outbound", "bidirectional"] as const} names={c.canvasModes} onChange={setCanvasMode} />
+        </Settings>
+      </div>
+    </>
+  );
+}
+
+function YororisStage() {
+  const { t } = useLab();
+  const c = t.controls;
+  const [state, setState] = useState<YororisState>("breathing");
+  const [tone, setTone] = useState<YororisVoiceTone>("lea");
+  const [intensity, setIntensity] = useState(0.7);
+  return (
+    <div className="lab-stage">
+      <Box tall>
+        <YororisPresenceOrb state={state} voiceTone={tone} intensity={intensity} enableAudio={false} />
+      </Box>
+      <Settings>
+        <Choice label={c.state} value={state} options={["idle", "listening", "speaking", "breathing", "reflecting"] as const} names={c.states} onChange={setState} />
+        <Choice label={c.tone} value={tone} options={["lea", "theta", "solfeggio", "aurora"] as const} names={c.tones} onChange={setTone} />
+        <Slider label={c.intensity} showLabel value={intensity} min={0.1} max={1} step={0.05} onValueChange={(v) => setIntensity(v as number)} />
+      </Settings>
+    </div>
+  );
+}
+
+function HudStage() {
+  const { t } = useLab();
+  const c = t.controls;
+  const [theme, setTheme] = useState<JarvisTheme>("cyan");
+  const [posture, setPosture] = useState<JarvisTacticalMode>("standard");
+  return (
+    <div className="lab-stage">
+      <Box tall>
+        <JarvisHUD theme={theme} tacticalMode={posture} overdrive={posture === "overdrive"} />
+      </Box>
+      <Settings>
+        <Choice label={c.hudTheme} value={theme} options={["cyan", "orazaka", "yororis", "crimson", "gold"] as const} names={c.hudThemes} onChange={setTheme} />
+        <Choice label={c.posture} value={posture} options={["standard", "combat", "stealth", "overdrive"] as const} names={c.postures} onChange={setPosture} />
+      </Settings>
+    </div>
+  );
+}
+
+function CausticsStage() {
+  const { t } = useLab();
+  const c = t.controls;
+  const [medium, setMedium] = useState<FluidMedium>("glass");
+  const [palette, setPalette] = useState<CausticPalette>("prussian");
+  const [refraction, setRefraction] = useState(1);
+  return (
+    <div className="lab-stage">
+      <Box>
+        <LiquidCausticsView fluidMedium={medium} palette={palette} refractionStrength={refraction} />
+      </Box>
+      <Settings>
+        <Choice label={c.medium} value={medium} options={["water", "glass", "mercury", "helium"] as const} names={c.media} onChange={setMedium} />
+        <Choice label={c.palette} value={palette} options={["obsidian", "prussian", "yororis", "amber"] as const} names={c.palettes} onChange={setPalette} />
+        <Slider label={c.refraction} showLabel value={refraction} min={0.2} max={2} step={0.1} onValueChange={(v) => setRefraction(v as number)} />
+      </Settings>
+    </div>
+  );
+}
+
+function LatticeStage() {
+  const { t } = useLab();
+  const c = t.controls;
+  const ref = useRef<NeuralLatticeViewHandle>(null);
+  const [theme, setTheme] = useState<"obsidian-gold" | "sage-calm" | "prussian-cyan">("prussian-cyan");
+  const [nodes, setNodes] = useState(90);
+  const [plastic, setPlastic] = useState(true);
+  return (
+    <div className="lab-stage">
+      <Box>
+        <NeuralLatticeView ref={ref} theme={theme} nodeCount={nodes} enableHebbianPlasticity={plastic} />
+      </Box>
+      <Settings>
+        <Choice label={c.latticeTheme} value={theme} options={["obsidian-gold", "sage-calm", "prussian-cyan"] as const} names={c.latticeThemes} onChange={setTheme} />
+        <Slider label={c.nodes} showLabel value={nodes} min={30} max={160} step={10} onValueChange={(v) => setNodes(v as number)} />
+        <label className="lab-switch">
+          <Switch checked={plastic} onCheckedChange={setPlastic} label={c.plasticity} />
+          <span aria-hidden>{c.plasticity}</span>
+        </label>
+        <Button variant="secondary" size="sm" onClick={() => ref.current?.triggerCascadeAvalanche()}>
+          {c.cascade}
+        </Button>
+      </Settings>
+    </div>
+  );
+}
+
+function SpecsStage() {
+  const { t } = useLab();
+  const s = t.specs;
+  return (
+    <div className="lab-prose">
+      <h3>{s.rules}</h3>
+      <ol>
+        {s.items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ol>
+      <h3>{s.tests}</h3>
+      <p>{s.testsText}</p>
+    </div>
+  );
+}
+
+export const ENGINE_FLOW_USAGE = `import { SettingsIcon } from "@krizaka/icons";
+import { ProductLogo } from "@krizaka/ui";
+import { EngineFlow } from "@krizaka/ui/engine-flow";
+
+<EngineFlow
+  className="brand-orazaka"
+  label="Orazaka and the products it powers"
+  hub={{ label: "Orazaka", mark: <ProductLogo id="orazaka" size={56} /> }}
+  nodes={[
+    { id: "orochia", label: "Orochia", flow: "both", className: "brand-orochia",
+      description: "Search and recommendations.", href: "https://dev.orochia.com" },
+    { id: "yororis", label: "Yororis", planned: true, status: "planned" },
+  ]}
+  layout="radial"
+  compactLayout="top-to-bottom"
+/>`;
+
+const canvasUsage = (component: string, props: string) => `import { ${component} } from "@krizaka/motion/react"; // the lab — not on npm
+
+// A canvas view: paused off screen (MotionObserver's data-offscreen), one still frame under reduced motion.
+<div style={{ aspectRatio: "16 / 9" }} data-motion-scope>
+  <${component} ${props} />
+</div>`;
+
+export interface Demo {
+  /** The live preview of the home's card (non-interactive). */
+  Preview: () => ReactNode;
+  /** The demo's page: the stage and its settings. */
+  Stage: () => ReactNode;
+  /** Its usage; absent for the pages that are not one view. */
+  usage?: { code: string; file: string };
+  /** A lab experiment (canvas), or what Krizaka UI ships. */
+  lab: boolean;
+}
+
+export const DEMOS: Record<TabId, Demo> = {
+  orazaka: { Preview: () => <Flow compact={false} />, Stage: OrazakaStage, usage: { code: ENGINE_FLOW_USAGE, file: "EngineFlow.tsx" }, lab: false },
+  yororis: { Preview: () => <YororisPresenceOrb state="breathing" interactive={false} enableAudio={false} />, Stage: YororisStage, usage: { code: canvasUsage("YororisPresenceOrb", 'state="listening" voiceTone="lea" intensity={0.7}'), file: "Presence.tsx" }, lab: true },
+  jarvis: { Preview: () => <JarvisHUD interactive3D={false} />, Stage: HudStage, usage: { code: canvasUsage("JarvisHUD", 'theme="cyan" tacticalMode="standard"'), file: "Hud.tsx" }, lab: true },
+  caustics: { Preview: () => <LiquidCausticsView interactive={false} />, Stage: CausticsStage, usage: { code: canvasUsage("LiquidCausticsView", 'fluidMedium="glass" palette="prussian"'), file: "Glass.tsx" }, lab: true },
+  lattice: { Preview: () => <NeuralLatticeView interactive={false} nodeCount={60} />, Stage: LatticeStage, usage: { code: canvasUsage("NeuralLatticeView", 'theme="prussian-cyan" nodeCount={90}'), file: "Lattice.tsx" }, lab: true },
+  "kz-ui": { Preview: () => <Flow compact={false} particles="photons" />, Stage: Gallery, lab: false },
+  architecture: { Preview: () => null, Stage: SpecsStage, lab: false },
+};

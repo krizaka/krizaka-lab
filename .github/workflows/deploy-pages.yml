@@ -26,6 +26,12 @@ jobs:
       # The demo: relative asset paths (vite base "./"), one folder per REST route, 404.html for any other deep link.
       - run: pnpm run build
       - run: test -f dist-demo/index.html && test -f dist-demo/404.html && test -f dist-demo/orazaka/index.html
+      # 360–1440 px, dark and light: no page of the lab scrolls sideways.
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: |
+          pnpm exec vite preview --outDir dist-demo --port 4173 --strictPort &
+          for i in $(seq 1 30); do curl -fsS http://localhost:4173/ >/dev/null && break; sleep 1; done
+          node scripts/check-overflow.mjs --base http://localhost:4173
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
       - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:

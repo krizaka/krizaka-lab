@@ -533,9 +533,9 @@ export class JarvisHUDRenderer {
     ctx.textBaseline = "top";
 
     // Top-Left Telemetry
-    ctx.fillText("J.A.R.V.I.S. // MARK LXXXV", 22, 22);
+    ctx.fillText("KRIZAKA // HUD STUDY", 22, 22);
     ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
-    ctx.fillText(`FLUX CAPACITANCE: 1.21 GW`, 22, 40);
+    ctx.fillText(`SIGNAL: 1.21`, 22, 40);
     ctx.fillText(`NEURAL CORE: 99.4% NOMINAL`, 22, 56);
 
     // Energy Shunt readout
@@ -559,8 +559,8 @@ export class JarvisHUDRenderer {
     ctx.fillStyle = theme.secondary;
     ctx.fillText(
       isOverdrive
-        ? "CRITICAL PLASMA SATURATION · PROTOCOL 11 ENGAGED"
-        : "CLIQUEZ N'IMPORTE OÙ POUR VERROUILLER UNE CIBLE TACTIQUE",
+        ? "OVERDRIVE · ALL RINGS AT FULL SPEED"
+        : "CLICK ANYWHERE TO LOCK A TARGET",
       this.width / 2,
       this.height - 24
     );

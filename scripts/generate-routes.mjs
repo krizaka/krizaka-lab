@@ -32,7 +32,8 @@ const ROUTES = [
 const subfolderHtml = rootHtml
   .replaceAll('src="./assets/', 'src="../assets/')
   .replaceAll('href="./assets/', 'href="../assets/')
-  .replaceAll('href="./"', 'href="../"');
+  .replaceAll('href="./"', 'href="../"')
+  .replaceAll('href="./favicon.svg"', 'href="../favicon.svg"');
 
 for (const route of ROUTES) {
   const dirPath = path.join(DIST_DEMO, route);
