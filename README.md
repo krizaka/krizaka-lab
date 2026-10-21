@@ -24,17 +24,28 @@ HUD, liquid glass, a neural lattice — played live, each one a shareable addres
 
 ## The lab
 
-**https://krizaka.github.io/krizaka-motion/** — English by default, French through the language switch, dark and light.
+**https://krizaka.github.io/krizaka-motion/** — English, dark and light. Organised by task (krizaka-ui#434).
 
-| Demo | Address | What it's for |
+**Guides** — one task each, played on a real app screen made of `@krizaka/ui`, with its settings, the code to copy
+(it follows the settings), every option in a table and what happens under reduced motion:
+
+| Guide | Address | Screen |
 | :-- | :-- | :-- |
-| Engine flow | [`/orazaka`](https://krizaka.github.io/krizaka-motion/orazaka/) | One engine and the products it powers — the flow krizaka.com's home draws (`@krizaka/ui/engine-flow`), beside the first canvas version. |
-| Voice presence | [`/yororis`](https://krizaka.github.io/krizaka-motion/yororis/) | A sphere that breathes and follows a voice (procedural, or the microphone if allowed). |
-| Holographic HUD | [`/jarvis`](https://krizaka.github.io/krizaka-motion/jarvis/) | A study of dense, legible motion: rings, reticles, telemetry. |
-| Liquid glass | [`/liquid-glass`](https://krizaka.github.io/krizaka-motion/liquid-glass/) | Light bending through a liquid surface; touch for a ripple. |
-| Neural lattice | [`/neural-lattice`](https://krizaka.github.io/krizaka-motion/neural-lattice/) | Neurons that fire, synapses that strengthen with use. |
-| Krizaka UI + Motion | [`/krizaka-ui`](https://krizaka.github.io/krizaka-motion/krizaka-ui/) | 17 real `@krizaka/ui` components with their motion, by use case — live, with imports, props and reduced-motion behaviour. |
-| Specs | [`/specs`](https://krizaka.github.io/krizaka-motion/specs/) | The rules a lab view follows, and how one becomes a Krizaka UI primitive. |
+| Animate a list arriving | [`/list-arrival`](https://krizaka.github.io/krizaka-motion/list-arrival/) | dashboard |
+| Show a live number | [`/live-number`](https://krizaka.github.io/krizaka-motion/live-number/) | dashboard |
+| Stream an answer into a chat | [`/streaming-answer`](https://krizaka.github.io/krizaka-motion/streaming-answer/) | chat |
+| Cross from one step to the next | [`/page-transition`](https://krizaka.github.io/krizaka-motion/page-transition/) | checkout |
+| Say an action is working, then done | [`/button-feedback`](https://krizaka.github.io/krizaka-motion/button-feedback/) | checkout |
+| Draw a route and follow a courier | [`/route-draw`](https://krizaka.github.io/krizaka-motion/route-draw/) | delivery |
+
+**Scenarios** — the four screens, whole, with every motion they use: [`/dashboard`](https://krizaka.github.io/krizaka-motion/dashboard/),
+[`/chat`](https://krizaka.github.io/krizaka-motion/chat/), [`/checkout`](https://krizaka.github.io/krizaka-motion/checkout/),
+[`/delivery`](https://krizaka.github.io/krizaka-motion/delivery/). The old demo addresses (`/data-motion`, `/figures`,
+`/transitions`, `/conversation`, `/maps`) open the guide that replaced them.
+
+**Also**: [`/krizaka-ui`](https://krizaka.github.io/krizaka-motion/krizaka-ui/) (components with their motion),
+`/journey`, `/overlays`, `/people`, and [`/experiments`](https://krizaka.github.io/krizaka-motion/experiments/) — the
+canvas studies (engine flow, voice presence, HUD, liquid glass, neural lattice).
 
 ## Lab, then Krizaka UI
 
@@ -57,7 +68,7 @@ scripts/       generate-routes.mjs (a folder per route + 404.html for Pages), ch
 docs/          AUDIT-2026-10-20.md
 ```
 
-**Add a demo**: its view in `src/react`, its card, settings and usage in `src/lab/demos.tsx`, its route in
+**Add a guide**: its entry in `src/lab/guides.ts` (task, screen, settings, snippet, options, reduced motion), its path in `src/core/router.ts` (`GUIDE_PATHS`) and `scripts/generate-routes.mjs`; tests/guides.test.mjs holds the contract. **Add a canvas experiment**: its view in `src/react`, its card, settings and usage in `src/lab/demos.tsx`, its route in
 `src/core/router.ts` and `scripts/generate-routes.mjs`, its words in both catalogues.
 
 ## Run it

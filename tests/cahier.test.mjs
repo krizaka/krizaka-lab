@@ -13,6 +13,7 @@ test("no uppercase tracked label, no frosted panel, no round card in the lab's s
   assert.doesNotMatch(css, /border-radius:\s*(1\d|[2-9]\d)px/);
 });
 
-test("the lab's title is set in the display face, at its one weight", () => {
-  assert.match(css, /\.lab-hero h1 \{[^}]*font-family: var\(--kz-font-display\); font-weight: 400;/);
+test("the lab's pages open on Krizaka UI's PageHero (the display face, at its one weight) — no hero of its own", () => {
+  assert.doesNotMatch(css, /\.lab-hero\b/);
+  assert.match(readFileSync(new URL("../src/lab/Home.tsx", import.meta.url), "utf8"), /<PageHero /);
 });

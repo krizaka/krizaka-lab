@@ -93,3 +93,32 @@ describe("Lab pages", () => {
     assert.equal(homeHref("/jarvis"), "/");
   });
 });
+
+// krizaka-ui#434: the lab is organised by task (guides) and by app screen (scenarios); the old demo addresses lead to
+// the guide that replaced them, so no link breaks.
+import { GUIDE_PATHS, SCENARIO_PATHS, LEGACY_PATHS } from "../dist/core/index.js";
+
+describe("guides, scenarios and the old addresses", () => {
+  it("each guide and each scenario is its own address, also under /krizaka-motion/", () => {
+    for (const id of ["list-arrival", "live-number", "page-transition", "button-feedback", "streaming-answer", "route-draw"]) {
+      assert.ok(GUIDE_PATHS.includes(id), id);
+      assert.equal(resolvePage({ pathname: `/krizaka-motion/${id}`, search: "", hash: "" }), id);
+    }
+    for (const id of ["dashboard", "chat", "checkout", "delivery"]) {
+      assert.ok(SCENARIO_PATHS.includes(id), id);
+      assert.equal(resolvePage({ pathname: `/${id}/`, search: "", hash: "" }), id);
+    }
+    assert.equal(resolvePage({ pathname: "/krizaka-motion/experiments", search: "", hash: "" }), "experiments");
+  });
+
+  it("the old demo pages lead to their guide", () => {
+    assert.deepEqual(LEGACY_PATHS, { "data-motion": "list-arrival", figures: "live-number", transitions: "page-transition", conversation: "streaming-answer", maps: "route-draw" });
+    assert.equal(resolvePage({ pathname: "/krizaka-motion/data-motion", search: "", hash: "" }), "list-arrival");
+    assert.equal(resolvePage({ pathname: "/maps/", search: "", hash: "" }), "route-draw");
+    assert.equal(resolvePage({ pathname: "/krizaka-motion/", search: "?/conversation", hash: "" }), "streaming-answer");
+  });
+
+  it("an address names a page or the home, never something else", () => {
+    assert.equal(resolvePage({ pathname: "/krizaka-motion/checkoutx", search: "", hash: "" }), "home");
+  });
+});

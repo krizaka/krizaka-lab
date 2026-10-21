@@ -34,6 +34,18 @@ const ROUTES = [
   "caustics",
   "lattice",
   "kz-ui",
+  // krizaka-ui#434: the guides, the scenarios, the experiments
+  "list-arrival",
+  "live-number",
+  "page-transition",
+  "button-feedback",
+  "streaming-answer",
+  "route-draw",
+  "dashboard",
+  "chat",
+  "checkout",
+  "delivery",
+  "experiments",
 ];
 
 // For subdirectories, replace relative paths "./assets/" with "../assets/"

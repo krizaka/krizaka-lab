@@ -1,8 +1,7 @@
 #!/usr/bin/env node
-/* The demos really play (reduced motion OFF) and rest done (ON), in a real browser, desktop and phone, dark and light:
-   - /conversation/: the streamed answer grows over time; under reduced motion it is whole at once;
-   - /journey/: the stepper's current step advances over time; under reduced motion the journey is finished at once;
-   - /figures/: the live total (the ticker's accessible value) changes over time.
+/* The guides' screens and the demos really play (reduced motion OFF) and rest done (ON), in a real browser, desktop and
+   phone, dark and light: the streamed answer grows, runs land in the table, the figures climb, the arrival counts down,
+   the checkout's step crosses through a view transition (never under reduced motion), the journey advances.
      node scripts/check-demos.mjs --base http://localhost:4173 */
 import { chromium } from "playwright";
 
@@ -10,15 +9,16 @@ const i = process.argv.indexOf("--base");
 const base = (i > 0 ? process.argv[i + 1] : "http://localhost:4173").replace(/\/$/, "");
 const VIEWPORTS = [{ name: "desktop", width: 1280, height: 900 }, { name: "phone", width: 390, height: 844 }];
 
-/** The in-page readings each demo is judged on. */
+/** The in-page readings each page is judged on: the guides' screens (krizaka-ui#434) and the component demos. */
 const READ = {
-  "/conversation/": () => [...document.querySelectorAll(".lab-chat-log > div, .lab-chat-log > *")].map((e) => e.textContent).join("|").length,
+  "/streaming-answer/": () => document.querySelector(".lab-chat-log")?.textContent?.length ?? 0,
+  "/list-arrival/": () => document.querySelector(".lab-dash-table tbody tr")?.textContent ?? "",
+  "/live-number/": () => document.querySelector(".lab-dash-figures .sr-only, .lab-dash-figures")?.textContent ?? "",
+  "/route-draw/": () => document.querySelector(".lab-delivery-side")?.textContent ?? "",
+  "/page-transition/": () => document.querySelector(".lab-checkout-title")?.textContent ?? "",
   "/journey/": () => [...document.querySelectorAll(".lab-journey li")].map((li) => li.textContent.length + (li.getAttribute("aria-current") ? "c" : "")).join(","),
   "/overlays/": () => document.querySelector("[data-testid=active]")?.textContent ?? "",
-  "/transitions/": () => document.querySelector("[data-testid=vt-view]")?.textContent ?? "",
-  "/data-motion/": () => getComputedStyle(document.querySelector(".kz-grow svg")).clipPath,
   "/people/": () => document.querySelector(".lab-people")?.textContent ?? "",
-  "/figures/": () => document.querySelector(".lab-figures")?.textContent ?? "",
 };
 
 const browser = await chromium.launch();
@@ -33,8 +33,7 @@ for (const reducedMotion of ["no-preference", "reduce"])
         const page = await context.newPage();
         await page.goto(base + path, { waitUntil: "load" });
         // The demo that moves by itself is the last playground of its page (overlays: the indicator).
-        const stages = page.locator(".lab-playground-stage");
-        await (path === "/conversation/" ? stages.first() : stages.last()).scrollIntoViewIfNeeded();
+        await page.locator(".lab-guide-screen, .lab-playground-stage").last().scrollIntoViewIfNeeded();
         await page.waitForTimeout(600);
         const a = await page.evaluate(read);
         await page.waitForTimeout(2600);
@@ -53,22 +52,22 @@ for (const reducedMotion of ["no-preference", "reduce"])
           else if (reducedMotion === "reduce" && anim > 0) problems.push(`${label}: the dialog animates under reduced motion`);
           await page.keyboard.press("Escape");
         }
-        if (path === "/transitions/") {
-          // Next: the view changes; with the API and motion on, a view transition runs (the root gets data-vt), never under reduced motion.
+        if (path === "/page-transition/") {
+          // Continue: the checkout's step changes; with the API and motion on, a view transition runs (the root gets data-vt), never under reduced motion.
           const seen = page.evaluate(() => new Promise((resolve) => { const o = new MutationObserver(() => { if (document.documentElement.dataset.vt) { o.disconnect(); resolve(true); } }); o.observe(document.documentElement, { attributes: true }); setTimeout(() => resolve(false), 1500); }));
-          await page.getByRole("button", { name: "Next" }).click();
+          await page.getByRole("button", { name: "Continue" }).click();
           const ran = await seen;
           const label = `${path} ${vp.name} ${theme} reduced-motion=${reducedMotion}`;
           await page.waitForTimeout(700);
-          const text = await page.getByTestId("vt-view").textContent();
-          if (!/Runs/.test(text ?? "")) problems.push(`${label}: Next did not change the view`);
+          const text = await page.locator(".lab-checkout-title").textContent();
+          if (!/Review/.test(text ?? "")) problems.push(`${label}: Continue did not change the step`);
           if (reducedMotion === "no-preference" && !ran) problems.push(`${label}: no view transition ran`);
           if (reducedMotion === "reduce" && ran) problems.push(`${label}: a view transition ran under reduced motion`);
         }
         const where = `${path} ${vp.name} ${theme} reduced-motion=${reducedMotion}`;
         checks++;
-        if (path !== "/transitions/" && reducedMotion === "no-preference" && JSON.stringify(a) === JSON.stringify(b)) problems.push(`${where}: nothing changed in 2.6 s`);
-        if (path !== "/transitions/" && reducedMotion === "reduce" && JSON.stringify(a) !== JSON.stringify(c)) problems.push(`${where}: it moves under reduced motion`);
+        if (path !== "/page-transition/" && reducedMotion === "no-preference" && JSON.stringify(a) === JSON.stringify(b)) problems.push(`${where}: nothing changed in 2.6 s`);
+        if (path !== "/page-transition/" && reducedMotion === "reduce" && JSON.stringify(a) !== JSON.stringify(c)) problems.push(`${where}: it moves under reduced motion`);
         await context.close();
       }
 await browser.close();

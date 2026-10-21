@@ -14,13 +14,18 @@ import { familyLabels } from "@krizaka/ui/sites";
 import { ThemeProvider, useTheme } from "@krizaka/ui/theme";
 import { type MouseEvent, useEffect, useMemo, useState } from "react";
 
-import { getHrefForTab, homeHref, type LabPage, resolvePage, type TabId } from "./core/router";
+import { GUIDE_PATHS, getHrefForTab, homeHref, type LabPage, resolvePage, SCENARIO_PATHS, type GuidePage as GuideId, type ScenarioPage as ScenarioId, type TabId } from "./core/router";
 import { DemoPage } from "./lab/DemoPage";
-import { Home } from "./lab/Home";
+import { GuidePage, ScenarioPage } from "./lab/GuidePage";
+import { guideById } from "./lab/guides";
+import { Experiments, Home } from "./lab/Home";
+import { SCENARIOS } from "./lab/scenarios";
 import { LabContext } from "./lab/context";
 import { i18n, LOCALE } from "./lab/messages";
 
 const REPO = "https://github.com/krizaka/krizaka-motion";
+const isGuide = (p: LabPage): p is GuideId => (GUIDE_PATHS as readonly string[]).includes(p);
+const isScenario = (p: LabPage): p is ScenarioId => (SCENARIO_PATHS as readonly string[]).includes(p);
 function Shell() {
   const [page, setPage] = useState<LabPage>(() => resolvePage(window.location));
   const locale = LOCALE;
@@ -36,7 +41,8 @@ function Shell() {
 
   useEffect(() => {
     document.documentElement.lang = locale;
-    document.title = page === "home" ? `${t.bar.label} — ${t.home.eyebrow}` : `${t.demos[page].name} — ${t.bar.label}`;
+    const name = page === "home" ? t.home.eyebrow : page === "experiments" ? "Experiments" : isGuide(page) ? guideById(page).title : isScenario(page) ? SCENARIOS[page].title : t.demos[page].name;
+    document.title = page === "home" ? `${t.bar.label} — ${name}` : `${name} — ${t.bar.label}`;
   }, [page, locale, t]);
 
   const lab = useMemo(() => {
@@ -53,10 +59,11 @@ function Shell() {
   }, [t, locale]);
 
   const nav: { id: LabPage; label: string }[] = [
-    { id: "home", label: t.bar.demos },
+    { id: "home", label: "Guides" },
     { id: "kz-ui", label: t.bar.gallery },
-    { id: "architecture", label: t.bar.specs },
+    { id: "experiments", label: "Experiments" },
   ];
+  const section: LabPage = isGuide(page) || isScenario(page) ? "home" : page === "experiments" || ["orazaka", "yororis", "jarvis", "caustics", "lattice"].includes(page) ? "experiments" : page;
 
   return (
     <LabContext.Provider value={lab}>
@@ -72,7 +79,7 @@ function Shell() {
           <NavBar.Family current="github" labels={familyLabels[locale]} />
           <NavBar.Items>
             {nav.map((n) => (
-              <NavBar.Link key={n.id} asChild active={page === n.id || (n.id === "home" && !["kz-ui", "architecture"].includes(page))}>
+              <NavBar.Link key={n.id} asChild active={section === n.id}>
                 <a href={lab.href(n.id)} onClick={lab.go(n.id)}>
                   {n.label}
                 </a>
@@ -104,11 +111,14 @@ function Shell() {
         </NavBar.Root>
       </div>
 
-      <main className="lab-main">{page === "home" ? <Home /> : <DemoPage id={page as TabId} />}</main>
+      <main className="lab-main">
+        {page === "home" ? <Home /> : page === "experiments" ? <Experiments /> : isGuide(page) ? <GuidePage key={page} id={page} /> : isScenario(page) ? <ScenarioPage key={page} id={page} /> : <DemoPage id={page as TabId} />}
+      </main>
 
       <SiteFooter current="github" labels={familyLabels[locale]}>
         <SiteFooter.Column title={t.footer.lab}>
-          <SiteFooter.Link href={lab.href("home")}>{t.footer.demos}</SiteFooter.Link>
+          <SiteFooter.Link href={lab.href("home")}>Guides</SiteFooter.Link>
+          <SiteFooter.Link href={lab.href("experiments")}>Experiments</SiteFooter.Link>
           <SiteFooter.Link href={lab.href("kz-ui")}>{t.bar.gallery}</SiteFooter.Link>
           <SiteFooter.Link href={lab.href("architecture")}>{t.bar.specs}</SiteFooter.Link>
           <SiteFooter.Link href={REPO}>{t.footer.source}</SiteFooter.Link>

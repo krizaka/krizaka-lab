@@ -8,14 +8,9 @@ export type TabId =
   | "jarvis"
   | "caustics"
   | "lattice"
-  | "maps"
-  | "conversation"
   | "journey"
-  | "figures"
   | "overlays"
   | "people"
-  | "transitions"
-  | "data"
   | "kz-ui"
   | "architecture";
 
@@ -69,22 +64,8 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     description: "Hodgkin-Huxley membrane action potentials & synaptic plasticity",
     aliases: ["neural-lattice", "lattice", "synapse", "quantum"],
   },
-  maps: {
-    id: "maps",
-    path: "maps",
-    label: "Maps",
-    title: "Maps in motion — Krizaka Motion",
-    description: "Pins that drop, a route that draws itself, a courier, a heat pulse — on the Krizaka UI map",
-    aliases: ["maps", "map", "route", "delivery"],
-  },
-  conversation: {
-    id: "conversation",
-    path: "conversation",
-    label: "Conversation",
-    title: "Streaming messages and terminal replay — Krizaka Motion",
-    description: "A model's answer streaming into a bubble, a terminal session played back",
-    aliases: ["conversation", "chat", "stream", "terminal"],
-  },
+
+
   journey: {
     id: "journey",
     path: "journey",
@@ -93,14 +74,7 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     description: "Steps that complete, a step in progress, a step that fails",
     aliases: ["journey", "stepper", "steps", "job"],
   },
-  figures: {
-    id: "figures",
-    path: "figures",
-    label: "Figures",
-    title: "Figures that climb — Krizaka Motion",
-    description: "NumberTicker, Meter and GoalGauge driven by one live total",
-    aliases: ["figures", "ticker", "meter", "gauge"],
-  },
+
   overlays: {
     id: "overlays",
     path: "overlays",
@@ -117,22 +91,8 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     description: "An avatar stack that fills, a verified badge, milestones that unlock",
     aliases: ["people","avatars","verified","achievements"],
   },
-  transitions: {
-    id: "transitions",
-    path: "transitions",
-    label: "Transitions",
-    title: "Page transitions — Krizaka Motion",
-    description: "View changes that cross inside a stage, through the View Transitions API",
-    aliases: ["transitions","page-transitions","view-transitions"],
-  },
-  data: {
-    id: "data",
-    path: "data-motion",
-    label: "Data",
-    title: "Data in motion — Krizaka Motion",
-    description: "Table rows that arrive and sort, sparklines that grow, figures that climb",
-    aliases: ["data-motion", "data", "table", "sparkline"],
-  },
+
+
   "kz-ui": {
     id: "kz-ui",
     path: "krizaka-ui",
@@ -157,14 +117,9 @@ export const TAB_ORDER: TabId[] = [
   "jarvis",
   "caustics",
   "lattice",
-  "maps",
-  "conversation",
   "journey",
-  "figures",
   "overlays",
   "people",
-  "transitions",
-  "data",
   "kz-ui",
   "architecture",
 ];
@@ -232,10 +187,10 @@ export function resolveTabFromLocation(loc: {
   return "orazaka";
 }
 
-export function getHrefForTab(tab: TabId, currentPathname: string = ""): string {
+export function getHrefForTab(tab: TabId | GuidePage | ScenarioPage | "experiments", currentPathname: string = ""): string {
   const isKrizakaMotionBase = currentPathname.includes("/krizaka-motion");
   const prefix = isKrizakaMotionBase ? "/krizaka-motion/" : "/";
-  return `${prefix}${TAB_ROUTES[tab].path}`;
+  return `${prefix}${tab in TAB_ROUTES ? TAB_ROUTES[tab as TabId].path : tab}`;
 }
 
 /**
@@ -251,12 +206,33 @@ export function cleanSpaRedirect(loc: { pathname: string; search: string; hash?:
   return `${base}${route.replace(/~and~/g, "&")}${query}${loc.hash ?? ""}`;
 }
 
-/** A page of the lab: its home (the demos as cards) or a demo. */
-export type LabPage = TabId | "home";
+/** The guides (one task each, on a real screen) and the scenarios (the app screens they play on) — krizaka-ui#434. */
+export const GUIDE_PATHS = ["list-arrival", "live-number", "page-transition", "button-feedback", "streaming-answer", "route-draw"] as const;
+export const SCENARIO_PATHS = ["dashboard", "chat", "checkout", "delivery"] as const;
+export type GuidePage = (typeof GUIDE_PATHS)[number];
+export type ScenarioPage = (typeof SCENARIO_PATHS)[number];
+/** The demo pages the guides replaced: their addresses still work and open the guide. */
+export const LEGACY_PATHS: Record<string, GuidePage> = { "data-motion": "list-arrival", figures: "live-number", transitions: "page-transition", conversation: "streaming-answer", maps: "route-draw" };
 
-/** The page at a location: the demo its query, hash or last path segment names, else the home. */
+/** A page of the lab: its home, a guide, a scenario, the experiments, or a demo. */
+export type LabPage = TabId | GuidePage | ScenarioPage | "experiments" | "home";
+
+/** The page a word names, among the guides, the scenarios, the experiments and the old demo addresses. */
+function namedPage(word: string | undefined): LabPage | undefined {
+  if (!word) return undefined;
+  const w = word.toLowerCase();
+  if ((GUIDE_PATHS as readonly string[]).includes(w)) return w as GuidePage;
+  if ((SCENARIO_PATHS as readonly string[]).includes(w)) return w as ScenarioPage;
+  if (w === "experiments") return "experiments";
+  return LEGACY_PATHS[w];
+}
+
+/** The page at a location: the page its query, hash or last path segment names, else the home. */
 export function resolvePage(loc: { pathname?: string; search?: string; hash?: string }): LabPage {
   const segments = (loc.pathname ?? "").split("/").filter(Boolean).filter((s) => s !== "krizaka-motion" && s !== "index.html");
+  const spa = (loc.search ?? "").startsWith("?/") ? (loc.search ?? "").slice(2).split("&")[0]!.split("/").filter(Boolean).pop() : undefined;
+  const page = namedPage(segments[segments.length - 1]) ?? namedPage(spa) ?? namedPage((loc.hash ?? "").replace(/^#\/?/, "")) ?? namedPage(new URLSearchParams((loc.search ?? "").replace(/^\?\/[^&]*&?/, "?")).get("tab") ?? undefined);
+  if (page) return page;
   const named = Boolean(segments.length) || /[?&]tab=/.test(loc.search ?? "") || (loc.search ?? "").startsWith("?/") || Boolean((loc.hash ?? "").replace(/^#\/?/, ""));
   if (!named) return "home";
   const tab = resolveTabFromLocation(loc);
