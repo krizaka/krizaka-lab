@@ -6,7 +6,7 @@
      node scripts/check-motion.mjs --base http://localhost:4173 */
 import { chromium } from "playwright";
 
-export const PATHS = ["/", "/orazaka/", "/krizaka-ui/"];
+export const PATHS = ["/orazaka/", "/krizaka-ui/"]; // the home is by task now (krizaka-ui#434): the engine flow lives on /orazaka/ and the components page
 export const VIEWPORTS = [
   { name: "desktop", width: 1280, height: 900 },
   { name: "phone", width: 390, height: 844 },

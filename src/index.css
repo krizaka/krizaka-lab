@@ -143,28 +143,47 @@ html[data-vt^="reveal"]::view-transition-new(lab-stage) { animation-name: lab-vt
 @keyframes lab-vt-reveal { from { opacity: 0; scale: 0.96; } }
 @media (prefers-reduced-motion: reduce) { ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } }
 
-/* The first screen: headline + install, the live figure and its knobs. One column on a phone (figure first under the headline). */
-.lab-hero { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; padding: 110px var(--kz-page-gutter, 16px) 40px; max-width: var(--kz-page-max, 72rem); margin-inline: auto; }
-.lab-hero-eyebrow { margin: 0; font-family: var(--kz-font-mono); font-size: 12px; letter-spacing: 0; text-transform: none; color: var(--kz-accent-text, var(--kz-accent)); }
-.lab-hero h1 { margin: 8px 0 12px; font-family: var(--kz-font-display); font-weight: 400; font-size: clamp(2.4rem, 7vw, 4.2rem); line-height: 1.06; letter-spacing: -0.01em; }
-.lab-hero-lead { margin: 0 0 18px; font-size: 1.1rem; color: var(--kz-text-secondary); max-width: 38ch; }
-.lab-install { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 8px 8px 8px 14px; border-radius: 8px; border: 1px solid var(--kz-border-default); background: var(--kz-surface-1); width: fit-content; max-width: 100%; }
-.lab-install code { font-family: var(--kz-font-mono); font-size: 14px; }
-.lab-hero-steps { margin: 16px 0 0; font-size: 14px; color: var(--kz-text-secondary); }
-.lab-hero-steps a, .lab-sublead a { color: var(--kz-accent-text, var(--kz-accent)); font-weight: 600; text-underline-offset: 3px; }
-.lab-hero-play { min-width: 0; display: flex; flex-direction: column; gap: 14px; }
-.lab-hero-figure { min-width: 0; padding: 12px; border-radius: 0; border: 1px solid var(--kz-border-subtle); background: var(--kz-surface-1); }
-.lab-hero-knobs { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 16px; border-radius: 0; border: 1px solid var(--kz-border-subtle); background: var(--kz-surface-1); }
-@media (min-width: 640px) { .lab-hero-knobs { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; } .lab-hero-knobs > button { grid-column: 1 / -1; } }
-@media (min-width: 1024px) { .lab-hero { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; padding-top: 120px; } }
-.lab-steps { list-style: none; margin: 0 0 16px; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; counter-reset: step; }
-.lab-steps li { min-width: 0; display: flex; flex-direction: column; gap: 8px; counter-increment: step; }
-.lab-steps li > strong::before { content: counter(step) ". "; color: var(--kz-accent-text, var(--kz-accent)); }
-@media (min-width: 900px) { .lab-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-
 /* People */
 .lab-people { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; max-width: 36rem; min-width: 0; }
 .lab-people-row { display: flex; align-items: center; gap: 14px; }
 .lab-people-item { display: inline-flex; }
 .lab-people-name { margin: 0; display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.1rem; }
 .lab-people-list { width: 100%; }
+
+/* ═══ Scenarios and guides (krizaka-ui#434) ═══════════════════════════════════════════════════════════════════════════
+   A scenario is an app screen made of @krizaka/ui: a sheet of paper with the product's bar. A guide sets that screen
+   beside its settings (one column on a phone, the screen first), then the code, the options, the other guides. */
+.lab-screen { min-width: 0; border: 1px solid var(--kz-border-default); background: var(--kz-surface-0); box-shadow: var(--kz-shadow-sm); }
+.lab-screen-bar { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 12px; border-bottom: 1px solid var(--kz-border-subtle); background: var(--kz-surface-1); font-size: 14px; }
+.lab-screen-app { font-weight: 700; color: var(--kz-text-primary); }
+.lab-screen-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--kz-text-secondary); }
+.lab-screen-actions { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; }
+.lab-screen-body { display: grid; gap: 16px; padding: clamp(12px, 2.4vw, 20px); min-width: 0; }
+.lab-dash-figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); gap: 12px 20px; }
+.lab-dash-table { min-width: 0; overflow-x: auto; }
+.lab-checkout { display: grid; gap: 14px; min-height: 12rem; align-content: start; }
+.lab-checkout-title { margin: 0; font-family: var(--kz-font-display); font-weight: 400; font-size: 1.25rem; color: var(--kz-text-primary); }
+.lab-checkout-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.lab-receipt { margin: 0; display: grid; gap: 4px; max-width: 22rem; font-size: 14px; }
+.lab-receipt > div { display: flex; justify-content: space-between; gap: 16px; padding: 4px 0; border-bottom: 1px dashed var(--kz-border-subtle); }
+.lab-receipt > div:last-child { border-bottom: 0; font-weight: 700; color: var(--kz-text-primary); }
+.lab-receipt dt { color: var(--kz-text-secondary); }
+.lab-receipt dd { margin: 0; font-variant-numeric: var(--kz-figures, lining-nums tabular-nums); }
+.lab-delivery { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.lab-delivery .lab-map-view { min-height: 260px; }
+.lab-delivery-side { display: grid; gap: 12px; align-content: start; }
+@media (min-width: 720px) { .lab-delivery { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); } }
+
+.lab-guide { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+.lab-guide-screen, .lab-scenario-screen { margin: 0; display: grid; gap: 8px; min-width: 0; }
+.lab-guide-settings { display: grid; gap: 14px; align-content: start; padding: 16px; border: 1px solid var(--kz-border-subtle); background: var(--kz-surface-1); }
+.lab-guide-settings h2 { margin: 0; font-size: 15px; font-weight: 700; }
+@media (min-width: 1024px) { .lab-guide { grid-template-columns: minmax(0, 2fr) minmax(16rem, 1fr); align-items: start; } }
+.lab-uses { margin: 0; font-size: 14px; color: var(--kz-text-secondary); }
+.lab-uses a, .lab-guide-more a { color: var(--kz-accent-text, var(--kz-accent)); font-weight: 600; text-underline-offset: 3px; }
+.lab-reduced { margin: 12px 0 0; max-width: 60ch; font-size: 14px; color: var(--kz-text-secondary); }
+.lab-guide-more { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; font-size: 15px; color: var(--kz-text-secondary); }
+/* A scenario's card: its screen in miniature, laid out at a laptop's width and scaled, never interactive. */
+.lab-preview-screen { aspect-ratio: 16 / 10; }
+.lab-preview-screen > * { position: absolute; inset: 0 auto auto 0; width: 200%; transform: scale(0.5); transform-origin: top left; }
+.lab-guide-copy-note { margin-top: 12px; }
