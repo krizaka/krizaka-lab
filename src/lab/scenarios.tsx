@@ -18,6 +18,7 @@ import { Stat } from "@krizaka/ui/stat";
 import { StepProgress } from "@krizaka/ui/step-progress";
 import { Toaster, toast } from "@krizaka/ui/toast";
 import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from "react";
+import { canViewTransition, transitionPage, type ViewTransitionEnv } from "../core/view-transition";
 import { flushSync } from "react-dom";
 
 import { useInView, useReducedMotion } from "./hooks";
@@ -164,8 +165,6 @@ const PRICE = 45;
 const GST = 0.05;
 const QST = 0.09975;
 
-type ViewTransitionDoc = Document & { startViewTransition?: (cb: () => void) => { finished: Promise<void> } };
-
 export function Checkout({ v = {} }: { v?: Values }) {
   const reduce = useReducedMotion();
   const [step, setStep] = useState(0);
@@ -175,14 +174,18 @@ export function Checkout({ v = {} }: { v?: Values }) {
   const easing = String(v.easing ?? "ease-out");
   const style = String(v.style ?? "slide");
   const go = (to: number) => {
-    const change = () => flushSync(() => setStep(to));
-    const doc = document as ViewTransitionDoc;
-    if (reduce || !doc.startViewTransition) return change();
     const root = document.documentElement;
-    root.dataset.vt = `${style}-${to >= step ? "forward" : "back"}`;
-    root.style.setProperty("--lab-vt-duration", `${duration}ms`);
-    root.style.setProperty("--lab-vt-ease", easing);
-    void doc.startViewTransition(change).finished.finally(() => delete root.dataset.vt);
+    const native = !reduce && canViewTransition(document as unknown as ViewTransitionEnv["doc"]);
+    if (native) {
+      root.dataset.vt = `${style}-${to >= step ? "forward" : "back"}`;
+      root.style.setProperty("--lab-vt-duration", `${duration}ms`);
+      root.style.setProperty("--lab-vt-ease", easing);
+    }
+    void transitionPage(
+      () => flushSync(() => setStep(to)),
+      { doc: document as unknown as ViewTransitionEnv["doc"], reduced: reduce },
+      { duration, easing },
+    ).finally(() => delete root.dataset.vt);
   };
   const pay = () => {
     setPaying(true);

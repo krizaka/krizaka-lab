@@ -12,3 +12,4 @@ export * from "./jarvis-hud";
 export * from "./liquid-caustics";
 export * from "./neural-lattice";
 export * from "./router";
+export * from "./view-transition";
