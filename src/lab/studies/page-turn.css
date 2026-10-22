@@ -1,0 +1,16 @@
+/* Page turn: two routes, one shared element, a fold between them (View Transitions, same document). */
+.st-book { display: grid; gap: 12px; width: 100%; justify-items: center; }
+.st-page { view-transition-name: st-page; width: min(100%, 22rem); min-height: 120px; padding: 18px 20px; border: 1px solid var(--kz-border-default); background: var(--kz-surface-1); color: var(--kz-text-primary); }
+.st-page h4 { margin: 0 0 6px; font-size: 1.05rem; }
+.st-page p { margin: 0; color: var(--kz-text-secondary); }
+html[data-turn] { perspective: 1200px; }
+html[data-turn] ::view-transition-group(st-page) { animation-duration: 600ms; }
+html[data-turn="next"]::view-transition-old(st-page) { transform-origin: left center; animation: st-fold-out 600ms ease-in both; }
+html[data-turn="next"]::view-transition-new(st-page) { animation: st-fade-in 600ms ease-out both; }
+html[data-turn="back"]::view-transition-old(st-page) { animation: st-fade-out 600ms ease-in both; }
+html[data-turn="back"]::view-transition-new(st-page) { transform-origin: left center; animation: st-fold-in 600ms ease-out both; }
+@keyframes st-fold-out { to { transform: rotateY(-100deg); opacity: 0.2; } }
+@keyframes st-fold-in { from { transform: rotateY(-100deg); opacity: 0.2; } }
+@keyframes st-fade-in { from { opacity: 0; } }
+@keyframes st-fade-out { to { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { html[data-turn] ::view-transition-group(st-page), html[data-turn] ::view-transition-old(st-page), html[data-turn] ::view-transition-new(st-page) { animation: none; } }

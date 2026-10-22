@@ -1,0 +1,23 @@
+/* Marginalia: a note anchored to the words it explains (CSS anchor positioning) and opened as a popover that grows
+   from its anchor with @starting-style. Without anchor positioning the note still opens, in the middle. */
+.st-text { max-width: 30rem; line-height: 1.7; color: var(--kz-text-secondary); }
+.st-term { anchor-name: --st-note; padding: 0 2px; border: 0; border-bottom: 2px dotted var(--kz-accent); background: none; color: var(--kz-text-primary); font: inherit; cursor: pointer; }
+.st-note {
+  position-anchor: --st-note;
+  position-area: right span-bottom;
+  margin: 0 0 0 12px;
+  max-width: 14rem;
+  padding: 10px 12px;
+  border: 1px solid var(--kz-border-default);
+  background: var(--kz-surface-2);
+  color: var(--kz-text-primary);
+  font-size: 13px;
+  line-height: 1.45;
+  opacity: 1;
+  translate: 0 0;
+  transition: opacity 220ms ease, translate 220ms ease, display 220ms allow-discrete, overlay 220ms allow-discrete;
+}
+.st-note:not(:popover-open) { opacity: 0; translate: -8px 0; }
+@starting-style { .st-note:popover-open { opacity: 0; translate: -8px 0; } }
+@supports not (position-area: right) { .st-note { position: fixed; inset: 0; margin: auto; height: fit-content; } }
+@media (prefers-reduced-motion: reduce) { .st-note { transition: none; } }

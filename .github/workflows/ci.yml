@@ -47,3 +47,4 @@ jobs:
           # Every gallery card works as its words say, and the experiments run smooth (reduced motion OFF and ON).
           node scripts/check-cards.mjs --base http://localhost:4173
           node scripts/check-experiments.mjs --base http://localhost:4173
+          node scripts/check-studies.mjs --base http://localhost:4173

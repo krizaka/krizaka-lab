@@ -3,6 +3,7 @@
    made of @krizaka/ui), and, last and quiet, where the components and the experiments are. The canvas studies live on
    their own page (Experiments): they are the lab's drawings, not what an app ships. */
 
+import { Studies } from "./studies";
 import { CardGrid } from "@krizaka/ui/card-grid";
 import { CodeBlock } from "@krizaka/ui/code-block";
 import { LinkCard } from "@krizaka/ui/link-card";
@@ -129,6 +130,7 @@ export function Experiments() {
           })}
         </CardGrid>
       </Section>
+      <Studies />
     </>
   );
 }
