@@ -78,3 +78,16 @@ describe("Jarvis Tactical Target Lock Threat Levels", () => {
     assert.equal(computeThreat(2400), "MINIMAL");
   });
 });
+
+describe("Voice presence particles", () => {
+  it("never draw a negative radius: depth is clamped before the perspective divide", async () => {
+    const { readFileSync } = await import("node:fs");
+    const src = readFileSync(new URL("../src/core/yororis-synthesis.ts", import.meta.url), "utf8");
+    assert.match(src, /fov \/ Math\.max\(40, fov \+ sp\.z \* this\.baseRadius\)/);
+  });
+  it("has no breathing exercise wording", async () => {
+    const { readFileSync } = await import("node:fs");
+    const src = readFileSync(new URL("../src/core/yororis-synthesis.ts", import.meta.url), "utf8");
+    assert.doesNotMatch(src, /4-7-8|INHALE|EXHALE|breathing/i);
+  });
+});
