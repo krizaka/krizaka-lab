@@ -43,7 +43,6 @@ export class YororisAcousticRenderer {
 
   private state: YororisState = "idle";
   private time = 0;
-  private breathingTimer = 0;
 
   // 3D Sphere geometry
   private spherePoints: Point3D[] = [];
@@ -264,7 +263,6 @@ export class YororisAcousticRenderer {
     const ctx = this.ctx;
     const dpr = this.dpr;
 
-    this.breathingTimer = (this.breathingTimer + deltaTime) % 19;
     this.updateAcousticSpectrum(deltaTime);
 
     ctx.save();
@@ -347,7 +345,7 @@ export class YororisAcousticRenderer {
     const radius = this.baseRadius * (1.9 + breath);
 
     const auraGrad = ctx.createRadialGradient(cx, cy, this.baseRadius * 0.35, cx, cy, radius);
-    if (this.state === "breathing") {
+    if (this.state === "resting") {
       auraGrad.addColorStop(0, "rgba(216, 227, 220, 0.3)");
       auraGrad.addColorStop(0.55, "rgba(124, 144, 130, 0.14)");
       auraGrad.addColorStop(1, "rgba(124, 144, 130, 0)");
@@ -425,7 +423,8 @@ export class YororisAcousticRenderer {
       }
 
       const fov = 300;
-      const scale = fov / (fov + sp.z * this.baseRadius);
+      // Never behind the camera: a negative depth gave a negative radius (a console error every frame on a wide stage).
+      const scale = fov / Math.max(40, fov + sp.z * this.baseRadius);
       const px = cx + sp.x * this.baseRadius * scale;
       const py = cy + sp.y * this.baseRadius * scale;
 
@@ -457,15 +456,9 @@ export class YororisAcousticRenderer {
     const sinX = Math.sin(rotX);
 
     let scaleModifier = 1.0;
-    if (this.state === "breathing") {
-      if (this.breathingTimer < 4) {
-        scaleModifier = 0.9 + (this.breathingTimer / 4) * 0.32;
-      } else if (this.breathingTimer < 11) {
-        scaleModifier = 1.22;
-      } else {
-        const exh = (this.breathingTimer - 11) / 8;
-        scaleModifier = 1.22 - exh * 0.32;
-      }
+    if (this.state === "resting") {
+      // A slow, quiet swell: the sphere at rest, waiting for a voice (no exercise, no count).
+      scaleModifier = 1.0 + Math.sin(this.time * 0.7) * 0.05;
     } else {
       scaleModifier = 1.0 + Math.sin(this.time * 1.3) * 0.06;
     }
@@ -554,14 +547,8 @@ export class YororisAcousticRenderer {
       label = "MICROPHONE ON · LISTENING";
     } else if (this.state === "speaking") {
       label = "SPEAKING";
-    } else if (this.state === "breathing") {
-      let breathPhase = "INHALE (4s)";
-      if (this.breathingTimer >= 4 && this.breathingTimer < 11) {
-        breathPhase = "HOLD (7s)";
-      } else if (this.breathingTimer >= 11) {
-        breathPhase = "EXHALE (8s)";
-      }
-      label = `4-7-8 BREATHING · ${breathPhase}`;
+    } else if (this.state === "resting") {
+      label = "AT REST";
     } else if (this.state === "reflecting") {
       label = "REFLECTING";
     }

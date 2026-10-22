@@ -84,11 +84,10 @@ export interface ProductSourceNode {
   activeRequests: number;
 }
 
-export type YororisState = "idle" | "listening" | "speaking" | "breathing" | "reflecting";
+export type YororisState = "idle" | "listening" | "speaking" | "resting" | "reflecting";
 
 export interface YororisConfig {
   state: YororisState;
-  breathingCycleSeconds: number;
   intensity: number;
   audioFrequencies?: Float32Array | number[];
   colorBase: string;

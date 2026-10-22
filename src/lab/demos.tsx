@@ -189,7 +189,7 @@ function OrazakaStage() {
 function YororisStage() {
   const { t } = useLab();
   const c = t.controls;
-  const [state, setState] = useState<YororisState>("breathing");
+  const [state, setState] = useState<YororisState>("resting");
   const [tone, setTone] = useState<YororisVoiceTone>("lea");
   const [intensity, setIntensity] = useState(0.7);
   return (
@@ -198,7 +198,7 @@ function YororisStage() {
         <YororisPresenceOrb state={state} voiceTone={tone} intensity={intensity} enableAudio={false} />
       </Box>
       <Settings>
-        <Choice label={c.state} value={state} options={["idle", "listening", "speaking", "breathing", "reflecting"] as const} names={c.states} onChange={setState} />
+        <Choice label={c.state} value={state} options={["idle", "listening", "speaking", "resting", "reflecting"] as const} names={c.states} onChange={setState} />
         <Choice label={c.tone} value={tone} options={["lea", "theta", "solfeggio", "aurora"] as const} names={c.tones} onChange={setTone} />
         <Slider label={c.intensity} showLabel value={intensity} min={0.1} max={1} step={0.05} onValueChange={(v) => setIntensity(v as number)} />
       </Settings>
@@ -325,7 +325,7 @@ export interface Demo {
 
 export const DEMOS: Record<TabId, Demo> = {
   orazaka: { Preview: () => <Flow compact={false} />, Stage: OrazakaStage, usage: { code: ENGINE_FLOW_USAGE, file: "EngineFlow.tsx" }, lab: false },
-  yororis: { Preview: () => <YororisPresenceOrb state="breathing" interactive={false} enableAudio={false} />, Stage: YororisStage, usage: { code: canvasUsage("YororisPresenceOrb", 'state="listening" voiceTone="lea" intensity={0.7}'), file: "Presence.tsx" }, lab: true },
+  yororis: { Preview: () => <YororisPresenceOrb state="resting" interactive={false} enableAudio={false} />, Stage: YororisStage, usage: { code: canvasUsage("YororisPresenceOrb", 'state="listening" voiceTone="lea" intensity={0.7}'), file: "Presence.tsx" }, lab: true },
   jarvis: { Preview: () => <JarvisHUD interactive3D={false} />, Stage: HudStage, usage: { code: canvasUsage("JarvisHUD", 'theme="cyan" tacticalMode="standard"'), file: "Hud.tsx" }, lab: true },
   caustics: { Preview: () => <LiquidCausticsView interactive={false} />, Stage: CausticsStage, usage: { code: canvasUsage("LiquidCausticsView", 'fluidMedium="glass" palette="prussian"'), file: "Glass.tsx" }, lab: true },
   lattice: { Preview: () => <NeuralLatticeView interactive={false} nodeCount={60} />, Stage: LatticeStage, usage: { code: canvasUsage("NeuralLatticeView", 'theme="prussian-cyan" nodeCount={90}'), file: "Lattice.tsx" }, lab: true },

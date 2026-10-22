@@ -103,7 +103,7 @@
       "idle": "Idle",
       "listening": "Listening",
       "speaking": "Speaking",
-      "breathing": "Breathing",
+      "resting": "At rest",
       "reflecting": "Reflecting"
     },
     "tone": "Voice tone",
@@ -176,10 +176,10 @@
     },
     "yororis": {
       "name": "Voice presence",
-      "eyebrow": "Yororis",
-      "title": "A presence that breathes and listens.",
+      "eyebrow": "Voice study",
+      "title": "A presence that rests, listens and speaks.",
       "lead": "An acoustic sphere that follows a voice's frequencies — procedural, or your microphone if you allow it.",
-      "card": "Breathing, listening, speaking: a sphere that follows the voice."
+      "card": "At rest, listening, speaking: a sphere that follows the voice."
     },
     "jarvis": {
       "name": "Holographic HUD",
@@ -263,64 +263,16 @@
     "reduced": "Under reduced motion",
     "copy": "Copy",
     "copied": "Copied",
-    "sample": {
-      "save": "Save",
-      "saving": "Saving",
-      "archived": "Message archived",
-      "undo": "Undo",
-      "toasts": "Notifications",
-      "close": "Close",
-      "progress": "Upload",
-      "advance": "Advance",
-      "open": "Open the panel",
-      "dialogTitle": "Share the clip",
-      "dialogText": "The panel slides in from the side; Escape closes it.",
-      "done": "Done",
-      "new": "New",
-      "live": "Live",
-      "week": "Week",
-      "month": "Month",
-      "year": "Year",
-      "weekText": "This week: 1,284 plays.",
-      "monthText": "This month: 5,940 plays.",
-      "yearText": "This year: 61,200 plays.",
-      "revenue": "Plays this month",
-      "glowTitle": "A card that answers",
-      "glowText": "Point at it: the ring turns, the light follows.",
-      "speaking": "Léa is speaking",
-      "listening": "Voice",
-      "bubbleA": "Can we move to Saturday?",
-      "bubbleB": "Yes — 10:30 works.",
-      "typing": "Léa is typing",
-      "partners": "Built on",
-      "pause": "Pause",
-      "play": "Play",
-      "home": "Home",
-      "demos": "Demos",
-      "about": "About",
-      "nav": "A navigation bar",
-      "glass": "Glass over light",
-      "glassText": "The card stays readable; the light moves under it.",
-      "lattice": "Live signals",
-      "latticeText": "1,284 events in the last minute.",
-      "name": "Name",
-      "status": "Status",
-      "plays": "Plays",
-      "table": "Recent clips",
-      "selectRow": "Select the row",
-      "selectAll": "Select all",
-      "flow": "An engine and the apps it serves"
-    },
     "items": {
       "button": {
         "title": "Button",
-        "what": "The one action of a screen: a sheen that passes, a lean toward the pointer, a loader while it works.",
-        "reduced": "No sheen, no lean; the loader turns slower and stays readable."
+        "what": "The one action of a screen: quiet under the pointer, a loader announced while it works.",
+        "reduced": "The loader is drawn still; the label changes to Saving and the button is announced as busy."
       },
       "toast": {
         "title": "Toast",
         "what": "Confirm an action and offer to undo it, without leaving the page.",
-        "reduced": "Toasts appear and leave with a fade, no slide."
+        "reduced": "Toasts appear and leave at once: no fade, no slide."
       },
       "progress": {
         "title": "Progress",
@@ -334,13 +286,13 @@
       },
       "glow-card": {
         "title": "GlowCard",
-        "what": "One featured card: a ring of the brand gradient that turns, a bloom under the pointer.",
-        "reduced": "The ring stands still; the bloom still follows the pointer."
+        "what": "One featured card: a still hairline ring of the brand gradient, fuller than on a plain card and a step brighter under the pointer or the focus.",
+        "reduced": "Nothing moves in any case; the ring only brightens under the pointer or the focus."
       },
       "badge": {
         "title": "Badge and Chip",
-        "what": "A live status that pulses, choices whose selection glides from one to the next.",
-        "reduced": "The dot stays lit without pulsing; the selection moves at once."
+        "what": "A live status whose dot pulses, and choices whose selection fades from one to the next.",
+        "reduced": "The dot stays lit without pulsing; the selection still changes."
       },
       "tabs": {
         "title": "Tabs",
@@ -349,7 +301,7 @@
       },
       "avatar-presence": {
         "title": "Avatar with a presence",
-        "what": "Someone speaking: the lab's voice presence breathing behind an avatar.",
+        "what": "Someone speaking: the lab's voice presence glowing behind an avatar.",
         "reduced": "A still sphere behind the avatar."
       },
       "stat": {
@@ -360,7 +312,7 @@
       "data-table": {
         "title": "DataTable row",
         "what": "The row that changed, marked in a table people read.",
-        "reduced": "The highlight appears without a transition."
+        "reduced": "The highlight is a plain colour change: nothing moves."
       },
       "engine-flow": {
         "title": "EngineFlow",

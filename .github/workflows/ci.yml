@@ -32,6 +32,8 @@ jobs:
       - run: pnpm run typecheck
       # The lab is English only: its catalogue is complete (no empty string, valid placeholders and markup — @krizaka/i18n).
       - run: pnpm exec krizaka-i18n check messages
+      # The gallery's code is the demo that renders (one file per card); a card, prop or word that drifts fails here.
+      - run: node scripts/check-gallery.mjs
       - run: pnpm run build
       - run: pnpm test
       # A real browser, reduced motion OFF: the engine flow's dots travel and the engine breathes (check-overflow runs under
@@ -42,3 +44,6 @@ jobs:
           for i in $(seq 1 30); do curl -fsS http://localhost:4173/ >/dev/null && break; sleep 1; done
           node scripts/check-motion.mjs --base http://localhost:4173
           node scripts/check-demos.mjs --base http://localhost:4173
+          # Every gallery card works as its words say, and the experiments run smooth (reduced motion OFF and ON).
+          node scripts/check-cards.mjs --base http://localhost:4173
+          node scripts/check-experiments.mjs --base http://localhost:4173

@@ -171,7 +171,7 @@ export const YororisPresenceOrb = forwardRef<YororisPresenceOrbHandle, YororisPr
         <canvas
           ref={canvasRef}
           className="w-full h-full block cursor-pointer touch-none"
-          aria-label="Yororis 3D generative acoustic presence sphere"
+          aria-label="Generative acoustic presence sphere"
           role="img"
         />
       </div>
