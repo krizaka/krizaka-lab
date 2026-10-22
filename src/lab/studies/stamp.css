@@ -1,0 +1,14 @@
+/* Stamp press: squash and stretch through a linear() spring, on the Web Animations API. */
+.st-stage { display: grid; place-items: center; gap: 16px; width: 100%; min-height: 150px; }
+.st-stamp {
+  padding: 8px 18px;
+  border: 3px solid var(--kz-accent);
+  color: var(--kz-accent-text);
+  font-family: var(--kz-font-display, inherit);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(-6deg);
+  opacity: 0;
+}
+.st-stamp[data-stamped] { opacity: 0.9; }

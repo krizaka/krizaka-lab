@@ -350,5 +350,39 @@
         "reduced": "A still caustic image under the card."
       }
     }
+  },
+  "studies": {
+    "eyebrow": "Notebook studies",
+    "title": "Paper, ink and pencil, with native web motion.",
+    "lead": "Small studies for the Cahier identity, made with the platform alone: SVG, the Web Animations API, scroll-driven animations, anchor positioning, popovers and View Transitions. Each one works, falls back and rests under reduced motion. The generic ones become @krizaka/ui/motion pieces.",
+    "status": "Experimental, lab only",
+    "uses": "Uses",
+    "items": {
+      "ink": {
+        "title": "Ink writing",
+        "what": "A signature written by a pen stroke on ruled paper: one SVG path, drawn by its dash offset.",
+        "reduced": "The signature is already written; Write again changes nothing."
+      },
+      "stamp": {
+        "title": "Stamp press",
+        "what": "« Fait à Montréal » lands with a squash on contact and a spring settle, a linear() easing on the Web Animations API.",
+        "reduced": "The stamp appears in place, without the fall or the squash."
+      },
+      "underline": {
+        "title": "Pencil underline",
+        "what": "A hand-drawn underline that follows the reading position: scroll the page and the line is drawn as far as you have read.",
+        "reduced": "The line is drawn in full; the scroll no longer draws it."
+      },
+      "marginalia": {
+        "title": "Marginalia",
+        "what": "A margin note anchored to the words it explains, opened as a popover that grows out of its anchor.",
+        "reduced": "The note opens and closes at once, in place."
+      },
+      "page-turn": {
+        "title": "Page turn",
+        "what": "Two routes and one shared element: the page you leave folds along its spine, the next one arrives (View Transitions).",
+        "reduced": "The page changes at once, no fold."
+      }
+    }
   }
 }
