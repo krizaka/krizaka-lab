@@ -76,7 +76,6 @@ function Shell() {
               {t.bar.label}
             </a>
           </NavBar.Brand>
-          <NavBar.Family current="github" labels={familyLabels[locale]} />
           <NavBar.Items>
             {nav.map((n) => (
               <NavBar.Link key={n.id} asChild active={section === n.id}>
@@ -105,7 +104,6 @@ function Shell() {
                   {n.label}
                 </NavBar.MobileLink>
               ))}
-              <NavBar.Family current="github" labels={familyLabels[locale]} />
             </NavBar.Mobile>
           </NavBar.Actions>
         </NavBar.Root>
