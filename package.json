@@ -54,7 +54,8 @@
     "preview": "vite preview --outDir dist-demo",
     "test": "node --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit",
-    "check:gallery": "node scripts/check-gallery.mjs"
+    "check:gallery": "node scripts/check-gallery.mjs",
+    "check:budget": "node scripts/check-budget.mjs"
   },
   "dependencies": {
     "@krizaka/charts": "^0.6.0",

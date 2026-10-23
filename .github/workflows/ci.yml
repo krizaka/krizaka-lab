@@ -37,6 +37,8 @@ jobs:
       # The gallery's code is the demo that renders (one file per card); a card, prop or word that drifts fails here.
       - run: node scripts/check-gallery.mjs
       - run: pnpm run build
+      # Performance budget (ADR-001 §6): gzip ceiling per entry, no requestAnimationFrame outside the experiments.
+      - run: pnpm run check:budget
       - run: pnpm test
       # A real browser, reduced motion OFF: the engine flow's dots travel and the engine breathes (check-overflow runs under
       # reduced motion and cannot see a frozen figure).
