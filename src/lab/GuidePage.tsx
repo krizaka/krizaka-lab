@@ -17,6 +17,7 @@ import { useLab } from "./context";
 import { type ConfigRow, type GuideId, guideById, guidesOf } from "./guides";
 import { type Knob, type Values, defaults, readValues, writeValues } from "./playground-lib";
 import { SCENARIOS } from "./scenarios";
+import { i18n } from "./messages";
 
 function Setting({ knob, value, onChange }: { knob: Knob; value: string | number | boolean; onChange: (v: string | number | boolean) => void }) {
   if (knob.kind === "choice")
@@ -97,6 +98,12 @@ export function GuidePage({ id }: { id: GuideId }) {
         <p className="lab-sublead lab-guide-copy-note">
           {g.scenario === "wall" ? t.wall.previewNote : <>Once per app: <code>pnpm add @krizaka/ui</code>, then mount <code>&lt;MotionObserver /&gt;</code> from <code>@krizaka/ui/motion</code> and import <code>@krizaka/ui/motion.css</code>.</>}
         </p>
+        {g.scenario === "checkout" ? (
+          <p className="lab-sublead">
+            {i18n.t("checkout.guides.sourceNote")}{" "}
+            <a href="https://github.com/krizaka/krizaka-motion/tree/main/src/lab/scenarios.tsx">{i18n.t("checkout.guides.source")}</a>
+          </p>
+        ) : null}
       </Section>
 
       <Section id="options" title="Options" headingSize="sm" divider>

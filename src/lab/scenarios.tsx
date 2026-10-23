@@ -17,13 +17,14 @@ import { Progress } from "@krizaka/ui/progress";
 import { Stat } from "@krizaka/ui/stat";
 import { StepProgress } from "@krizaka/ui/step-progress";
 import { Toaster, toast } from "@krizaka/ui/toast";
-import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from "react";
-import { canViewTransition, transitionPage, type ViewTransitionEnv } from "../core/view-transition";
-import { flushSync } from "react-dom";
+import { type CSSProperties, type ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { WallMotionWall } from "./wall-motions";
 
 import { useInView, useReducedMotion } from "./hooks";
-import type { Values } from "./playground-lib";
+import { defaults, type Values } from "./playground-lib";
+import { CHECKOUT_KNOBS } from "./guides";
+import { CheckoutPageTransition, CheckoutPayButton, checkoutMotionStyle, type CheckoutTransition } from "./checkout-motion";
+import { i18n, format } from "./messages";
 import { shownAt, tokens } from "./stream-lib";
 
 export type ScenarioId = "dashboard" | "chat" | "checkout" | "delivery" | "wall";
@@ -168,47 +169,86 @@ const QST = 0.09975;
 
 export function Checkout({ v = {} }: { v?: Values }) {
   const reduce = useReducedMotion();
+  const words = i18n.getDictionary("en").checkout;
+  const settings = { ...defaults(CHECKOUT_KNOBS), ...v };
+  const host = useRef<HTMLDivElement>(null);
+  const heading = useRef<HTMLHeadingElement>(null);
+  const transition = useRef<CheckoutTransition>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const locked = useRef(false);
+  const mounted = useRef(true);
+  const moved = useRef(false);
   const [step, setStep] = useState(0);
   const [slot, setSlot] = useState("10:30");
-  const [paying, setPaying] = useState(false);
-  const duration = Number(v.duration ?? 320);
-  const easing = String(v.easing ?? "ease-out");
-  const style = String(v.style ?? "slide");
-  const go = (to: number) => {
-    const root = document.documentElement;
-    const native = !reduce && canViewTransition(document as unknown as ViewTransitionEnv["doc"]);
-    if (native) {
-      root.dataset.vt = `${style}-${to >= step ? "forward" : "back"}`;
-      root.style.setProperty("--lab-vt-duration", `${duration}ms`);
-      root.style.setProperty("--lab-vt-ease", easing);
+  const [phase, setPhase] = useState<"idle" | "working" | "done">("idle");
+  const [error, setError] = useState(false);
+  const [crossing, setCrossing] = useState(false);
+  const [timing, setTiming] = useState({ duration: 0, easing: "linear" });
+  useLayoutEffect(() => {
+    const css = getComputedStyle(host.current!);
+    const time = css.getPropertyValue(String(settings.duration)).trim();
+    setTiming({
+      duration: reduce ? 0 : parseFloat(time) * (time.endsWith("ms") ? 1 : 1000),
+      easing: css.getPropertyValue(String(settings.easing)).trim(),
+    });
+  }, [settings.duration, settings.easing, reduce]);
+  useLayoutEffect(() => {
+    if (moved.current) heading.current?.focus({ preventScroll: true });
+  }, [step]);
+  useEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; clearTimeout(timer.current); };
+  }, []);
+  const go = async (to: number) => {
+    setCrossing(true);
+    moved.current = true;
+    const forward = (to > step) === (settings.direction === "right");
+    try {
+      await transition.current!.change(() => { setStep(to); setError(false); }, forward ? "forward" : "back");
+    } finally {
+      if (mounted.current) { setCrossing(false); setPhase("idle"); }
+      locked.current = false;
     }
-    void transitionPage(
-      () => flushSync(() => setStep(to)),
-      { doc: document as unknown as ViewTransitionEnv["doc"], reduced: reduce },
-      { duration, easing },
-    ).finally(() => delete root.dataset.vt);
+  };
+  const navigate = (to: number) => {
+    if (locked.current) return;
+    locked.current = true;
+    void go(to);
   };
   const pay = () => {
-    setPaying(true);
-    window.setTimeout(() => {
-      setPaying(false);
-      go(2);
-      toast.success("Booked: Tuesday " + slot + ", a confirmation is on its way");
-    }, Number(v.wait ?? 1400));
+    if (locked.current) return;
+    locked.current = true;
+    setError(false);
+    setPhase("working");
+    timer.current = setTimeout(() => {
+      if (settings.fail) {
+        setPhase("idle");
+        setError(true);
+        locked.current = false;
+        return;
+      }
+      setPhase("done");
+      timer.current = setTimeout(() => {
+        void go(2).then(() => {
+          if (mounted.current) toast.success(format(words.toast, { slot }));
+        });
+      }, reduce ? 0 : timing.duration * 2);
+    }, Number(settings.wait));
   };
   const tax = (rate: number) => Math.round(PRICE * rate * 100) / 100;
   const total = PRICE + tax(GST) + tax(QST);
   const money = (n: number) => new Intl.NumberFormat("en-CA", { style: "currency", currency: "CAD" }).format(n);
   return (
-    <div className="lab-vt" data-style={style}>
-      <Toaster label="Notifications" closeLabel="Close" position="bottom-right" />
-      <Screen product="akinaza" app="Akinaza" title="Salon Mira · book a cut">
-        <StepProgress step={step + 1} total={3} label={(s, t) => `Step ${s} of ${t}`} />
-        <div className="lab-vt-stage lab-checkout">
+    <div ref={host} className="lab-booking" data-motion-scope="" style={checkoutMotionStyle(String(settings.duration), String(settings.easing))}>
+      <Toaster label={words.notifications} closeLabel={words.close} position="bottom-right" />
+      <Screen product="akinaza" app="Akinaza" title={words.title} actions={<Badge tone="neutral">{words.demo}</Badge>}>
+        <StepProgress step={step + 1} total={3} label={(s, t) => format(words.step, { step: s, total: t })} />
+        <CheckoutPageTransition ref={transition} reduced={reduce} duration={timing.duration} easing={timing.easing}>
+        <div className="lab-checkout">
           {step === 0 && (
             <>
-              <h3 className="lab-checkout-title">Pick a time on Tuesday</h3>
-              <Chip.Group type="single" required label="Times on Tuesday" value={slot} onValueChange={(s) => s && setSlot(s)}>
+              <h3 ref={heading} tabIndex={-1} className="lab-checkout-title">{words.pick}</h3>
+              <Chip.Group type="single" required label={words.times} value={slot} onValueChange={(s) => !locked.current && s && setSlot(s)}>
                 {SLOTS.map((s) => (
                   <Chip key={s} value={s}>
                     {s}
@@ -216,43 +256,45 @@ export function Checkout({ v = {} }: { v?: Values }) {
                 ))}
               </Chip.Group>
               <div className="lab-checkout-actions">
-                <Button variant="primary" onClick={() => go(1)}>
-                  Continue
+                <Button variant="primary" disabled={crossing} onClick={() => navigate(1)}>
+                  {words.continue}
                 </Button>
               </div>
             </>
           )}
           {step === 1 && (
             <>
-              <h3 className="lab-checkout-title">Review · Tuesday {slot}</h3>
+              <h3 ref={heading} tabIndex={-1} className="lab-checkout-title">{format(words.review, { slot })}</h3>
               <dl className="lab-receipt">
-                <div><dt>Cut and style</dt><dd>{money(PRICE)}</dd></div>
-                <div><dt>GST 5 %</dt><dd>{money(tax(GST))}</dd></div>
-                <div><dt>QST 9.975 %</dt><dd>{money(tax(QST))}</dd></div>
-                <div><dt>Total</dt><dd>{money(total)}</dd></div>
+                <div><dt>{words.service}</dt><dd>{money(PRICE)}</dd></div>
+                <div><dt>{words.gst}</dt><dd>{money(tax(GST))}</dd></div>
+                <div><dt>{words.qst}</dt><dd>{money(tax(QST))}</dd></div>
+                <div><dt>{words.total}</dt><dd>{money(total)}</dd></div>
               </dl>
+              {error ? <p id="checkout-payment-error" className="lab-checkout-error" role="alert">{words.error}</p> : null}
               <div className="lab-checkout-actions">
-                <Button variant="ghost" onClick={() => go(0)}>
-                  Back
+                <Button variant="ghost" disabled={crossing || phase !== "idle"} onClick={() => navigate(0)}>
+                  {words.back}
                 </Button>
-                <Button variant="primary" loading={paying} onClick={pay}>
-                  {paying ? "Booking…" : `Book and pay ${money(total)}`}
-                </Button>
+                <CheckoutPayButton phase={phase} disabled={crossing} label={format(words.pay, { total: money(total) })} working={words.working} done={words.done} onClick={pay} errorId={error ? "checkout-payment-error" : undefined} />
               </div>
             </>
           )}
           {step === 2 && (
             <>
-              <h3 className="lab-checkout-title">See you Tuesday at {slot}</h3>
-              <p className="lab-sublead">The salon has your booking. A demo: nothing was charged.</p>
+              <h3 ref={heading} tabIndex={-1} className="lab-checkout-title">{format(words.confirmed, { slot })}</h3>
+              <Stat label={words.total} value={<NumberTicker value={reduce || !crossing ? total : 0} trigger="change" locale="en-CA" format={NUMBER_FORMATS.currency} duration={timing.duration} easing={timing.easing} announce />} />
+              <p data-reveal="soft" style={{ "--kz-delay": "0ms" } as CSSProperties}>{format(words.summary, { slot })}</p>
+              <p data-reveal="soft" style={{ "--kz-delay": "var(--lab-checkout-duration)" } as CSSProperties} className="lab-sublead">{words.nothingCharged}</p>
               <div className="lab-checkout-actions">
-                <Button variant="secondary" onClick={() => go(0)}>
-                  Start again
+                <Button variant="secondary" disabled={crossing} onClick={() => navigate(0)}>
+                  {words.restart}
                 </Button>
               </div>
             </>
           )}
         </div>
+        </CheckoutPageTransition>
       </Screen>
     </div>
   );

@@ -3,8 +3,9 @@
    screens (scenarios.tsx): the screen plays it, the settings change it, the snippet follows the settings, the table says
    every option and what happens under reduced motion. Data only here; the page is GuidePage (GuidePage.tsx). */
 
-import type { Knob } from "./playground-lib";
+import type { Knob, Values } from "./playground-lib";
 import type { ScenarioId } from "./scenarios";
+import en from "../../messages/en.json" with { type: "json" };
 
 export type GuideId =
   | "list-arrival"
@@ -46,6 +47,41 @@ export interface Guide {
 }
 
 const UI = "https://ui.krizaka.com/components";
+const checkoutWords = en.checkout.guides;
+export const CHECKOUT_KNOBS: readonly Knob[] = [
+  { kind: "range", key: "wait", label: en.checkout.settings.wait, min: 300, max: 4000, step: 100, value: 1400, unit: "ms" },
+  { kind: "choice", key: "direction", label: en.checkout.settings.direction, options: ["right", "left"], value: "right" },
+  { kind: "choice", key: "duration", label: en.checkout.settings.duration, options: ["--kz-duration-instant", "--kz-duration-fast", "--kz-duration-base"], value: "--kz-duration-base" },
+  { kind: "choice", key: "easing", label: en.checkout.settings.easing, options: ["--kz-ease", "--kz-ease-spring"], value: "--kz-ease" },
+  { kind: "toggle", key: "fail", label: en.checkout.settings.fail, value: false },
+];
+const checkoutSnippet = (values: Values) => {
+  const v = { ...Object.fromEntries(CHECKOUT_KNOBS.map((k) => [k.key, k.value])), ...values };
+  return `import { Checkout } from "./lab/scenarios";
+import "@krizaka/ui/motion.css";
+
+// Copy the linked checkout source, motion components, styles and catalogue.
+// Local prototypes are not exports of @krizaka/ui yet.
+<Checkout v={{
+  wait: ${v.wait},
+  direction: ${JSON.stringify(v.direction)},
+  duration: ${JSON.stringify(v.duration)},
+  easing: ${JSON.stringify(v.easing)},
+  fail: ${v.fail},
+}} />`;
+};
+const checkoutConfig: readonly ConfigRow[] = [
+  { option: "wait", type: "ms", default: "1400", does: checkoutWords.waitDoes },
+  { option: "direction", type: '"right" | "left"', default: '"right"', does: checkoutWords.directionDoes },
+  { option: "duration", type: "CSS motion token", default: "--kz-duration-base", does: checkoutWords.durationDoes },
+  { option: "easing", type: "CSS easing token", default: "--kz-ease", does: checkoutWords.easingDoes },
+  { option: "fail", type: "boolean", default: "false", does: checkoutWords.failDoes },
+  { option: "focus / loading / status", type: "UI state", default: "idle", does: checkoutWords.focusDoes },
+];
+const checkoutUses = [
+  { name: "Motion", href: "https://ui.krizaka.com/foundations/motion" },
+  ...["StepProgress", "Button", "NumberTicker", "Toast", "Chip"].map((name) => ({ name, href: `${UI}/${({ StepProgress: "step-progress", NumberTicker: "number-ticker" } as Record<string, string>)[name] ?? name.toLowerCase()}` })),
+];
 
 type WallMotion = Extract<GuideId, "pin-drop" | "tape-stick" | "paper-sway" | "develop" | "crt-power-on" | "crt-power-off" | "neon-flicker">;
 type WallVariable = { key: string; unit?: string; attribute?: boolean };
@@ -171,41 +207,26 @@ export const GUIDES: readonly Guide[] = [
   {
     id: "page-transition",
     title: "Cross from one step to the next",
-    lead: "A checkout's steps change through the browser's View Transitions: the old step leaves, the new one arrives, inside the screen only.",
+    lead: checkoutWords.pageLead,
     scenario: "checkout",
-    knobs: [
-      { kind: "choice", key: "style", label: "style", options: ["slide", "fade", "reveal"], value: "slide" },
-      { kind: "range", key: "duration", label: "duration", min: 120, max: 900, step: 20, value: 320, unit: "ms" },
-      { kind: "choice", key: "easing", label: "easing", options: ["ease-out", "ease-in-out", "linear"], value: "ease-out" },
-    ],
-    snippet: (v) =>
-      `import { flushSync } from "react-dom";\n\nfunction go(next: number) {\n  const change = () => flushSync(() => setStep(next));\n  if (!document.startViewTransition || matchMedia("(prefers-reduced-motion: reduce)").matches) return change();\n  document.documentElement.dataset.vt = "${v.style}-" + (next > step ? "forward" : "back");\n  document.documentElement.style.setProperty("--vt-duration", "${v.duration}ms");\n  document.startViewTransition(change).finished.finally(() => delete document.documentElement.dataset.vt);\n}\n\n/* CSS — only the step crosses:\n.checkout-step { view-transition-name: checkout-step; }\n::view-transition-group(checkout-step) { animation-duration: var(--vt-duration); }\nhtml[data-vt="slide-forward"]::view-transition-new(checkout-step) { animation-name: slide-in-right; } */`,
+    knobs: CHECKOUT_KNOBS,
+    snippet: checkoutSnippet,
     file: "Checkout.tsx",
-    config: [
-      { option: "view-transition-name", type: "CSS", default: "—", does: "On the step's container: only it crosses, the page stays still." },
-      { option: "data-vt", type: "attribute on <html>", default: "—", does: "The style and direction for this change (slide-forward, fade-back…)." },
-      { option: "--vt-duration / --vt-ease", type: "CSS", default: "320ms / ease-out", does: "The length and the curve of the crossing." },
-      { option: "flushSync", type: "react-dom", default: "—", does: "Renders the new step inside the transition's callback." },
-    ],
-    reduced: "The step changes at once; so it does in a browser without View Transitions.",
-    uses: [{ name: "StepProgress", href: `${UI}/step-progress` }, { name: "Chip", href: `${UI}/chip` }],
+    config: checkoutConfig,
+    reduced: checkoutWords.reduced,
+    uses: checkoutUses,
   },
   {
     id: "button-feedback",
     title: "Say an action is working, then done",
-    lead: "The pay button holds its width and shows it is working; when the booking lands, the step changes and a toast confirms it.",
+    lead: checkoutWords.buttonLead,
     scenario: "checkout",
-    knobs: [{ kind: "range", key: "wait", label: "the server answers after", min: 300, max: 4000, step: 100, value: 1400, unit: "ms" }],
-    snippet: () =>
-      `import { Button } from "@krizaka/ui/button";\nimport { Toaster, toast } from "@krizaka/ui/toast";\n\n<Toaster label="Notifications" closeLabel="Close" />\n\n<Button\n  variant="primary"\n  loading={paying}\n  onClick={async () => {\n    setPaying(true);\n    await book();\n    setPaying(false);\n    toast.success("Booked: Tuesday 10:30");\n  }}\n>\n  {paying ? "Booking…" : "Book and pay"}\n</Button>`,
-    file: "PayButton.tsx",
-    config: [
-      { option: "loading", type: "boolean", default: "false", does: "Disables the button against a second press, says it is waiting (aria-busy) and shows the Krizaka loader before the label." },
-      { option: "toast.success(text)", type: "function", default: "—", does: "A confirmation that leaves by itself; the Toaster announces it." },
-      { option: "Toaster position", type: '"bottom-right" | …', default: "the Toaster's", does: "Where the toasts stack." },
-    ],
-    reduced: "The loader stands still (a mark, not a spin); the step changes at once.",
-    uses: [{ name: "Button", href: `${UI}/button` }, { name: "Toast", href: `${UI}/toast` }],
+    knobs: CHECKOUT_KNOBS,
+    snippet: checkoutSnippet,
+    file: "Checkout.tsx",
+    config: checkoutConfig,
+    reduced: checkoutWords.reduced,
+    uses: checkoutUses,
   },
   {
     id: "route-draw",
