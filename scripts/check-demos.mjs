@@ -53,8 +53,8 @@ for (const reducedMotion of ["no-preference", "reduce"])
           await page.keyboard.press("Escape");
         }
         if (path === "/page-transition/") {
-          // Continue: the checkout's step changes; with the API and motion on, a view transition runs (the root gets data-vt), never under reduced motion.
-          const seen = page.evaluate(() => new Promise((resolve) => { const o = new MutationObserver(() => { if (document.documentElement.dataset.vt) { o.disconnect(); resolve(true); } }); o.observe(document.documentElement, { attributes: true }); setTimeout(() => resolve(false), 1500); }));
+          // Continue: the checkout's step changes; with the API and motion on, its directional transition runs, never under reduced motion.
+          const seen = page.evaluate(() => new Promise((resolve) => { const o = new MutationObserver(() => { if (document.documentElement.dataset.checkoutDirection) { o.disconnect(); resolve(true); } }); o.observe(document.documentElement, { attributes: true }); setTimeout(() => { o.disconnect(); resolve(false); }, 1500); }));
           await page.getByRole("button", { name: "Continue" }).click();
           const ran = await seen;
           const label = `${path} ${vp.name} ${theme} reduced-motion=${reducedMotion}`;
