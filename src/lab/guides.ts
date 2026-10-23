@@ -274,7 +274,7 @@ export const GUIDES: readonly Guide[] = [
       { kind: "range", key: "amplitude", label: "amplitude", min: 0.3, max: 1.5, step: 0.1, value: 1.2, unit: "°" },
       { kind: "choice", key: "easing", label: "easing", options: ["ease-in-out", "var(--kz-ease)"], value: "ease-in-out" },
     ],
-    { "sway-duration": { key: "period", unit: "ms" }, "sway-angle": { key: "amplitude", unit: "deg" } },
+    { "sway-duration": { key: "period", unit: "ms" }, "sway-angle": { key: "amplitude", unit: "deg" }, ease: { key: "easing" } },
     [
       { option: "data-kz-paper-sway", type: "attribute", default: "—", does: "Starts a slow idle sway around the paper's pin." },
       { option: "--kz-wall-sway-duration", type: "CSS time", default: "18000ms", does: "Sets one full sway cycle." },

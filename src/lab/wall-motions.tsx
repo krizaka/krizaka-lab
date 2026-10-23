@@ -35,14 +35,15 @@ function wallStyle(motion: GuideId, values: Values): CSSProperties {
 }
 
 const dataFor = (motion: string, name: string) =>
-  motion === name ? { "data-wall-animation": "", [`data-kz-${name}`]: "" } : {};
+  motion === "all" || motion === name ? { "data-wall-animation": "", [`data-kz-${name}`]: "" } : {};
 
 export function WallMotionWall({ v = {}, motion = "pin-drop" }: { v?: Values; motion?: string }) {
   const { t } = useLab();
   const [replay, setReplay] = useState(0);
-  const guideId = motion as GuideId;
-  const settings = { ...defaults(guideById(guideId).knobs), ...v };
-  const style = wallStyle(guideId, v);
+  const overview = motion === "all";
+  const guideId = (overview ? "pin-drop" : motion) as GuideId;
+  const settings: Values = overview ? {} : { ...defaults(guideById(guideId).knobs), ...v };
+  const style = overview ? undefined : wallStyle(guideId, v);
   const flickers = String(settings.flickers ?? "3");
 
   return (
@@ -86,13 +87,23 @@ export function WallMotionWall({ v = {}, motion = "pin-drop" }: { v?: Values; mo
               <Card.Title>{t.wall.display}</Card.Title>
               <div
                 className="lab-wall-display"
-                {...(motion === "crt-power-on" ? dataFor(motion, "crt-power-on") : {})}
+                {...(motion === "crt-power-on" || overview ? dataFor(motion, "crt-power-on") : {})}
                 {...(motion === "crt-power-off" ? dataFor(motion, "crt-power-off") : {})}
               >
                 {t.wall.open}
               </div>
             </Card.Body>
           </Card.Root>
+          {overview ? (
+            <Card.Root className="lab-wall-display-card">
+              <Card.Body>
+                <Card.Title>{t.wall.display}</Card.Title>
+                <div className="lab-wall-display" {...dataFor(motion, "crt-power-off")}>
+                  {t.wall.open}
+                </div>
+              </Card.Body>
+            </Card.Root>
+          ) : null}
 
           <Badge className="lab-wall-sign" tone="accent" {...dataFor(motion, "neon-flicker")} data-kz-flickers={flickers}>
             {t.wall.sign}

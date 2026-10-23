@@ -7,6 +7,7 @@ import { readFileSync } from "node:fs";
 import { GUIDES } from "../src/lab/guides.ts";
 
 const scenarios = readFileSync(new URL("../src/lab/scenarios.tsx", import.meta.url), "utf8");
+const guidePage = readFileSync(new URL("../src/lab/GuidePage.tsx", import.meta.url), "utf8");
 
 test("thirteen guides, each on one of the five scenarios", () => {
   assert.deepEqual(GUIDES.map((g) => g.id), ["list-arrival", "live-number", "streaming-answer", "page-transition", "button-feedback", "route-draw", "pin-drop", "tape-stick", "paper-sway", "develop", "crt-power-on", "crt-power-off", "neon-flicker"]);
@@ -61,6 +62,10 @@ test("wall motions expose bounded, configurable CSS contracts and reduced-motion
   assert.match(css, /\.lab-wall \[data-kz-paper-sway\].*infinite/s);
   assert.doesNotMatch(css.match(/\.lab-wall \[data-kz-neon-flicker\][^{]*\{[^}]*\}/)?.[0] ?? "", /infinite/);
   assert.doesNotMatch(preview, /requestAnimationFrame|<canvas/);
+  assert.match(preview, /motion === "all"/);
+  assert.match(guidePage, /motion=\{id === "wall" \? "all" : undefined\}/);
+  const sway = wall.find((g) => g.id === "paper-sway");
+  assert.match(sway.snippet(Object.fromEntries(sway.knobs.map((k) => [k.key, k.value]))), /--kz-wall-ease/);
   for (const guide of wall) {
     const code = guide.snippet(Object.fromEntries(guide.knobs.map((k) => [k.key, k.value])));
     assert.ok(code.includes(`data-kz-${guide.id}`), guide.id);

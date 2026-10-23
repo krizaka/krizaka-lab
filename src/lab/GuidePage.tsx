@@ -142,7 +142,7 @@ export function ScenarioPage({ id }: { id: keyof typeof SCENARIOS }) {
       <PageHero eyebrow={`Scenario · ${s.product}`} title={s.title} lead={s.lead} back={{ href: href("home"), label: "All scenarios" }} linkAs={(props: React.ComponentProps<"a">) => <a {...props} onClick={go("home")} />} />
       <Section id="screen" spacing="sm">
         <figure className="lab-scenario-screen">
-          <View />
+          <View motion={id === "wall" ? "all" : undefined} />
           <Caption figure="fig. 1">A real screen made of @krizaka/ui components, playing while it is on screen. The data is a demo.</Caption>
         </figure>
       </Section>
