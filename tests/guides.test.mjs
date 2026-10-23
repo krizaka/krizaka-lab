@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 import { GUIDES } from "../src/lab/guides.ts";
+import { readValues, toSearch } from "../src/lab/playground-lib.ts";
 
 const scenarios = readFileSync(new URL("../src/lab/scenarios.tsx", import.meta.url), "utf8");
 
@@ -37,6 +38,25 @@ test("every guide has its options table and says what happens under reduced moti
     for (const row of g.config) for (const f of ["option", "type", "default", "does"]) assert.ok(row[f].length > 0, `${g.id}: ${row.option} has no ${f}`);
     assert.ok(g.reduced.length > 20, g.id);
     assert.ok(g.uses.every((u) => u.href.startsWith("https://ui.krizaka.com/")), g.id);
+  }
+});
+
+test("both checkout guides share token settings, round-trip every knob, and copy the actual configuration", () => {
+  const guides = GUIDES.filter((g) => g.scenario === "checkout");
+  assert.equal(guides.length, 2);
+  assert.equal(guides[0].knobs, guides[1].knobs);
+  for (const g of guides) {
+    const initial = readValues(g.knobs, "");
+    assert.deepEqual(Object.keys(initial), ["wait", "direction", "duration", "easing", "fail"]);
+    for (const knob of g.knobs) {
+      const values = { ...initial, [knob.key]: knob.kind === "toggle" ? true : knob.kind === "range" ? knob.max : knob.options[0] };
+      const read = readValues(g.knobs, toSearch(g.knobs, values));
+      assert.deepEqual(read, values);
+      assert.ok(g.snippet(read).includes(`${knob.key}: ${JSON.stringify(values[knob.key])}`));
+      assert.ok(g.config.some((row) => row.option === knob.key));
+    }
+    assert.match(g.reduced, /instantly.*focus.*without animation.*final total/i);
+    assert.match(g.snippet(initial), /not exports of @krizaka\/ui/);
   }
 });
 
