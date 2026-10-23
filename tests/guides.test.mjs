@@ -8,14 +8,15 @@ import { GUIDES } from "../src/lab/guides.ts";
 import { readValues, toSearch } from "../src/lab/playground-lib.ts";
 
 const scenarios = readFileSync(new URL("../src/lab/scenarios.tsx", import.meta.url), "utf8");
+const guidePage = readFileSync(new URL("../src/lab/GuidePage.tsx", import.meta.url), "utf8");
 
-test("six guides, each on one of the four scenarios", () => {
-  assert.deepEqual(GUIDES.map((g) => g.id), ["list-arrival", "live-number", "streaming-answer", "page-transition", "button-feedback", "route-draw"]);
-  // grouped by screen in the order of the scenarios, so the index numbers read 01 → 06 down the page
-  const order = ["dashboard", "chat", "checkout", "delivery"];
+test("thirteen guides, each on one of the five scenarios", () => {
+  assert.deepEqual(GUIDES.map((g) => g.id), ["list-arrival", "live-number", "streaming-answer", "page-transition", "button-feedback", "route-draw", "pin-drop", "tape-stick", "paper-sway", "develop", "crt-power-on", "crt-power-off", "neon-flicker"]);
+  // grouped by screen in the order of the scenarios, so the index numbers read down the page
+  const order = ["dashboard", "chat", "checkout", "delivery", "wall"];
   assert.deepEqual(GUIDES.map((g) => order.indexOf(g.scenario)), [...GUIDES.map((g) => order.indexOf(g.scenario))].sort());
-  for (const g of GUIDES) assert.ok(["dashboard", "chat", "checkout", "delivery"].includes(g.scenario), g.id);
-  for (const s of ["dashboard", "chat", "checkout", "delivery"]) assert.ok(GUIDES.some((g) => g.scenario === s), `no guide plays on ${s}`);
+  for (const g of GUIDES) assert.ok(order.includes(g.scenario), g.id);
+  for (const s of order) assert.ok(GUIDES.some((g) => g.scenario === s), `no guide plays on ${s}`);
 });
 
 test("a guide's title is a task, its code imports Krizaka UI (or the platform) and follows its settings", () => {
@@ -66,4 +67,29 @@ test("the scenarios are app screens made of Krizaka UI, with their clocks stoppe
   assert.match(scenarios, /if \(!stream \|\| !visible \|\| reduce\) return;/);
   assert.match(scenarios, /if \(!visible \|\| reduce\) return;/);
   assert.ok((scenarios.match(/demo/gi) ?? []).length >= 4, "the data says it is a demo");
+});
+
+test("wall motions expose bounded, configurable CSS contracts and reduced-motion finals", () => {
+  const css = readFileSync(new URL("../src/lab/wall-motions.css", import.meta.url), "utf8");
+  const preview = readFileSync(new URL("../src/lab/wall-motions.tsx", import.meta.url), "utf8");
+  const wall = GUIDES.filter((g) => g.scenario === "wall");
+  assert.deepEqual(wall.map((g) => g.id), ["pin-drop", "tape-stick", "paper-sway", "develop", "crt-power-on", "crt-power-off", "neon-flicker"]);
+  assert.equal(wall.find((g) => g.id === "paper-sway").knobs.find((k) => k.key === "amplitude").max, 1.5);
+  assert.match(css, /prefers-reduced-motion:\s*reduce/);
+  assert.match(css, /\[data-offscreen\].*data-wall-animation/s);
+  assert.match(css, /html\[data-motion="settling"\]/);
+  assert.match(css, /animation: kz-wall-neon-three .* both/);
+  assert.match(css, /\.lab-wall \[data-kz-paper-sway\].*infinite/s);
+  assert.doesNotMatch(css.match(/\.lab-wall \[data-kz-neon-flicker\][^{]*\{[^}]*\}/)?.[0] ?? "", /infinite/);
+  assert.doesNotMatch(preview, /requestAnimationFrame|<canvas/);
+  assert.match(preview, /motion === "all"/);
+  assert.match(guidePage, /motion=\{id === "wall" \? "all" : undefined\}/);
+  const sway = wall.find((g) => g.id === "paper-sway");
+  assert.match(sway.snippet(Object.fromEntries(sway.knobs.map((k) => [k.key, k.value]))), /--kz-wall-ease/);
+  for (const guide of wall) {
+    const code = guide.snippet(Object.fromEntries(guide.knobs.map((k) => [k.key, k.value])));
+    assert.ok(code.includes(`data-kz-${guide.id}`), guide.id);
+    assert.match(code, /data-wall-animation/);
+    assert.match(code, /wall-motions\.css/);
+  }
 });

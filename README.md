@@ -37,10 +37,18 @@ HUD, liquid glass, a neural lattice — played live, each one a shareable addres
 | Cross from one step to the next | [`/page-transition`](https://krizaka.github.io/krizaka-motion/page-transition/) | checkout |
 | Say an action is working, then done | [`/button-feedback`](https://krizaka.github.io/krizaka-motion/button-feedback/) | checkout |
 | Draw a route and follow a courier | [`/route-draw`](https://krizaka.github.io/krizaka-motion/route-draw/) | delivery |
+| Drop a pin onto a shop wall | [`/pin-drop`](https://krizaka.github.io/krizaka-motion/pin-drop/) | wall |
+| Press tape onto a note | [`/tape-stick`](https://krizaka.github.io/krizaka-motion/tape-stick/) | wall |
+| Let pinned paper sway | [`/paper-sway`](https://krizaka.github.io/krizaka-motion/paper-sway/) | wall |
+| Develop a pinned photograph | [`/develop`](https://krizaka.github.io/krizaka-motion/develop/) | wall |
+| Power on a wall display | [`/crt-power-on`](https://krizaka.github.io/krizaka-motion/crt-power-on/) | wall |
+| Power off a wall display | [`/crt-power-off`](https://krizaka.github.io/krizaka-motion/crt-power-off/) | wall |
+| Settle a neon sign | [`/neon-flicker`](https://krizaka.github.io/krizaka-motion/neon-flicker/) | wall |
 
-**Scenarios** — the four screens, whole, with every motion they use: [`/dashboard`](https://krizaka.github.io/krizaka-motion/dashboard/),
+**Scenarios** — the screens, whole, with every motion they use: [`/dashboard`](https://krizaka.github.io/krizaka-motion/dashboard/),
 [`/chat`](https://krizaka.github.io/krizaka-motion/chat/), [`/checkout`](https://krizaka.github.io/krizaka-motion/checkout/),
-[`/delivery`](https://krizaka.github.io/krizaka-motion/delivery/). The old demo addresses (`/data-motion`, `/figures`,
+[`/delivery`](https://krizaka.github.io/krizaka-motion/delivery/), and [`/wall`](https://krizaka.github.io/krizaka-motion/wall/).
+The old demo addresses (`/data-motion`, `/figures`,
 `/transitions`, `/conversation`, `/maps`) open the guide that replaced them.
 
 **Also**: [`/krizaka-ui`](https://krizaka.github.io/krizaka-motion/krizaka-ui/) (components with their motion),

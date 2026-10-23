@@ -41,10 +41,18 @@ const ROUTES = [
   "button-feedback",
   "streaming-answer",
   "route-draw",
+  "pin-drop",
+  "tape-stick",
+  "paper-sway",
+  "develop",
+  "crt-power-on",
+  "crt-power-off",
+  "neon-flicker",
   "dashboard",
   "chat",
   "checkout",
   "delivery",
+  "wall",
   "experiments",
 ];
 

@@ -66,7 +66,7 @@
     "primary": "See the engine flow",
     "source": "Source on GitHub",
     "demosEyebrow": "The demos",
-    "demosTitle": "Six experiments, each at its own address.",
+    "demosTitle": "Thirteen guides, each at its own address.",
     "demosLead": "Live previews: they play on screen and rest under reduced motion.",
     "open": "Open the demo",
     "shippedEyebrow": "From the lab to Krizaka UI",
@@ -287,6 +287,22 @@
     "lab": "The lab",
     "demos": "Demos",
     "source": "Source"
+  },
+  "wall": {
+    "app": "Akinaza",
+    "title": "Shop wall",
+    "demo": "demo display",
+    "note": "Pinned note",
+    "hours": "Hours · 10–18 · demo",
+    "tape": "taped",
+    "photo": "Photo print · demo",
+    "caption": "The studio",
+    "captionNote": "Sample content · demo",
+    "display": "Old display",
+    "open": "Open today · demo",
+    "sign": "Akinaza",
+    "replay": "Replay motion",
+    "previewNote": "Lab prototype: the wall-motion CSS is not yet part of @krizaka/ui/motion.css. Copy the stylesheet with the example."
   },
   "gallery": {
     "eyebrow": "Krizaka UI + Motion",

@@ -207,8 +207,8 @@ export function cleanSpaRedirect(loc: { pathname: string; search: string; hash?:
 }
 
 /** The guides (one task each, on a real screen) and the scenarios (the app screens they play on) — krizaka-ui#434. */
-export const GUIDE_PATHS = ["list-arrival", "live-number", "page-transition", "button-feedback", "streaming-answer", "route-draw"] as const;
-export const SCENARIO_PATHS = ["dashboard", "chat", "checkout", "delivery"] as const;
+export const GUIDE_PATHS = ["list-arrival", "live-number", "page-transition", "button-feedback", "streaming-answer", "route-draw", "pin-drop", "tape-stick", "paper-sway", "develop", "crt-power-on", "crt-power-off", "neon-flicker"] as const;
+export const SCENARIO_PATHS = ["dashboard", "chat", "checkout", "delivery", "wall"] as const;
 export type GuidePage = (typeof GUIDE_PATHS)[number];
 export type ScenarioPage = (typeof SCENARIO_PATHS)[number];
 /** The demo pages the guides replaced: their addresses still work and open the guide. */
