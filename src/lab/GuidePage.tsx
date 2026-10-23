@@ -45,7 +45,7 @@ function Setting({ knob, value, onChange }: { knob: Knob; value: string | number
 }
 
 export function GuidePage({ id }: { id: GuideId }) {
-  const { href, go } = useLab();
+  const { t, href, go } = useLab();
   const g = guideById(id);
   const scenario = SCENARIOS[g.scenario];
   const View = scenario.View;
@@ -71,7 +71,7 @@ export function GuidePage({ id }: { id: GuideId }) {
       <Section id="screen" spacing="sm">
         <div className="lab-guide">
           <figure className="lab-guide-screen">
-            <View v={values} />
+            <View v={values} motion={g.id} />
             <Caption figure="fig. 1">
               {scenario.title}, on <a {...link(g.scenario)}>its own page</a>. Every piece is @krizaka/ui; the data is a demo.
             </Caption>
@@ -95,7 +95,7 @@ export function GuidePage({ id }: { id: GuideId }) {
       <Section id="code" title="Copy this" lead="It follows the settings above." headingSize="sm" divider>
         <CodeBlock code={g.snippet(values)} language="tsx" file={g.file} copyLabel="Copy" copiedLabel="Copied" />
         <p className="lab-sublead lab-guide-copy-note">
-          Once per app: <code>pnpm add @krizaka/ui</code>, then mount <code>&lt;MotionObserver /&gt;</code> from <code>@krizaka/ui/motion</code> and import <code>@krizaka/ui/motion.css</code>.
+          {g.scenario === "wall" ? t.wall.previewNote : <>Once per app: <code>pnpm add @krizaka/ui</code>, then mount <code>&lt;MotionObserver /&gt;</code> from <code>@krizaka/ui/motion</code> and import <code>@krizaka/ui/motion.css</code>.</>}
         </p>
       </Section>
 

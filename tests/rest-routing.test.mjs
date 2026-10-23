@@ -100,11 +100,11 @@ import { GUIDE_PATHS, SCENARIO_PATHS, LEGACY_PATHS } from "../dist/core/index.js
 
 describe("guides, scenarios and the old addresses", () => {
   it("each guide and each scenario is its own address, also under /krizaka-motion/", () => {
-    for (const id of ["list-arrival", "live-number", "page-transition", "button-feedback", "streaming-answer", "route-draw"]) {
+    for (const id of ["list-arrival", "live-number", "page-transition", "button-feedback", "streaming-answer", "route-draw", "pin-drop", "tape-stick", "paper-sway", "develop", "crt-power-on", "crt-power-off", "neon-flicker"]) {
       assert.ok(GUIDE_PATHS.includes(id), id);
       assert.equal(resolvePage({ pathname: `/krizaka-motion/${id}`, search: "", hash: "" }), id);
     }
-    for (const id of ["dashboard", "chat", "checkout", "delivery"]) {
+    for (const id of ["dashboard", "chat", "checkout", "delivery", "wall"]) {
       assert.ok(SCENARIO_PATHS.includes(id), id);
       assert.equal(resolvePage({ pathname: `/${id}/`, search: "", hash: "" }), id);
     }

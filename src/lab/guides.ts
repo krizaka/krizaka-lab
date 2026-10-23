@@ -6,7 +6,20 @@
 import type { Knob } from "./playground-lib";
 import type { ScenarioId } from "./scenarios";
 
-export type GuideId = "list-arrival" | "live-number" | "page-transition" | "streaming-answer" | "route-draw" | "button-feedback";
+export type GuideId =
+  | "list-arrival"
+  | "live-number"
+  | "page-transition"
+  | "streaming-answer"
+  | "route-draw"
+  | "button-feedback"
+  | "pin-drop"
+  | "tape-stick"
+  | "paper-sway"
+  | "develop"
+  | "crt-power-on"
+  | "crt-power-off"
+  | "neon-flicker";
 
 export interface ConfigRow {
   option: string;
@@ -33,6 +46,56 @@ export interface Guide {
 }
 
 const UI = "https://ui.krizaka.com/components";
+
+type WallMotion = Extract<GuideId, "pin-drop" | "tape-stick" | "paper-sway" | "develop" | "crt-power-on" | "crt-power-off" | "neon-flicker">;
+type WallVariable = { key: string; unit?: string; attribute?: boolean };
+const WALL_TARGETS: Record<WallMotion, { component: string; path: string; tag: string; content: string }> = {
+  "pin-drop": { component: "Card", path: "card", tag: "Card.Root", content: "<Card.Title>Hours</Card.Title>" },
+  "tape-stick": { component: "Badge", path: "badge", tag: "Badge", content: "taped" },
+  "paper-sway": { component: "Card", path: "card", tag: "Card.Root", content: "<Card.Title>Your caption</Card.Title>" },
+  develop: { component: "Card", path: "card", tag: "Card.Media", content: "Your photograph" },
+  "crt-power-on": { component: "Card", path: "card", tag: "Card.Media", content: "Your display" },
+  "crt-power-off": { component: "Card", path: "card", tag: "Card.Media", content: "Your display" },
+  "neon-flicker": { component: "Button", path: "button", tag: "Button", content: "Your sign" },
+};
+
+function wallGuide(
+  id: WallMotion,
+  title: string,
+  lead: string,
+  knobs: readonly Knob[],
+  variables: Readonly<Record<string, WallVariable>>,
+  config: readonly ConfigRow[],
+  reduced: string,
+): Guide {
+  return {
+    id,
+    title,
+    lead,
+    scenario: "wall",
+    knobs,
+    snippet: (v) => {
+      const style = Object.entries(variables)
+        .filter(([, variable]) => !variable.attribute)
+        .map(([name, variable]) => {
+          const value = v[variable.key];
+          return `"--kz-wall-${name}": ${typeof value === "string" ? `"${value}"` : `"${value}${variable.unit ?? ""}"`}`;
+        })
+        .join(", ");
+      const attributes = Object.values(variables)
+        .filter((variable) => variable.attribute)
+        .map((variable) => `data-kz-${variable.key}="${v[variable.key]}"`)
+        .join(" ");
+      const target = WALL_TARGETS[id];
+      const imports = `import { Badge } from "@krizaka/ui/badge";\nimport { Button } from "@krizaka/ui/button";\nimport { Card } from "@krizaka/ui/card";\nimport "./wall-motions.css";`;
+      return `${imports}\n\n<div className="lab-wall" data-motion-scope="">\n  <${target.tag} data-wall-animation="" data-kz-${id} ${attributes} style={{ ${style} }}>\n    ${target.content}\n  </${target.tag}>\n</div>`;
+    },
+    file: "ShopWall.tsx",
+    config,
+    reduced,
+    uses: [{ name: WALL_TARGETS[id].component, href: `${UI}/${WALL_TARGETS[id].path}` }, { name: "Motion", href: "https://ui.krizaka.com/foundations/motion" }],
+  };
+}
 
 export const GUIDES: readonly Guide[] = [
   {
@@ -168,6 +231,124 @@ export const GUIDES: readonly Guide[] = [
     reduced: "The route is drawn, the courier at its place, the pins set: nothing moves.",
     uses: [{ name: "Map", href: `${UI}/map` }, { name: "NumberTicker", href: `${UI}/number-ticker` }],
   },
+  wallGuide(
+    "pin-drop",
+    "Drop a pin onto a shop wall",
+    "A note lands with a restrained bounce; its shadow tightens as it settles.",
+    [
+      { kind: "range", key: "duration", label: "landing", min: 320, max: 900, step: 40, value: 620, unit: "ms" },
+      { kind: "range", key: "bounce", label: "bounce height", min: 1, max: 4, step: 0.5, value: 2, unit: "px" },
+      { kind: "choice", key: "easing", label: "easing", options: ["var(--kz-ease)", "ease-out", "ease-in-out"], value: "var(--kz-ease)" },
+    ],
+    { duration: { key: "duration", unit: "ms" }, bounce: { key: "bounce", unit: "px" }, ease: { key: "easing" } },
+    [
+      { option: "data-kz-pin-drop", type: "attribute", default: "—", does: "Plays one landing on the marked wall item." },
+      { option: "--kz-wall-duration / --kz-wall-bounce", type: "CSS time / length", default: "620ms / 2px", does: "Sets the landing time and the small rebound." },
+      { option: "--kz-wall-ease", type: "CSS easing", default: "var(--kz-ease)", does: "Uses the motion system's easing token or a CSS curve." },
+    ],
+    "The item rests in place with its settled shadow; no drop or bounce plays.",
+  ),
+  wallGuide(
+    "tape-stick",
+    "Press tape onto a note",
+    "A short strip flattens onto the paper and its shadow closes as the tape sticks.",
+    [
+      { kind: "range", key: "duration", label: "press", min: 220, max: 700, step: 20, value: 420, unit: "ms" },
+      { kind: "range", key: "pressure", label: "final scale", min: 0.88, max: 1, step: 0.02, value: 0.94 },
+      { kind: "choice", key: "easing", label: "easing", options: ["var(--kz-ease)", "ease-out", "ease-in-out"], value: "var(--kz-ease)" },
+    ],
+    { duration: { key: "duration", unit: "ms" }, pressure: { key: "pressure" }, ease: { key: "easing" } },
+    [
+      { option: "data-kz-tape-stick", type: "attribute", default: "—", does: "Presses the tape strip once." },
+      { option: "--kz-wall-duration / --kz-wall-pressure", type: "CSS time / number", default: "420ms / 0.94", does: "Sets how long the press takes and how far the strip compresses." },
+      { option: "--kz-wall-ease", type: "CSS easing", default: "var(--kz-ease)", does: "Follows the motion easing token or a CSS curve." },
+    ],
+    "The tape sits pressed flat, with its final shadow; no press plays.",
+  ),
+  wallGuide(
+    "paper-sway",
+    "Let pinned paper sway",
+    "A very slow, small idle movement pivots around the pin and rests whenever the wall leaves view.",
+    [
+      { kind: "range", key: "period", label: "sway period", min: 10000, max: 30000, step: 1000, value: 18000, unit: "ms" },
+      { kind: "range", key: "amplitude", label: "amplitude", min: 0.3, max: 1.5, step: 0.1, value: 1.2, unit: "°" },
+      { kind: "choice", key: "easing", label: "easing", options: ["ease-in-out", "var(--kz-ease)"], value: "ease-in-out" },
+    ],
+    { "sway-duration": { key: "period", unit: "ms" }, "sway-angle": { key: "amplitude", unit: "deg" } },
+    [
+      { option: "data-kz-paper-sway", type: "attribute", default: "—", does: "Starts a slow idle sway around the paper's pin." },
+      { option: "--kz-wall-sway-duration", type: "CSS time", default: "18000ms", does: "Sets one full sway cycle." },
+      { option: "--kz-wall-sway-angle", type: "CSS angle", default: "1.2deg", does: "Sets the sway's amplitude; it is capped at 1.5 degrees." },
+      { option: "--kz-wall-ease", type: "CSS easing", default: "ease-in-out", does: "Sets the slow turn between the two ends of the sway." },
+      { option: "[data-offscreen]", type: "attribute", default: "MotionObserver", does: "Pauses the idle sway off screen." },
+    ],
+    "The paper stays upright; the idle sway does not run.",
+  ),
+  wallGuide(
+    "develop",
+    "Develop a pinned photograph",
+    "A milky, low-contrast print settles into its sharp final image once.",
+    [
+      { kind: "range", key: "duration", label: "develop", min: 500, max: 1800, step: 100, value: 1000, unit: "ms" },
+      { kind: "range", key: "haze", label: "starting haze", min: 0.15, max: 0.55, step: 0.05, value: 0.35 },
+      { kind: "choice", key: "easing", label: "easing", options: ["var(--kz-ease)", "ease-out", "ease-in-out"], value: "var(--kz-ease)" },
+    ],
+    { duration: { key: "duration", unit: "ms" }, haze: { key: "haze" }, ease: { key: "easing" } },
+    [
+      { option: "data-kz-develop", type: "attribute", default: "—", does: "Develops the print from milky to sharp, once." },
+      { option: "--kz-wall-duration / --kz-wall-haze", type: "CSS time / number", default: "1000ms / 0.35", does: "Sets the development time and the starting haze." },
+      { option: "--kz-wall-ease", type: "CSS easing", default: "var(--kz-ease)", does: "Sets the filter's easing curve." },
+    ],
+    "The sharp, full-contrast photograph is shown immediately.",
+  ),
+  wallGuide(
+    "crt-power-on",
+    "Power on a wall display",
+    "A bright horizontal line opens vertically into the display's steady image.",
+    [
+      { kind: "range", key: "duration", label: "power on", min: 240, max: 900, step: 40, value: 520, unit: "ms" },
+      { kind: "choice", key: "easing", label: "easing", options: ["var(--kz-ease)", "ease-out", "ease-in-out"], value: "var(--kz-ease)" },
+    ],
+    { duration: { key: "duration", unit: "ms" }, ease: { key: "easing" } },
+    [
+      { option: "data-kz-crt-power-on", type: "attribute", default: "—", does: "Opens the screen from a bright line." },
+      { option: "--kz-wall-duration", type: "CSS time", default: "520ms", does: "Sets how long the screen takes to open." },
+      { option: "--kz-wall-ease", type: "CSS easing", default: "var(--kz-ease)", does: "Sets the line's opening curve." },
+    ],
+    "The display is already open; no line expands.",
+  ),
+  wallGuide(
+    "crt-power-off",
+    "Power off a wall display",
+    "The picture collapses to a bright line, then the screen goes dark.",
+    [
+      { kind: "range", key: "duration", label: "power off", min: 240, max: 900, step: 40, value: 520, unit: "ms" },
+      { kind: "choice", key: "easing", label: "easing", options: ["var(--kz-ease)", "ease-out", "ease-in-out"], value: "var(--kz-ease)" },
+    ],
+    { duration: { key: "duration", unit: "ms" }, ease: { key: "easing" } },
+    [
+      { option: "data-kz-crt-power-off", type: "attribute", default: "—", does: "Closes the image to a line, then turns it off." },
+      { option: "--kz-wall-duration", type: "CSS time", default: "520ms", does: "Sets how long the screen takes to close." },
+      { option: "--kz-wall-ease", type: "CSS easing", default: "var(--kz-ease)", does: "Sets the line's closing curve." },
+    ],
+    "The display stays dark, its final state; the power-off motion is skipped.",
+  ),
+  wallGuide(
+    "neon-flicker",
+    "Settle a neon sign",
+    "Two or three irregular flickers lead into a steady sign; it never loops.",
+    [
+      { kind: "range", key: "duration", label: "settle", min: 360, max: 1200, step: 40, value: 800, unit: "ms" },
+      { kind: "choice", key: "flickers", label: "flickers", options: ["2", "3"], value: "3" },
+    ],
+    { duration: { key: "duration", unit: "ms" }, flickers: { key: "flickers", attribute: true } },
+    [
+      { option: "data-kz-neon-flicker", type: "attribute", default: "—", does: "Flickers a sign two or three times, then holds steady." },
+      { option: "--kz-wall-duration", type: "CSS time", default: "800ms", does: "Sets the one-shot flicker sequence's length." },
+      { option: "data-kz-flickers", type: '"2" | "3"', default: '"3"', does: "Chooses two or three irregular flickers; the sign never loops." },
+    ],
+    "The sign stays steadily lit; it does not flicker.",
+  ),
 ];
 
 export const guideById = (id: GuideId): Guide => GUIDES.find((g) => g.id === id)!;

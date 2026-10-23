@@ -20,12 +20,13 @@ import { Toaster, toast } from "@krizaka/ui/toast";
 import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from "react";
 import { canViewTransition, transitionPage, type ViewTransitionEnv } from "../core/view-transition";
 import { flushSync } from "react-dom";
+import { WallMotionWall } from "./wall-motions";
 
 import { useInView, useReducedMotion } from "./hooks";
 import type { Values } from "./playground-lib";
 import { shownAt, tokens } from "./stream-lib";
 
-export type ScenarioId = "dashboard" | "chat" | "checkout" | "delivery";
+export type ScenarioId = "dashboard" | "chat" | "checkout" | "delivery" | "wall";
 
 /** An app screen: the product's mark (none for a generic app, the courier) and name, the screen's title, then the screen. Decorative chrome is the frame only. */
 export function Screen({ product, app, title, children, actions }: { product?: "orazaka" | "yasakia" | "akinaza"; app: string; title: string; children: ReactNode; actions?: ReactNode }) {
@@ -305,9 +306,10 @@ export function Delivery({ v = {} }: { v?: Values }) {
   );
 }
 
-export const SCENARIOS: Record<ScenarioId, { title: string; product: string; lead: string; View: (p: { v?: Values }) => ReactNode }> = {
+export const SCENARIOS: Record<ScenarioId, { title: string; product: string; lead: string; View: (p: { v?: Values; motion?: string }) => ReactNode }> = {
   dashboard: { title: "An operations dashboard", product: "Orazaka", lead: "The runs of the day: figures that climb as runs land, new rows that arrive on top.", View: Dashboard },
   chat: { title: "A support chat", product: "Yasakia", lead: "A restaurant's assistant answers: the typing indicator, then the answer streaming in.", View: Chat },
   checkout: { title: "A booking checkout", product: "Akinaza", lead: "Pick a time, review, pay: each step crosses to the next, the button says it is working.", View: Checkout },
   delivery: { title: "A delivery on a map", product: "Courier", lead: "An order on its way: the route draws itself, the courier travels, the arrival counts down.", View: Delivery },
+  wall: { title: "Akinaza's shop wall", product: "Akinaza", lead: "A pinned photograph, a taped note, a small sign and a screen; each motion is tuned separately.", View: WallMotionWall },
 };
