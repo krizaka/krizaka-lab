@@ -56,7 +56,7 @@ const WALL_TARGETS: Record<WallMotion, { component: string; path: string; tag: s
   develop: { component: "Card", path: "card", tag: "Card.Media", content: "Your photograph" },
   "crt-power-on": { component: "Card", path: "card", tag: "Card.Media", content: "Your display" },
   "crt-power-off": { component: "Card", path: "card", tag: "Card.Media", content: "Your display" },
-  "neon-flicker": { component: "Button", path: "button", tag: "Button", content: "Your sign" },
+  "neon-flicker": { component: "Badge", path: "badge", tag: "Badge", content: "Your sign" },
 };
 
 function wallGuide(

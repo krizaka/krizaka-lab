@@ -94,14 +94,9 @@ export function WallMotionWall({ v = {}, motion = "pin-drop" }: { v?: Values; mo
             </Card.Body>
           </Card.Root>
 
-          <Button
-            variant="secondary"
-            className="lab-wall-sign"
-            {...dataFor(motion, "neon-flicker")}
-            data-kz-flickers={flickers}
-          >
+          <Badge className="lab-wall-sign" tone="accent" {...dataFor(motion, "neon-flicker")} data-kz-flickers={flickers}>
             {t.wall.sign}
-          </Button>
+          </Badge>
         </div>
       </Screen>
     </div>
