@@ -246,3 +246,12 @@ export function resolvePage(loc: { pathname?: string; search?: string; hash?: st
 export function homeHref(currentPathname = ""): string {
   return currentPathname.includes("/krizaka-motion") ? "/krizaka-motion/" : "/";
 }
+
+/** The canonical URL for a page path on the motion lab's custom domain. */
+export function getCanonicalUrl(pathname: string): string {
+  const route = pathname
+    .replace(/^\/krizaka-motion(?=\/|$)/, "")
+    .replace(/\/index\.html$/i, "")
+    .replace(/^\/+|\/+$/g, "");
+  return `https://motion.krizaka.com/${route ? `${route}/` : ""}`;
+}
