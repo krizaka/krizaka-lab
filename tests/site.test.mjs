@@ -26,6 +26,7 @@ describe("motion.krizaka.com", () => {
     assert.equal(getCanonicalUrl("/"), "https://motion.krizaka.com/");
     assert.equal(getCanonicalUrl("/checkout"), "https://motion.krizaka.com/checkout/");
     assert.equal(getCanonicalUrl("/krizaka-motion/checkout/"), "https://motion.krizaka.com/checkout/");
+    assert.equal(getCanonicalUrl("//checkout///"), "https://motion.krizaka.com/checkout/");
   });
   it("README says where the docs live", () => {
     assert.match(read("README.md"), /docs live here/);
