@@ -17,7 +17,7 @@ export function chunksOf(entry, dist) {
     if (seen.has(file)) return;
     seen.add(file);
     const code = readFileSync(file, "utf8");
-    for (const m of code.matchAll(/(?:from\s*|import\s*\(\s*)["'](\.{1,2}\/[^"']+)["']/g)) visit(resolve(dirname(file), m[1]));
+    for (const m of code.matchAll(/(?:\bfrom\s*|\bimport\s*(?:\(\s*)?)["'](\.{1,2}\/[^"']+)["']/g)) visit(resolve(dirname(file), m[1]));
   };
   visit(join(dist, entry));
   return [...seen];
