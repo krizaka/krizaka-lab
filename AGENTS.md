@@ -40,9 +40,9 @@ These are the defects code review found most often on 2026-10-23. Check them you
 4. **Errors:** a cleanup (ROLLBACK, DROP, close) never masks the original error. Rethrow it, or throw an `AggregateError` with the original first.
 5. **Validation:** validate the original input, never a truncated or pre-trimmed copy. Server and client reject the same inputs.
 6. **Accessibility:**
-   - every control has a unique label, and FR/EN pairs say their language;
+   - every control has a unique label;
    - focus rings are never clipped by `overflow`;
    - text never overflows its box at 360 px.
 7. **Naming:** environment variables follow `<CONTEXT>_<THING>` (`APP_`, `DATABASE_`, `AUTH_`, `MEDIA_`, `MAIL_`, `PAYMENTS_`, `AI_`…) and are declared once.
-8. **Words:** every user-facing string is in the FR and EN messages, and no colour is hard-coded.
+8. **Words:** every user-facing string is in `messages/en.json` (the lab is English-only, rule 6), and no colour is hard-coded.
 9. **Review threads:** answer every one. Fix it test-first, or reply with the reason, then resolve it.
