@@ -86,6 +86,7 @@ pnpm install          # pnpm 10 (packageManager)
 pnpm dev              # the lab on http://localhost:5173
 pnpm test             # builds the library, then the unit tests (node --test)
 pnpm run build        # library + demo (dist-demo/, what Pages serves)
+pnpm run check:budget   # gzip ceiling per entry (scripts/budget.json), no requestAnimationFrame outside src/core and src/native
 pnpm exec krizaka-i18n check messages
 node scripts/check-overflow.mjs --base http://localhost:4173   # after `pnpm exec vite preview --outDir dist-demo`
 ```
