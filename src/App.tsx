@@ -14,7 +14,7 @@ import { familyLabels } from "@krizaka/ui/sites";
 import { ThemeProvider, useTheme } from "@krizaka/ui/theme";
 import { type MouseEvent, useEffect, useMemo, useState } from "react";
 
-import { GUIDE_PATHS, getHrefForTab, homeHref, type LabPage, resolvePage, SCENARIO_PATHS, type GuidePage as GuideId, type ScenarioPage as ScenarioId, type TabId } from "./core/router";
+import { GUIDE_PATHS, getCanonicalUrl, getHrefForTab, homeHref, type LabPage, resolvePage, SCENARIO_PATHS, type GuidePage as GuideId, type ScenarioPage as ScenarioId, type TabId } from "./core/router";
 import { DemoPage } from "./lab/DemoPage";
 import { GuidePage, ScenarioPage } from "./lab/GuidePage";
 import { guideById } from "./lab/guides";
@@ -43,6 +43,9 @@ function Shell() {
     document.documentElement.lang = locale;
     const name = page === "home" ? t.home.eyebrow : page === "experiments" ? "Experiments" : isGuide(page) ? guideById(page).title : isScenario(page) ? SCENARIOS[page].title : t.demos[page].name;
     document.title = page === "home" ? `${t.bar.label} — ${name}` : `${name} — ${t.bar.label}`;
+    const canonicalUrl = getCanonicalUrl(window.location.pathname);
+    document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute("href", canonicalUrl);
+    document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute("content", canonicalUrl);
   }, [page, locale, t]);
 
   const lab = useMemo(() => {

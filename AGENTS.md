@@ -1,7 +1,7 @@
 # krizaka-motion — agent instructions
 
 The Krizaka **motion lab**: guides (one motion task each, played on a real app screen made of `@krizaka/ui`), the four
-scenarios (dashboard, chat, checkout, delivery) and the canvas experiments. Live at https://krizaka.github.io/krizaka-motion/
+scenarios (dashboard, chat, checkout, delivery) and the canvas experiments. Live at https://motion.krizaka.com/
 (moving to motion.krizaka.com, krizaka-motion#45). It is **a lab, not a package**: nothing here is published on npm.
 
 ## The rules

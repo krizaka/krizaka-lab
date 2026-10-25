@@ -246,3 +246,15 @@ export function resolvePage(loc: { pathname?: string; search?: string; hash?: st
 export function homeHref(currentPathname = ""): string {
   return currentPathname.includes("/krizaka-motion") ? "/krizaka-motion/" : "/";
 }
+
+/** The canonical URL for a page path on the motion lab's custom domain. */
+export function getCanonicalUrl(pathname: string): string {
+  let routePath = pathname;
+  if (routePath.startsWith("/krizaka-motion")) {
+    const remainder = routePath.slice("/krizaka-motion".length);
+    if (remainder === "" || remainder.startsWith("/")) routePath = remainder;
+  }
+  if (routePath.toLowerCase().endsWith("/index.html")) routePath = routePath.slice(0, -"/index.html".length);
+  const route = routePath.split("/").filter(Boolean).join("/");
+  return `https://motion.krizaka.com/${route ? `${route}/` : ""}`;
+}

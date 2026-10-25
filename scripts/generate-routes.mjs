@@ -13,6 +13,7 @@ if (!fs.existsSync(DIST_DEMO)) {
 }
 
 const rootHtml = fs.readFileSync(path.join(DIST_DEMO, "index.html"), "utf8");
+const SITE = "https://motion.krizaka.com";
 
 const ROUTES = [
   "orazaka",
@@ -66,7 +67,11 @@ const subfolderHtml = rootHtml
 for (const route of ROUTES) {
   const dirPath = path.join(DIST_DEMO, route);
   fs.mkdirSync(dirPath, { recursive: true });
-  fs.writeFileSync(path.join(dirPath, "index.html"), subfolderHtml, "utf8");
+  const routeUrl = `${SITE}/${route}/`;
+  const routeHtml = subfolderHtml
+    .replace(/(<link rel="canonical" href=")[^"]+(" \/>)/, `$1${routeUrl}$2`)
+    .replace(/(<meta property="og:url" content=")[^"]+(" \/>)/, `$1${routeUrl}$2`);
+  fs.writeFileSync(path.join(dirPath, "index.html"), routeHtml, "utf8");
 }
 
 console.log(`✅ Generated ${ROUTES.length} static REST route directories in dist-demo/`);
@@ -78,9 +83,9 @@ const spa404Html = `<!DOCTYPE html>
     <meta charset="utf-8">
     <title>Redirecting...</title>
     <script>
-      // Single Page Apps for GitHub Pages
+      // Single Page Apps for GitHub Pages; the lab is served from the root of motion.krizaka.com (no repo subpath)
       // MIT License https://github.com/rafgraph/spa-github-pages
-      var pathSegmentsToKeep = 1;
+      var pathSegmentsToKeep = 0;
       var l = window.location;
       var redirectPath = l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/');
       l.replace(
@@ -98,3 +103,12 @@ const spa404Html = `<!DOCTYPE html>
 
 fs.writeFileSync(path.join(DIST_DEMO, "404.html"), spa404Html, "utf8");
 console.log("✅ Generated dist-demo/404.html SPA fallback");
+
+// SEO: a sitemap of every address on the custom domain.
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${["", ...ROUTES].map((r) => `  <url><loc>${SITE}/${r ? r + "/" : ""}</loc></url>`).join("\n")}
+</urlset>
+`;
+fs.writeFileSync(path.join(DIST_DEMO, "sitemap.xml"), sitemap, "utf8");
+console.log("✅ Generated dist-demo/sitemap.xml");

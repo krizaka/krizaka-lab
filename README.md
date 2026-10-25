@@ -16,7 +16,7 @@ HUD, liquid glass, a neural lattice — played live, each one a shareable addres
 
 [![CI](https://github.com/krizaka/krizaka-motion/actions/workflows/ci.yml/badge.svg)](https://github.com/krizaka/krizaka-motion/actions/workflows/ci.yml)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/krizaka/krizaka-motion/badge)](https://scorecard.dev/viewer/?uri=github.com/krizaka/krizaka-motion)
-[![Lab](https://img.shields.io/badge/lab-krizaka.github.io%2Fkrizaka--motion-196df5)](https://krizaka.github.io/krizaka-motion/)
+[![Lab](https://img.shields.io/badge/lab-motion.krizaka.com-196df5)](https://motion.krizaka.com/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 
 </div>
@@ -24,35 +24,35 @@ HUD, liquid glass, a neural lattice — played live, each one a shareable addres
 
 ## The lab
 
-**https://krizaka.github.io/krizaka-motion/** — English, dark and light. Organised by task (krizaka-ui#434).
+**https://motion.krizaka.com/** (the docs live here; `krizaka.github.io/krizaka-motion` redirects to it) — English, dark and light. Organised by task (krizaka-ui#434).
 
 **Guides** — one task each, played on a real app screen made of `@krizaka/ui`, with its settings, the code to copy
 (it follows the settings), every option in a table and what happens under reduced motion:
 
 | Guide | Address | Screen |
 | :-- | :-- | :-- |
-| Animate a list arriving | [`/list-arrival`](https://krizaka.github.io/krizaka-motion/list-arrival/) | dashboard |
-| Show a live number | [`/live-number`](https://krizaka.github.io/krizaka-motion/live-number/) | dashboard |
-| Stream an answer into a chat | [`/streaming-answer`](https://krizaka.github.io/krizaka-motion/streaming-answer/) | chat |
-| Cross from one step to the next | [`/page-transition`](https://krizaka.github.io/krizaka-motion/page-transition/) | checkout |
-| Say an action is working, then done | [`/button-feedback`](https://krizaka.github.io/krizaka-motion/button-feedback/) | checkout |
-| Draw a route and follow a courier | [`/route-draw`](https://krizaka.github.io/krizaka-motion/route-draw/) | delivery |
-| Drop a pin onto a shop wall | [`/pin-drop`](https://krizaka.github.io/krizaka-motion/pin-drop/) | wall |
-| Press tape onto a note | [`/tape-stick`](https://krizaka.github.io/krizaka-motion/tape-stick/) | wall |
-| Let pinned paper sway | [`/paper-sway`](https://krizaka.github.io/krizaka-motion/paper-sway/) | wall |
-| Develop a pinned photograph | [`/develop`](https://krizaka.github.io/krizaka-motion/develop/) | wall |
-| Power on a wall display | [`/crt-power-on`](https://krizaka.github.io/krizaka-motion/crt-power-on/) | wall |
-| Power off a wall display | [`/crt-power-off`](https://krizaka.github.io/krizaka-motion/crt-power-off/) | wall |
-| Settle a neon sign | [`/neon-flicker`](https://krizaka.github.io/krizaka-motion/neon-flicker/) | wall |
+| Animate a list arriving | [`/list-arrival`](https://motion.krizaka.com/list-arrival/) | dashboard |
+| Show a live number | [`/live-number`](https://motion.krizaka.com/live-number/) | dashboard |
+| Stream an answer into a chat | [`/streaming-answer`](https://motion.krizaka.com/streaming-answer/) | chat |
+| Cross from one step to the next | [`/page-transition`](https://motion.krizaka.com/page-transition/) | checkout |
+| Say an action is working, then done | [`/button-feedback`](https://motion.krizaka.com/button-feedback/) | checkout |
+| Draw a route and follow a courier | [`/route-draw`](https://motion.krizaka.com/route-draw/) | delivery |
+| Drop a pin onto a shop wall | [`/pin-drop`](https://motion.krizaka.com/pin-drop/) | wall |
+| Press tape onto a note | [`/tape-stick`](https://motion.krizaka.com/tape-stick/) | wall |
+| Let pinned paper sway | [`/paper-sway`](https://motion.krizaka.com/paper-sway/) | wall |
+| Develop a pinned photograph | [`/develop`](https://motion.krizaka.com/develop/) | wall |
+| Power on a wall display | [`/crt-power-on`](https://motion.krizaka.com/crt-power-on/) | wall |
+| Power off a wall display | [`/crt-power-off`](https://motion.krizaka.com/crt-power-off/) | wall |
+| Settle a neon sign | [`/neon-flicker`](https://motion.krizaka.com/neon-flicker/) | wall |
 
-**Scenarios** — the screens, whole, with every motion they use: [`/dashboard`](https://krizaka.github.io/krizaka-motion/dashboard/),
-[`/chat`](https://krizaka.github.io/krizaka-motion/chat/), [`/checkout`](https://krizaka.github.io/krizaka-motion/checkout/),
-[`/delivery`](https://krizaka.github.io/krizaka-motion/delivery/), and [`/wall`](https://krizaka.github.io/krizaka-motion/wall/).
+**Scenarios** — the screens, whole, with every motion they use: [`/dashboard`](https://motion.krizaka.com/dashboard/),
+[`/chat`](https://motion.krizaka.com/chat/), [`/checkout`](https://motion.krizaka.com/checkout/),
+[`/delivery`](https://motion.krizaka.com/delivery/), and [`/wall`](https://motion.krizaka.com/wall/).
 The old demo addresses (`/data-motion`, `/figures`,
 `/transitions`, `/conversation`, `/maps`) open the guide that replaced them.
 
-**Also**: [`/krizaka-ui`](https://krizaka.github.io/krizaka-motion/krizaka-ui/) (components with their motion),
-`/journey`, `/overlays`, `/people`, and [`/experiments`](https://krizaka.github.io/krizaka-motion/experiments/) — the
+**Also**: [`/krizaka-ui`](https://motion.krizaka.com/krizaka-ui/) (components with their motion),
+`/journey`, `/overlays`, `/people`, and [`/experiments`](https://motion.krizaka.com/experiments/) — the
 canvas studies (engine flow, voice presence, HUD, liquid glass, neural lattice).
 
 ## Lab, then Krizaka UI
