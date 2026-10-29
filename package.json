@@ -22,7 +22,8 @@
     "test": "node --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit",
     "check:gallery": "node scripts/check-gallery.mjs",
-    "check:budget": "node scripts/check-budget.mjs"
+    "check:budget": "node scripts/check-budget.mjs",
+    "lint:workspace": "npx --yes -p @krizaka/config krizaka-workspace-guard"
   },
   "dependencies": {
     "@krizaka/charts": "^0.6.0",
