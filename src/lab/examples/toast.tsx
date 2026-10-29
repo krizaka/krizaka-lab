@@ -5,7 +5,10 @@ export function Example() {
   return (
     <>
       <Toaster label="Notifications" closeLabel="Close" position="bottom-right" />
-      <Button variant="secondary" onClick={() => undoToast("Message archived", { undoLabel: "Undo", onUndo: () => {} })}>
+      <Button
+        variant="secondary"
+        onClick={() => undoToast("Message archived", { undoLabel: "Undo", onUndo: () => {} })}
+      >
         Message archived
       </Button>
     </>

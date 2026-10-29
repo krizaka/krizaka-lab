@@ -19,14 +19,29 @@ import { type Knob, type Values, defaults, readValues, writeValues } from "./pla
 import { SCENARIOS } from "./scenarios";
 import { i18n } from "./messages";
 
-function Setting({ knob, value, onChange }: { knob: Knob; value: string | number | boolean; onChange: (v: string | number | boolean) => void }) {
+function Setting({
+  knob,
+  value,
+  onChange,
+}: {
+  knob: Knob;
+  value: string | number | boolean;
+  onChange: (v: string | number | boolean) => void;
+}) {
   if (knob.kind === "choice")
     return (
       <div className="lab-control">
         <span className="lab-control-label" aria-hidden>
           {knob.label}
         </span>
-        <Chip.Group type="single" required size="sm" label={knob.label} value={String(value)} onValueChange={(v) => v && onChange(v)}>
+        <Chip.Group
+          type="single"
+          required
+          size="sm"
+          label={knob.label}
+          value={String(value)}
+          onValueChange={(v) => v && onChange(v)}
+        >
           {knob.options.map((o) => (
             <Chip key={o} value={o}>
               {o}
@@ -36,7 +51,17 @@ function Setting({ knob, value, onChange }: { knob: Knob; value: string | number
       </div>
     );
   if (knob.kind === "range")
-    return <Slider label={`${knob.label}${knob.unit ? ` (${knob.unit})` : ""}`} showLabel value={Number(value)} min={knob.min} max={knob.max} step={knob.step} onValueChange={(v) => onChange(v as number)} />;
+    return (
+      <Slider
+        label={`${knob.label}${knob.unit ? ` (${knob.unit})` : ""}`}
+        showLabel
+        value={Number(value)}
+        min={knob.min}
+        max={knob.max}
+        step={knob.step}
+        onValueChange={(v) => onChange(v as number)}
+      />
+    );
   return (
     <label className="lab-switch">
       <Switch checked={Boolean(value)} onCheckedChange={onChange} label={knob.label} />
@@ -51,13 +76,21 @@ export function GuidePage({ id }: { id: GuideId }) {
   const scenario = SCENARIOS[g.scenario];
   const View = scenario.View;
   const initial = useMemo(() => defaults(g.knobs), [g]);
-  const [values, setValues] = useState<Values>(() => readValues(g.knobs, typeof window === "undefined" ? "" : window.location.search));
+  const [values, setValues] = useState<Values>(() =>
+    readValues(g.knobs, typeof window === "undefined" ? "" : window.location.search),
+  );
   useEffect(() => writeValues(g.knobs, values), [g, values]);
   const others = guidesOf(g.scenario).filter((o) => o.id !== id);
   const link = (to: LabPage) => ({ href: href(to), onClick: go(to) });
   return (
     <>
-      <PageHero eyebrow="Guide" title={g.title} lead={g.lead} back={{ href: href("home"), label: "All guides" }} linkAs={(props: React.ComponentProps<"a">) => <a {...props} onClick={go("home")} />}>
+      <PageHero
+        eyebrow="Guide"
+        title={g.title}
+        lead={g.lead}
+        back={{ href: href("home"), label: "All guides" }}
+        linkAs={(props: React.ComponentProps<"a">) => <a {...props} onClick={go("home")} />}
+      >
         <p className="lab-uses">
           Uses{" "}
           {g.uses.map((u, i) => (
@@ -74,7 +107,8 @@ export function GuidePage({ id }: { id: GuideId }) {
           <figure className="lab-guide-screen">
             <View v={values} motion={g.id} />
             <Caption figure="fig. 1">
-              {scenario.title}, on <a {...link(g.scenario)}>its own page</a>. Every piece is @krizaka/ui; the data is a demo.
+              {scenario.title}, on <a {...link(g.scenario)}>its own page</a>. Every piece is @krizaka/ui; the data is a
+              demo.
             </Caption>
           </figure>
           <div className="lab-guide-settings">
@@ -86,7 +120,12 @@ export function GuidePage({ id }: { id: GuideId }) {
             </div>
             <div className="lab-controls">
               {g.knobs.map((k) => (
-                <Setting key={k.key} knob={k} value={values[k.key] ?? initial[k.key]!} onChange={(v) => setValues((prev) => ({ ...prev, [k.key]: v }))} />
+                <Setting
+                  key={k.key}
+                  knob={k}
+                  value={values[k.key] ?? initial[k.key]!}
+                  onChange={(v) => setValues((prev) => ({ ...prev, [k.key]: v }))}
+                />
               ))}
             </div>
           </div>
@@ -96,12 +135,21 @@ export function GuidePage({ id }: { id: GuideId }) {
       <Section id="code" title="Copy this" lead="It follows the settings above." headingSize="sm" divider>
         <CodeBlock code={g.snippet(values)} language="tsx" file={g.file} copyLabel="Copy" copiedLabel="Copied" />
         <p className="lab-sublead lab-guide-copy-note">
-          {g.scenario === "wall" ? t.wall.previewNote : <>Once per app: <code>pnpm add @krizaka/ui</code>, then mount <code>&lt;MotionObserver /&gt;</code> from <code>@krizaka/ui/motion</code> and import <code>@krizaka/ui/motion.css</code>.</>}
+          {g.scenario === "wall" ? (
+            t.wall.previewNote
+          ) : (
+            <>
+              Once per app: <code>pnpm add @krizaka/ui</code>, then mount <code>&lt;MotionObserver /&gt;</code> from{" "}
+              <code>@krizaka/ui/motion</code> and import <code>@krizaka/ui/motion.css</code>.
+            </>
+          )}
         </p>
         {g.scenario === "checkout" ? (
           <p className="lab-sublead">
             {i18n.t("checkout.guides.sourceNote")}{" "}
-            <a href="https://github.com/krizaka/krizaka-lab/tree/main/src/lab/scenarios.tsx">{i18n.t("checkout.guides.source")}</a>
+            <a href="https://github.com/krizaka/krizaka-lab/tree/main/src/lab/scenarios.tsx">
+              {i18n.t("checkout.guides.source")}
+            </a>
           </p>
         ) : null}
       </Section>
@@ -146,14 +194,28 @@ export function ScenarioPage({ id }: { id: keyof typeof SCENARIOS }) {
   const guides = guidesOf(id);
   return (
     <>
-      <PageHero eyebrow={`Scenario · ${s.product}`} title={s.title} lead={s.lead} back={{ href: href("home"), label: "All scenarios" }} linkAs={(props: React.ComponentProps<"a">) => <a {...props} onClick={go("home")} />} />
+      <PageHero
+        eyebrow={`Scenario · ${s.product}`}
+        title={s.title}
+        lead={s.lead}
+        back={{ href: href("home"), label: "All scenarios" }}
+        linkAs={(props: React.ComponentProps<"a">) => <a {...props} onClick={go("home")} />}
+      />
       <Section id="screen" spacing="sm">
         <figure className="lab-scenario-screen">
           <View motion={id === "wall" ? "all" : undefined} />
-          <Caption figure="fig. 1">A real screen made of @krizaka/ui components, playing while it is on screen. The data is a demo.</Caption>
+          <Caption figure="fig. 1">
+            A real screen made of @krizaka/ui components, playing while it is on screen. The data is a demo.
+          </Caption>
         </figure>
       </Section>
-      <Section id="motion" title="The motion on this screen" lead="Each one is a guide: the same screen, its settings, the code to copy and every option." headingSize="sm" divider>
+      <Section
+        id="motion"
+        title="The motion on this screen"
+        lead="Each one is a guide: the same screen, its settings, the code to copy and every option."
+        headingSize="sm"
+        divider
+      >
         <ol className="lab-guide-more">
           {guides.map((g) => (
             <li key={g.id}>

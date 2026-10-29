@@ -24,8 +24,12 @@ export function Example() {
   }
   return (
     <div className="st-stage">
-      <div ref={stamp} className="st-stamp" role="img" aria-label="Fait à Montréal, stamped">Fait à Montréal</div>
-      <Button variant="secondary" size="sm" onClick={press}>Press the stamp</Button>
+      <div ref={stamp} className="st-stamp" role="img" aria-label="Fait à Montréal, stamped">
+        Fait à Montréal
+      </div>
+      <Button variant="secondary" size="sm" onClick={press}>
+        Press the stamp
+      </Button>
     </div>
   );
 }

@@ -24,7 +24,14 @@ export function Gallery() {
   return (
     <>
       {GROUPS.map((group, gi) => (
-        <Section key={group} id={group} eyebrow={g.groups[group]} title={g.groupLeads[group]} headingSize="sm" divider={gi > 0}>
+        <Section
+          key={group}
+          id={group}
+          eyebrow={g.groups[group]}
+          title={g.groupLeads[group]}
+          headingSize="sm"
+          divider={gi > 0}
+        >
           <ul className="lab-gallery">
             {ITEMS.filter((i) => i.group === group).map((item) => {
               const w = g.items[item.id as ItemId];
@@ -47,7 +54,12 @@ export function Gallery() {
                       <dt>{g.reduced}</dt>
                       <dd>{w.reduced}</dd>
                     </dl>
-                    <CodeBlock code={shownCode(raw[`./examples/${item.id}.tsx`]!)} language="tsx" copyLabel={g.copy} copiedLabel={g.copied} />
+                    <CodeBlock
+                      code={shownCode(raw[`./examples/${item.id}.tsx`]!)}
+                      language="tsx"
+                      copyLabel={g.copy}
+                      copiedLabel={g.copied}
+                    />
                   </div>
                 </li>
               );

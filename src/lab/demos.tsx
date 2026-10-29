@@ -66,13 +66,32 @@ function Settings({ children }: { children: ReactNode }) {
 }
 
 /** A row of choices: a single-choice Chip.Group with its label. */
-function Choice<T extends string>({ label, value, options, names, onChange }: { label: string; value: T; options: readonly T[]; names: Record<T, string>; onChange: (v: T) => void }) {
+function Choice<T extends string>({
+  label,
+  value,
+  options,
+  names,
+  onChange,
+}: {
+  label: string;
+  value: T;
+  options: readonly T[];
+  names: Record<T, string>;
+  onChange: (v: T) => void;
+}) {
   return (
     <div className="lab-control">
       <span className="lab-control-label" aria-hidden>
         {label}
       </span>
-      <Chip.Group type="single" required size="sm" label={label} value={value} onValueChange={(v) => v && onChange(v as T)}>
+      <Chip.Group
+        type="single"
+        required
+        size="sm"
+        label={label}
+        value={value}
+        onValueChange={(v) => v && onChange(v as T)}
+      >
         {options.map((o) => (
           <Chip key={o} value={o}>
             {names[o]}
@@ -93,7 +112,21 @@ function Box({ children, tall = false }: { children: ReactNode; tall?: boolean }
 }
 
 /** The engine flow of @krizaka/ui — the shipped primitive krizaka.com's home draws. */
-export function Flow({ layout = "radial", mode = "both", particles = "photons", conduit = "bezier", compact = true, config }: { layout?: FlowLayout; mode?: FlowMode; particles?: "photons" | "none"; conduit?: "bezier" | "straight"; compact?: boolean; config?: Partial<React.ComponentProps<typeof EngineFlow>> }) {
+export function Flow({
+  layout = "radial",
+  mode = "both",
+  particles = "photons",
+  conduit = "bezier",
+  compact = true,
+  config,
+}: {
+  layout?: FlowLayout;
+  mode?: FlowMode;
+  particles?: "photons" | "none";
+  conduit?: "bezier" | "straight";
+  compact?: boolean;
+  config?: Partial<React.ComponentProps<typeof EngineFlow>>;
+}) {
   const { t } = useLab();
   const c = t.controls;
   return (
@@ -125,11 +158,23 @@ export function Flow({ layout = "radial", mode = "both", particles = "photons", 
 }
 
 const FLOW_KNOBS: readonly Knob[] = [
-  { kind: "choice", key: "layout", label: "layout", options: ["radial", "top-to-bottom", "left-to-right"], value: "radial" },
+  {
+    kind: "choice",
+    key: "layout",
+    label: "layout",
+    options: ["radial", "top-to-bottom", "left-to-right"],
+    value: "radial",
+  },
   { kind: "choice", key: "flow", label: "traffic", options: ["in", "out", "both"], value: "both" },
   { kind: "choice", key: "density", label: "density", options: ["sparse", "normal", "dense"], value: "normal" },
   { kind: "choice", key: "trigger", label: "trigger", options: ["always", "hover", "active"], value: "always" },
-  { kind: "choice", key: "easing", label: "easing", options: ["linear", "ease-in-out", "cubic-bezier(.2,0,0,1)"], value: "linear" },
+  {
+    kind: "choice",
+    key: "easing",
+    label: "easing",
+    options: ["linear", "ease-in-out", "cubic-bezier(.2,0,0,1)"],
+    value: "linear",
+  },
   { kind: "range", key: "speed", label: "speed", min: 4, max: 40, step: 2, value: 16, unit: "units/s" },
   { kind: "range", key: "stagger", label: "stagger", min: 0, max: 800, step: 50, value: 300, unit: "ms" },
   { kind: "choice", key: "particles", label: "particles", options: ["photons", "none"], value: "photons" },
@@ -158,12 +203,19 @@ function OrazakaStage() {
               particles={v.particles as "photons" | "none"}
               conduit={v.conduit as "bezier" | "straight"}
               compact={false}
-              config={{ density: v.density as FlowDensity, trigger: v.trigger as FlowTrigger, easing: v.easing as string, speed: v.speed as number, stagger: v.stagger as number, breathe: v.breathe as boolean }}
+              config={{
+                density: v.density as FlowDensity,
+                trigger: v.trigger as FlowTrigger,
+                easing: v.easing as string,
+                speed: v.speed as number,
+                stagger: v.stagger as number,
+                breathe: v.breathe as boolean,
+              }}
             />
           </div>
         )}
       >
-        {"  label=\"Orazaka and the products it powers\"\n  hub={{ label: \"Orazaka\" }}\n  nodes={nodes}"}
+        {'  label="Orazaka and the products it powers"\n  hub={{ label: "Orazaka" }}\n  nodes={nodes}'}
       </Playground>
       <h3 className="lab-subtitle">{c.canvasTitle}</h3>
       <p className="lab-sublead">{c.canvasLead}</p>
@@ -172,8 +224,20 @@ function OrazakaStage() {
           <OrazakaEngineFlow direction={direction} flowMode={canvasMode} showTelemetry={false} />
         </Box>
         <Settings>
-          <Choice label={c.direction} value={direction} options={["left-to-right", "right-to-left", "top-to-bottom", "radial"] as const} names={c.directions} onChange={setDirection} />
-          <Choice label={c.mode} value={canvasMode} options={["inbound", "outbound", "bidirectional"] as const} names={c.canvasModes} onChange={setCanvasMode} />
+          <Choice
+            label={c.direction}
+            value={direction}
+            options={["left-to-right", "right-to-left", "top-to-bottom", "radial"] as const}
+            names={c.directions}
+            onChange={setDirection}
+          />
+          <Choice
+            label={c.mode}
+            value={canvasMode}
+            options={["inbound", "outbound", "bidirectional"] as const}
+            names={c.canvasModes}
+            onChange={setCanvasMode}
+          />
         </Settings>
       </div>
     </>
@@ -191,8 +255,20 @@ function HudStage() {
         <JarvisHUD theme={theme} tacticalMode={posture} overdrive={posture === "overdrive"} />
       </Box>
       <Settings>
-        <Choice label={c.hudTheme} value={theme} options={["cyan", "orazaka", "sage", "crimson", "gold"] as const} names={c.hudThemes} onChange={setTheme} />
-        <Choice label={c.posture} value={posture} options={["standard", "combat", "stealth", "overdrive"] as const} names={c.postures} onChange={setPosture} />
+        <Choice
+          label={c.hudTheme}
+          value={theme}
+          options={["cyan", "orazaka", "sage", "crimson", "gold"] as const}
+          names={c.hudThemes}
+          onChange={setTheme}
+        />
+        <Choice
+          label={c.posture}
+          value={posture}
+          options={["standard", "combat", "stealth", "overdrive"] as const}
+          names={c.postures}
+          onChange={setPosture}
+        />
       </Settings>
     </div>
   );
@@ -210,9 +286,29 @@ function CausticsStage() {
         <LiquidCausticsView fluidMedium={medium} palette={palette} refractionStrength={refraction} />
       </Box>
       <Settings>
-        <Choice label={c.medium} value={medium} options={["water", "glass", "mercury", "helium"] as const} names={c.media} onChange={setMedium} />
-        <Choice label={c.palette} value={palette} options={["obsidian", "prussian", "sage", "amber"] as const} names={c.palettes} onChange={setPalette} />
-        <Slider label={c.refraction} showLabel value={refraction} min={0.2} max={2} step={0.1} onValueChange={(v) => setRefraction(v as number)} />
+        <Choice
+          label={c.medium}
+          value={medium}
+          options={["water", "glass", "mercury", "helium"] as const}
+          names={c.media}
+          onChange={setMedium}
+        />
+        <Choice
+          label={c.palette}
+          value={palette}
+          options={["obsidian", "prussian", "sage", "amber"] as const}
+          names={c.palettes}
+          onChange={setPalette}
+        />
+        <Slider
+          label={c.refraction}
+          showLabel
+          value={refraction}
+          min={0.2}
+          max={2}
+          step={0.1}
+          onValueChange={(v) => setRefraction(v as number)}
+        />
       </Settings>
     </div>
   );
@@ -231,8 +327,22 @@ function LatticeStage() {
         <NeuralLatticeView ref={ref} theme={theme} nodeCount={nodes} enableHebbianPlasticity={plastic} />
       </Box>
       <Settings>
-        <Choice label={c.latticeTheme} value={theme} options={["obsidian-gold", "sage-calm", "prussian-cyan"] as const} names={c.latticeThemes} onChange={setTheme} />
-        <Slider label={c.nodes} showLabel value={nodes} min={30} max={160} step={10} onValueChange={(v) => setNodes(v as number)} />
+        <Choice
+          label={c.latticeTheme}
+          value={theme}
+          options={["obsidian-gold", "sage-calm", "prussian-cyan"] as const}
+          names={c.latticeThemes}
+          onChange={setTheme}
+        />
+        <Slider
+          label={c.nodes}
+          showLabel
+          value={nodes}
+          min={30}
+          max={160}
+          step={10}
+          onValueChange={(v) => setNodes(v as number)}
+        />
         <label className="lab-switch">
           <Switch checked={plastic} onCheckedChange={setPlastic} label={c.plasticity} />
           <span aria-hidden>{c.plasticity}</span>
@@ -278,7 +388,10 @@ import { EngineFlow } from "@krizaka/ui/engine-flow";
   compactLayout="top-to-bottom"
 />`;
 
-const canvasUsage = (component: string, props: string) => `import { ${component} } from "@krizaka/motion/react"; // the lab — not on npm
+const canvasUsage = (
+  component: string,
+  props: string,
+) => `import { ${component} } from "@krizaka/motion/react"; // the lab — not on npm
 
 // A canvas view: paused off screen (MotionObserver's data-offscreen), one still frame under reduced motion.
 <div style={{ aspectRatio: "16 / 9" }} data-motion-scope>
@@ -297,13 +410,57 @@ export interface Demo {
 }
 
 export const DEMOS: Record<TabId, Demo> = {
-  orazaka: { Preview: () => <Flow compact={false} />, Stage: OrazakaStage, usage: { code: ENGINE_FLOW_USAGE, file: "EngineFlow.tsx" }, lab: false },
-  jarvis: { Preview: () => <JarvisHUD interactive3D={false} />, Stage: HudStage, usage: { code: canvasUsage("JarvisHUD", 'theme="cyan" tacticalMode="standard"'), file: "Hud.tsx" }, lab: true },
-  caustics: { Preview: () => <LiquidCausticsView interactive={false} />, Stage: CausticsStage, usage: { code: canvasUsage("LiquidCausticsView", 'fluidMedium="glass" palette="prussian"'), file: "Glass.tsx" }, lab: true },
-  lattice: { Preview: () => <NeuralLatticeView interactive={false} nodeCount={60} />, Stage: LatticeStage, usage: { code: canvasUsage("NeuralLatticeView", 'theme="prussian-cyan" nodeCount={90}'), file: "Lattice.tsx" }, lab: true },
-  journey: { Preview: () => <div className="lab-g-col"><Progress label="Transcoding" value={58} size="sm" /></div>, Stage: JourneyStage, lab: false },
-  overlays: { Preview: () => <div className="lab-g-col"><Chip>Sheet</Chip></div>, Stage: OverlaysStage, lab: false },
-  people: { Preview: () => <div className="lab-g-col"><Chip>Avatars · badge · milestones</Chip></div>, Stage: PeopleStage, lab: false },
+  orazaka: {
+    Preview: () => <Flow compact={false} />,
+    Stage: OrazakaStage,
+    usage: { code: ENGINE_FLOW_USAGE, file: "EngineFlow.tsx" },
+    lab: false,
+  },
+  jarvis: {
+    Preview: () => <JarvisHUD interactive3D={false} />,
+    Stage: HudStage,
+    usage: { code: canvasUsage("JarvisHUD", 'theme="cyan" tacticalMode="standard"'), file: "Hud.tsx" },
+    lab: true,
+  },
+  caustics: {
+    Preview: () => <LiquidCausticsView interactive={false} />,
+    Stage: CausticsStage,
+    usage: { code: canvasUsage("LiquidCausticsView", 'fluidMedium="glass" palette="prussian"'), file: "Glass.tsx" },
+    lab: true,
+  },
+  lattice: {
+    Preview: () => <NeuralLatticeView interactive={false} nodeCount={60} />,
+    Stage: LatticeStage,
+    usage: { code: canvasUsage("NeuralLatticeView", 'theme="prussian-cyan" nodeCount={90}'), file: "Lattice.tsx" },
+    lab: true,
+  },
+  journey: {
+    Preview: () => (
+      <div className="lab-g-col">
+        <Progress label="Transcoding" value={58} size="sm" />
+      </div>
+    ),
+    Stage: JourneyStage,
+    lab: false,
+  },
+  overlays: {
+    Preview: () => (
+      <div className="lab-g-col">
+        <Chip>Sheet</Chip>
+      </div>
+    ),
+    Stage: OverlaysStage,
+    lab: false,
+  },
+  people: {
+    Preview: () => (
+      <div className="lab-g-col">
+        <Chip>Avatars · badge · milestones</Chip>
+      </div>
+    ),
+    Stage: PeopleStage,
+    lab: false,
+  },
   "kz-ui": { Preview: () => <Flow compact={false} particles="photons" />, Stage: Gallery, lab: false },
   architecture: { Preview: () => null, Stage: SpecsStage, lab: false },
 };

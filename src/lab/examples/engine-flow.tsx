@@ -9,7 +9,13 @@ export function Example() {
       compactLayout={false}
       hub={{ label: "Orazaka", mark: <ProductLogo id="orazaka" size={40} animated={false} /> }}
       nodes={[
-        { id: "yomizaka", label: "Yomizaka", className: "brand-yomizaka", mark: <ProductLogo id="yomizaka" size={22} animated={false} />, flow: "both" },
+        {
+          id: "yomizaka",
+          label: "Yomizaka",
+          className: "brand-yomizaka",
+          mark: <ProductLogo id="yomizaka" size={22} animated={false} />,
+          flow: "both",
+        },
       ]}
     />
   );

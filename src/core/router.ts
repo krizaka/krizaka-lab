@@ -3,15 +3,7 @@
  */
 
 export type TabId =
-  | "orazaka"
-  | "jarvis"
-  | "caustics"
-  | "lattice"
-  | "journey"
-  | "overlays"
-  | "people"
-  | "kz-ui"
-  | "architecture";
+  "orazaka" | "jarvis" | "caustics" | "lattice" | "journey" | "overlays" | "people" | "kz-ui" | "architecture";
 
 export interface TabRouteDefinition {
   id: TabId;
@@ -56,7 +48,6 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     aliases: ["neural-lattice", "lattice", "synapse", "quantum"],
   },
 
-
   journey: {
     id: "journey",
     path: "journey",
@@ -72,7 +63,7 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     label: "Overlays",
     title: "Dialog, sheet and indicator — Krizaka Lab",
     description: "A dialog in four placements, the sliding indicator of NavBar and Tabs",
-    aliases: ["overlays","dialog","sheet","navbar","indicator"],
+    aliases: ["overlays", "dialog", "sheet", "navbar", "indicator"],
   },
   people: {
     id: "people",
@@ -80,9 +71,8 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     label: "People",
     title: "People arriving — Krizaka Lab",
     description: "An avatar stack that fills, a verified badge, milestones that unlock",
-    aliases: ["people","avatars","verified","achievements"],
+    aliases: ["people", "avatars", "verified", "achievements"],
   },
-
 
   "kz-ui": {
     id: "kz-ui",
@@ -114,11 +104,7 @@ export const TAB_ORDER: TabId[] = [
   "architecture",
 ];
 
-export function resolveTabFromLocation(loc: {
-  pathname?: string;
-  search?: string;
-  hash?: string;
-}): TabId {
+export function resolveTabFromLocation(loc: { pathname?: string; search?: string; hash?: string }): TabId {
   // 1. Check query parameter: ?tab=voice
   if (loc.search) {
     const rawSearch = loc.search.replace(/^\?/, "");
@@ -149,7 +135,10 @@ export function resolveTabFromLocation(loc: {
 
   // 2. Check hash: #/voice or #voice
   if (loc.hash) {
-    const rawHash = loc.hash.replace(/^#[/]?/, "").trim().toLowerCase();
+    const rawHash = loc.hash
+      .replace(/^#[/]?/, "")
+      .trim()
+      .toLowerCase();
     if (rawHash) {
       const hashSegments = rawHash.split("/").filter(Boolean);
       const candidate = hashSegments[hashSegments.length - 1];
@@ -177,7 +166,10 @@ export function resolveTabFromLocation(loc: {
   return "orazaka";
 }
 
-export function getHrefForTab(tab: TabId | GuidePage | ScenarioPage | "experiments", currentPathname: string = ""): string {
+export function getHrefForTab(
+  tab: TabId | GuidePage | ScenarioPage | "experiments",
+  currentPathname: string = "",
+): string {
   const isKrizakaMotionBase = currentPathname.includes("/krizaka-lab");
   const prefix = isKrizakaMotionBase ? "/krizaka-lab/" : "/";
   return `${prefix}${tab in TAB_ROUTES ? TAB_ROUTES[tab as TabId].path : tab}`;
@@ -197,12 +189,32 @@ export function cleanSpaRedirect(loc: { pathname: string; search: string; hash?:
 }
 
 /** The guides (one task each, on a real screen) and the scenarios (the app screens they play on) — krizaka-ui#434. */
-export const GUIDE_PATHS = ["list-arrival", "live-number", "page-transition", "button-feedback", "streaming-answer", "route-draw", "pin-drop", "tape-stick", "paper-sway", "develop", "crt-power-on", "crt-power-off", "neon-flicker"] as const;
+export const GUIDE_PATHS = [
+  "list-arrival",
+  "live-number",
+  "page-transition",
+  "button-feedback",
+  "streaming-answer",
+  "route-draw",
+  "pin-drop",
+  "tape-stick",
+  "paper-sway",
+  "develop",
+  "crt-power-on",
+  "crt-power-off",
+  "neon-flicker",
+] as const;
 export const SCENARIO_PATHS = ["dashboard", "chat", "checkout", "delivery", "wall"] as const;
 export type GuidePage = (typeof GUIDE_PATHS)[number];
 export type ScenarioPage = (typeof SCENARIO_PATHS)[number];
 /** The demo pages the guides replaced: their addresses still work and open the guide. */
-export const LEGACY_PATHS: Record<string, GuidePage> = { "data-motion": "list-arrival", figures: "live-number", transitions: "page-transition", conversation: "streaming-answer", maps: "route-draw" };
+export const LEGACY_PATHS: Record<string, GuidePage> = {
+  "data-motion": "list-arrival",
+  figures: "live-number",
+  transitions: "page-transition",
+  conversation: "streaming-answer",
+  maps: "route-draw",
+};
 
 /** A page of the lab: its home, a guide, a scenario, the experiments, or a demo. */
 export type LabPage = TabId | GuidePage | ScenarioPage | "experiments" | "home";
@@ -219,16 +231,33 @@ function namedPage(word: string | undefined): LabPage | undefined {
 
 /** The page at a location: the page its query, hash or last path segment names, else the home. */
 export function resolvePage(loc: { pathname?: string; search?: string; hash?: string }): LabPage {
-  const segments = (loc.pathname ?? "").split("/").filter(Boolean).filter((s) => s !== "krizaka-lab" && s !== "index.html");
-  const spa = (loc.search ?? "").startsWith("?/") ? (loc.search ?? "").slice(2).split("&")[0]!.split("/").filter(Boolean).pop() : undefined;
-  const page = namedPage(segments[segments.length - 1]) ?? namedPage(spa) ?? namedPage((loc.hash ?? "").replace(/^#\/?/, "")) ?? namedPage(new URLSearchParams((loc.search ?? "").replace(/^\?\/[^&]*&?/, "?")).get("tab") ?? undefined);
+  const segments = (loc.pathname ?? "")
+    .split("/")
+    .filter(Boolean)
+    .filter((s) => s !== "krizaka-lab" && s !== "index.html");
+  const spa = (loc.search ?? "").startsWith("?/")
+    ? (loc.search ?? "").slice(2).split("&")[0]!.split("/").filter(Boolean).pop()
+    : undefined;
+  const page =
+    namedPage(segments[segments.length - 1]) ??
+    namedPage(spa) ??
+    namedPage((loc.hash ?? "").replace(/^#\/?/, "")) ??
+    namedPage(new URLSearchParams((loc.search ?? "").replace(/^\?\/[^&]*&?/, "?")).get("tab") ?? undefined);
   if (page) return page;
-  const named = Boolean(segments.length) || /[?&]tab=/.test(loc.search ?? "") || (loc.search ?? "").startsWith("?/") || Boolean((loc.hash ?? "").replace(/^#\/?/, ""));
+  const named =
+    Boolean(segments.length) ||
+    /[?&]tab=/.test(loc.search ?? "") ||
+    (loc.search ?? "").startsWith("?/") ||
+    Boolean((loc.hash ?? "").replace(/^#\/?/, ""));
   if (!named) return "home";
   const tab = resolveTabFromLocation(loc);
   // resolveTabFromLocation falls back to "orazaka": only trust it when something really named it.
   if (tab !== "orazaka") return tab;
-  const words = [...segments, (loc.search ?? "").replace(/^\?(tab=|\/)?/, ""), (loc.hash ?? "").replace(/^#\/?/, "")].map((w) => w.toLowerCase());
+  const words = [
+    ...segments,
+    (loc.search ?? "").replace(/^\?(tab=|\/)?/, ""),
+    (loc.hash ?? "").replace(/^#\/?/, ""),
+  ].map((w) => w.toLowerCase());
   return words.some((w) => TAB_ROUTES.orazaka.aliases.includes(w) || w === "orazaka") ? "orazaka" : "home";
 }
 

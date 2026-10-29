@@ -33,6 +33,8 @@ test("the lab itself keeps no requestAnimationFrame outside src/core and src/nat
 test("the lab is not a package (ADR-008 §6): no exports, no library build, nothing to publish", () => {
   const pkg = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8"));
   assert.equal(pkg.private, true);
-  for (const key of ["main", "module", "types", "exports", "files"]) assert.equal(pkg[key], undefined, `package.json has \`${key}\``);
-  for (const file of ["../vite.config.lib.ts", "../tsconfig.build.json", "../src/index.ts"]) assert.equal(existsSync(new URL(file, import.meta.url)), false, file);
+  for (const key of ["main", "module", "types", "exports", "files"])
+    assert.equal(pkg[key], undefined, `package.json has \`${key}\``);
+  for (const file of ["../vite.config.lib.ts", "../tsconfig.build.json", "../src/index.ts"])
+    assert.equal(existsSync(new URL(file, import.meta.url)), false, file);
 });

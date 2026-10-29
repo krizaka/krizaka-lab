@@ -26,7 +26,7 @@ export interface NativeMotionProps {
  */
 export function generateNativeWebViewHTML(
   mode: "engine" | "voice" | "jarvis",
-  options: Record<string, unknown> = {}
+  options: Record<string, unknown> = {},
 ): string {
   const jsonOptions = JSON.stringify(options);
 

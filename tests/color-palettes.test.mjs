@@ -6,11 +6,7 @@ const { PRODUCT_BRANDS, JARVIS_THEMES, CAUSTIC_PALETTES } = core;
 
 describe("Brand Color Palettes & Tokens", () => {
   it("defines the Krizaka product brands", () => {
-    const requiredBrands = [
-      "orazaka",
-      "yomizaka",
-      "akinaza",
-    ];
+    const requiredBrands = ["orazaka", "yomizaka", "akinaza"];
 
     for (const id of requiredBrands) {
       const brand = PRODUCT_BRANDS[id];

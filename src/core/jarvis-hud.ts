@@ -257,10 +257,7 @@ export class JarvisHUDRenderer {
 
   private updateAudioEqualizer(deltaTime: number): void {
     for (let i = 0; i < this.audioSpectrum.length; i++) {
-      const target =
-        0.2 +
-        Math.abs(Math.sin(this.time * 6 + i * 0.4)) * 0.5 +
-        Math.sin(this.time * 12 + i * 0.8) * 0.3;
+      const target = 0.2 + Math.abs(Math.sin(this.time * 6 + i * 0.4)) * 0.5 + Math.sin(this.time * 12 + i * 0.8) * 0.3;
       this.audioSpectrum[i] += (target - this.audioSpectrum[i]) * Math.min(deltaTime * 12, 0.4);
     }
   }
@@ -270,7 +267,7 @@ export class JarvisHUDRenderer {
     cx: number,
     cy: number,
     r: number,
-    theme: typeof JARVIS_THEMES["cyan"]
+    theme: (typeof JARVIS_THEMES)["cyan"],
   ): void {
     ctx.save();
     const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, r * 1.5);
@@ -295,11 +292,7 @@ export class JarvisHUDRenderer {
     ctx.restore();
   }
 
-  private drawOuterReticles(
-    ctx: CanvasRenderingContext2D,
-    r: number,
-    theme: typeof JARVIS_THEMES["cyan"]
-  ): void {
+  private drawOuterReticles(ctx: CanvasRenderingContext2D, r: number, theme: (typeof JARVIS_THEMES)["cyan"]): void {
     ctx.save();
     const bracketSize = r * 1.18;
     const cornerArm = 26;
@@ -325,11 +318,7 @@ export class JarvisHUDRenderer {
     ctx.restore();
   }
 
-  private drawTelemetryRings(
-    ctx: CanvasRenderingContext2D,
-    r: number,
-    theme: typeof JARVIS_THEMES["cyan"]
-  ): void {
+  private drawTelemetryRings(ctx: CanvasRenderingContext2D, r: number, theme: (typeof JARVIS_THEMES)["cyan"]): void {
     ctx.save();
 
     // Ring 1: Fast counter-clockwise azimuth
@@ -374,11 +363,7 @@ export class JarvisHUDRenderer {
     ctx.restore();
   }
 
-  private drawRadialSpectrum(
-    ctx: CanvasRenderingContext2D,
-    r: number,
-    theme: typeof JARVIS_THEMES["cyan"]
-  ): void {
+  private drawRadialSpectrum(ctx: CanvasRenderingContext2D, r: number, theme: (typeof JARVIS_THEMES)["cyan"]): void {
     ctx.save();
     ctx.rotate(this.time * 0.2);
 
@@ -401,11 +386,7 @@ export class JarvisHUDRenderer {
     ctx.restore();
   }
 
-  private drawArcReactor(
-    ctx: CanvasRenderingContext2D,
-    r: number,
-    theme: typeof JARVIS_THEMES["cyan"]
-  ): void {
+  private drawArcReactor(ctx: CanvasRenderingContext2D, r: number, theme: (typeof JARVIS_THEMES)["cyan"]): void {
     ctx.save();
 
     // 1. Outer rim
@@ -473,7 +454,7 @@ export class JarvisHUDRenderer {
     ctx.restore();
   }
 
-  private drawTargetLock(ctx: CanvasRenderingContext2D, theme: typeof JARVIS_THEMES["cyan"]): void {
+  private drawTargetLock(ctx: CanvasRenderingContext2D, theme: (typeof JARVIS_THEMES)["cyan"]): void {
     if (!this.targetLock) return;
 
     const { x, y, distanceMeters, threatLevel } = this.targetLock;
@@ -524,8 +505,8 @@ export class JarvisHUDRenderer {
 
   private drawDiagnosticsHUD(
     ctx: CanvasRenderingContext2D,
-    theme: typeof JARVIS_THEMES["cyan"],
-    isOverdrive: boolean
+    theme: (typeof JARVIS_THEMES)["cyan"],
+    isOverdrive: boolean,
   ): void {
     ctx.save();
     ctx.font = "10.5px SF Mono, monospace";
@@ -558,11 +539,9 @@ export class JarvisHUDRenderer {
     ctx.textAlign = "center";
     ctx.fillStyle = theme.secondary;
     ctx.fillText(
-      isOverdrive
-        ? "OVERDRIVE · ALL RINGS AT FULL SPEED"
-        : "CLICK ANYWHERE TO LOCK A TARGET",
+      isOverdrive ? "OVERDRIVE · ALL RINGS AT FULL SPEED" : "CLICK ANYWHERE TO LOCK A TARGET",
       this.width / 2,
-      this.height - 24
+      this.height - 24,
     );
 
     ctx.restore();

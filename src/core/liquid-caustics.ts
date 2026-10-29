@@ -239,10 +239,7 @@ export class LiquidCausticsRenderer {
     ctx.restore();
   }
 
-  private drawLiquidBase(
-    ctx: CanvasRenderingContext2D,
-    palette: typeof CAUSTIC_PALETTES["obsidian"]
-  ): void {
+  private drawLiquidBase(ctx: CanvasRenderingContext2D, palette: (typeof CAUSTIC_PALETTES)["obsidian"]): void {
     ctx.fillStyle = palette.bg;
     ctx.fillRect(0, 0, this.width, this.height);
 
@@ -261,7 +258,7 @@ export class LiquidCausticsRenderer {
 
   private drawUnderlyingTypography(
     ctx: CanvasRenderingContext2D,
-    palette: typeof CAUSTIC_PALETTES["obsidian"]
+    palette: (typeof CAUSTIC_PALETTES)["obsidian"],
   ): void {
     ctx.save();
     ctx.font = "bold 24px Inter, system-ui, sans-serif";
@@ -290,10 +287,7 @@ export class LiquidCausticsRenderer {
     this.ripples = alive;
   }
 
-  private drawChromaticCaustics(
-    ctx: CanvasRenderingContext2D,
-    palette: typeof CAUSTIC_PALETTES["obsidian"]
-  ): void {
+  private drawChromaticCaustics(ctx: CanvasRenderingContext2D, palette: (typeof CAUSTIC_PALETTES)["obsidian"]): void {
     const gridCountX = this.options.gridDensity || 32;
     const stepX = this.width / gridCountX;
     const stepY = stepX * 1.15;
@@ -358,7 +352,7 @@ export class LiquidCausticsRenderer {
 
   private drawTactileGlassHighlights(
     ctx: CanvasRenderingContext2D,
-    palette: typeof CAUSTIC_PALETTES["obsidian"]
+    palette: (typeof CAUSTIC_PALETTES)["obsidian"],
   ): void {
     ctx.save();
     ctx.strokeStyle = palette.highlight;

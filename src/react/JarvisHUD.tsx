@@ -1,18 +1,7 @@
 "use client";
 
-import {
-  useEffect,
-  useRef,
-  useImperativeHandle,
-  forwardRef,
-  type CSSProperties,
-} from "react";
-import {
-  JarvisHUDRenderer,
-  type JarvisHUDOptions,
-  type JarvisTacticalMode,
-  type TargetLock,
-} from "../core/jarvis-hud";
+import { useEffect, useRef, useImperativeHandle, forwardRef, type CSSProperties } from "react";
+import { JarvisHUDRenderer, type JarvisHUDOptions, type JarvisTacticalMode, type TargetLock } from "../core/jarvis-hud";
 import { MotionController } from "../core/motion-controller";
 import { type JarvisTheme } from "../core/types";
 
@@ -70,7 +59,7 @@ export const JarvisHUD = forwardRef<JarvisHUDHandle, JarvisHUDProps>(function Ja
     className = "",
     style,
   },
-  ref
+  ref,
 ) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rendererRef = useRef<JarvisHUDRenderer | null>(null);
@@ -136,16 +125,7 @@ export const JarvisHUD = forwardRef<JarvisHUDHandle, JarvisHUDProps>(function Ja
         onTargetLocked,
       });
     }
-  }, [
-    theme,
-    tacticalMode,
-    overdrive,
-    interactive3D,
-    rotationSpeed,
-    showDiagnostics,
-    showEnergyMatrix,
-    onTargetLocked,
-  ]);
+  }, [theme, tacticalMode, overdrive, interactive3D, rotationSpeed, showDiagnostics, showEnergyMatrix, onTargetLocked]);
 
   // Synchronize playing state with @krizaka/ui motion system
   useEffect(() => {

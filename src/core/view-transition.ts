@@ -55,7 +55,11 @@ export function runViewTransition(update: () => void, env: ViewTransitionEnv = {
  * The fallback for a browser without view transitions: the change is applied, then the root cross-fades from
  * transparent. Reduced motion means no fade at all. Returns the animation when one was started, otherwise `null`.
  */
-export function crossFallback(update: () => void, env: ViewTransitionEnv = {}, options: CrossFadeOptions = {}): unknown {
+export function crossFallback(
+  update: () => void,
+  env: ViewTransitionEnv = {},
+  options: CrossFadeOptions = {},
+): unknown {
   update();
   if (env.reduced || canViewTransition(env.doc)) return null;
   const root = env.doc?.documentElement;
@@ -67,7 +71,11 @@ export function crossFallback(update: () => void, env: ViewTransitionEnv = {}, o
 }
 
 /** One call for a change of page or step: a view transition where it exists, a cross-fade otherwise, instant under reduced motion. */
-export function transitionPage(update: () => void, env: ViewTransitionEnv = {}, options: CrossFadeOptions = {}): Promise<void> {
+export function transitionPage(
+  update: () => void,
+  env: ViewTransitionEnv = {},
+  options: CrossFadeOptions = {},
+): Promise<void> {
   if (canViewTransition(env.doc) && !env.reduced) return runViewTransition(update, env);
   crossFallback(update, env, options);
   return Promise.resolve();

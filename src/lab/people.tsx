@@ -25,7 +25,16 @@ export const PEOPLE_KNOBS: readonly Knob[] = [
   { kind: "choice", key: "arrival", label: "arrival", options: ["slide", "fade", "flash"], value: "fade" },
   { kind: "range", key: "max", label: "avatars shown", min: 2, max: 6, step: 1, value: 4 },
   { kind: "choice", key: "size", label: "size", options: ["sm", "md", "lg"], value: "md" },
-  { kind: "range", key: "every", label: "something happens every", min: 800, max: 4000, step: 200, value: 1800, unit: "ms" },
+  {
+    kind: "range",
+    key: "every",
+    label: "something happens every",
+    min: 800,
+    max: 4000,
+    step: 200,
+    value: 1800,
+    unit: "ms",
+  },
   { kind: "toggle", key: "auto", label: "it happens by itself", value: true },
 ];
 
@@ -54,14 +63,30 @@ function Scene({ v }: { v: Record<string, string | number | boolean> }) {
   return (
     <div ref={host} className="lab-people" data-kz-arrival={v.arrival as string} data-motion-scope="">
       <div className="lab-people-row">
-        <Avatar.Group max={v.max as number} size={v.size as "sm" | "md" | "lg"} aria-label={`${joined} people are here`}>
+        <Avatar.Group
+          max={v.max as number}
+          size={v.size as "sm" | "md" | "lg"}
+          aria-label={`${joined} people are here`}
+        >
           {shown.map((p) => (
             <span key={p.id} data-kz-arrive="" className="lab-people-item">
-              <Avatar size={v.size as "sm" | "md" | "lg"} {...(p.src ? { src: p.src, alt: p.name } : { fallback: p.name.split(" ").map((w) => w[0]).join("") })} />
+              <Avatar
+                size={v.size as "sm" | "md" | "lg"}
+                {...(p.src
+                  ? { src: p.src, alt: p.name }
+                  : {
+                      fallback: p.name
+                        .split(" ")
+                        .map((w) => w[0])
+                        .join(""),
+                    })}
+              />
             </span>
           ))}
         </Avatar.Group>
-        <span className="lab-sublead" data-testid="people-count">{joined} here</span>
+        <span className="lab-sublead" data-testid="people-count">
+          {joined} here
+        </span>
       </div>
       <p className="lab-people-name">
         Camille Roy{" "}
@@ -76,7 +101,13 @@ function Scene({ v }: { v: Record<string, string | number | boolean> }) {
       <AchievementList className="lab-people-list">
         {MILESTONES.map((m, i) => (
           <div key={`${m.title}-${i < unlocked}`} {...(i < unlocked && !reduce ? { "data-kz-arrive": "" } : {})}>
-            <Achievement eyebrow={m.eyebrow} badge={i < unlocked ? "Done" : "Locked"} locked={i >= unlocked} {...(i < unlocked ? { replaced: m.replaced } : {})} title={m.title} />
+            <Achievement
+              eyebrow={m.eyebrow}
+              badge={i < unlocked ? "Done" : "Locked"}
+              locked={i >= unlocked}
+              {...(i < unlocked ? { replaced: m.replaced } : {})}
+              title={m.title}
+            />
           </div>
         ))}
       </AchievementList>

@@ -11,12 +11,36 @@ const scenarios = readFileSync(new URL("../src/lab/scenarios.tsx", import.meta.u
 const guidePage = readFileSync(new URL("../src/lab/GuidePage.tsx", import.meta.url), "utf8");
 
 test("thirteen guides, each on one of the five scenarios", () => {
-  assert.deepEqual(GUIDES.map((g) => g.id), ["list-arrival", "live-number", "streaming-answer", "page-transition", "button-feedback", "route-draw", "pin-drop", "tape-stick", "paper-sway", "develop", "crt-power-on", "crt-power-off", "neon-flicker"]);
+  assert.deepEqual(
+    GUIDES.map((g) => g.id),
+    [
+      "list-arrival",
+      "live-number",
+      "streaming-answer",
+      "page-transition",
+      "button-feedback",
+      "route-draw",
+      "pin-drop",
+      "tape-stick",
+      "paper-sway",
+      "develop",
+      "crt-power-on",
+      "crt-power-off",
+      "neon-flicker",
+    ],
+  );
   // grouped by screen in the order of the scenarios, so the index numbers read down the page
   const order = ["dashboard", "chat", "checkout", "delivery", "wall"];
-  assert.deepEqual(GUIDES.map((g) => order.indexOf(g.scenario)), [...GUIDES.map((g) => order.indexOf(g.scenario))].sort());
+  assert.deepEqual(
+    GUIDES.map((g) => order.indexOf(g.scenario)),
+    [...GUIDES.map((g) => order.indexOf(g.scenario))].sort(),
+  );
   for (const g of GUIDES) assert.ok(order.includes(g.scenario), g.id);
-  for (const s of order) assert.ok(GUIDES.some((g) => g.scenario === s), `no guide plays on ${s}`);
+  for (const s of order)
+    assert.ok(
+      GUIDES.some((g) => g.scenario === s),
+      `no guide plays on ${s}`,
+    );
 });
 
 test("a guide's title is a task, its code imports Krizaka UI (or the platform) and follows its settings", () => {
@@ -28,7 +52,10 @@ test("a guide's title is a task, its code imports Krizaka UI (or the platform) a
     for (const k of g.knobs.filter((k) => k.kind !== "toggle")) {
       const changed = { ...defaults, [k.key]: k.kind === "range" ? k.max : k.options.at(-1) };
       if (g.snippet(changed) === code) continue; // a setting of the screen's data (how often a run lands), not of the motion
-      assert.ok(g.snippet(changed).includes(String(changed[k.key])), `${g.id}: the code does not follow « ${k.label} »`);
+      assert.ok(
+        g.snippet(changed).includes(String(changed[k.key])),
+        `${g.id}: the code does not follow « ${k.label} »`,
+      );
     }
   }
 });
@@ -36,9 +63,14 @@ test("a guide's title is a task, its code imports Krizaka UI (or the platform) a
 test("every guide has its options table and says what happens under reduced motion", () => {
   for (const g of GUIDES) {
     assert.ok(g.config.length >= 3, g.id);
-    for (const row of g.config) for (const f of ["option", "type", "default", "does"]) assert.ok(row[f].length > 0, `${g.id}: ${row.option} has no ${f}`);
+    for (const row of g.config)
+      for (const f of ["option", "type", "default", "does"])
+        assert.ok(row[f].length > 0, `${g.id}: ${row.option} has no ${f}`);
     assert.ok(g.reduced.length > 20, g.id);
-    assert.ok(g.uses.every((u) => u.href.startsWith("https://ui.krizaka.com/")), g.id);
+    assert.ok(
+      g.uses.every((u) => u.href.startsWith("https://ui.krizaka.com/")),
+      g.id,
+    );
   }
 });
 
@@ -50,7 +82,10 @@ test("both checkout guides share token settings, round-trip every knob, and copy
     const initial = readValues(g.knobs, "");
     assert.deepEqual(Object.keys(initial), ["wait", "direction", "duration", "easing", "fail"]);
     for (const knob of g.knobs) {
-      const values = { ...initial, [knob.key]: knob.kind === "toggle" ? true : knob.kind === "range" ? knob.max : knob.options[0] };
+      const values = {
+        ...initial,
+        [knob.key]: knob.kind === "toggle" ? true : knob.kind === "range" ? knob.max : knob.options[0],
+      };
       const read = readValues(g.knobs, toSearch(g.knobs, values));
       assert.deepEqual(read, values);
       assert.ok(g.snippet(read).includes(`${knob.key}: ${JSON.stringify(values[knob.key])}`));
@@ -62,7 +97,8 @@ test("both checkout guides share token settings, round-trip every knob, and copy
 });
 
 test("the scenarios are app screens made of Krizaka UI, with their clocks stopped off screen and under reduced motion", () => {
-  for (const name of ["Dashboard", "Chat", "Checkout", "Delivery"]) assert.match(scenarios, new RegExp(`export function ${name}\\(`));
+  for (const name of ["Dashboard", "Chat", "Checkout", "Delivery"])
+    assert.match(scenarios, new RegExp(`export function ${name}\\(`));
   assert.doesNotMatch(scenarios, /<canvas|requestAnimationFrame/);
   assert.match(scenarios, /if \(!stream \|\| !visible \|\| reduce\) return;/);
   assert.match(scenarios, /if \(!visible \|\| reduce\) return;/);
@@ -73,7 +109,10 @@ test("wall motions expose bounded, configurable CSS contracts and reduced-motion
   const css = readFileSync(new URL("../src/lab/wall-motions.css", import.meta.url), "utf8");
   const preview = readFileSync(new URL("../src/lab/wall-motions.tsx", import.meta.url), "utf8");
   const wall = GUIDES.filter((g) => g.scenario === "wall");
-  assert.deepEqual(wall.map((g) => g.id), ["pin-drop", "tape-stick", "paper-sway", "develop", "crt-power-on", "crt-power-off", "neon-flicker"]);
+  assert.deepEqual(
+    wall.map((g) => g.id),
+    ["pin-drop", "tape-stick", "paper-sway", "develop", "crt-power-on", "crt-power-off", "neon-flicker"],
+  );
   assert.equal(wall.find((g) => g.id === "paper-sway").knobs.find((k) => k.key === "amplitude").max, 1.5);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /\[data-offscreen\].*data-wall-animation/s);

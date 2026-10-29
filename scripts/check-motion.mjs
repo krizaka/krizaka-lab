@@ -51,7 +51,11 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     for (const theme of ["dark", "light"])
       for (const vp of VIEWPORTS)
         for (const path of PATHS) {
-          const context = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, colorScheme: theme, reducedMotion });
+          const context = await browser.newContext({
+            viewport: { width: vp.width, height: vp.height },
+            colorScheme: theme,
+            reducedMotion,
+          });
           await context.addInitScript((t) => localStorage.setItem("kz-theme", t), theme);
           const page = await context.newPage();
           await page.goto(base + path, { waitUntil: "networkidle" });
@@ -60,10 +64,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
           checks++;
           if (r.error) problems.push(`${where}: ${r.error}`);
           else if (reducedMotion === "reduce") {
-            if (r.distinct !== 1) problems.push(`${where}: the photons move (${r.distinct} positions) under reduced motion`);
+            if (r.distinct !== 1)
+              problems.push(`${where}: the photons move (${r.distinct} positions) under reduced motion`);
           } else {
             if (!r.finite) problems.push(`${where}: the dash offset is not an interpolated length`);
-            if (r.distinct < 4) problems.push(`${where}: the photons do not travel (${r.distinct} distinct positions in 700 ms)`);
+            if (r.distinct < 4)
+              problems.push(`${where}: the photons do not travel (${r.distinct} distinct positions in 700 ms)`);
             if (!r.running) problems.push(`${where}: a photon animation is not running`);
             if (r.hub === "none") problems.push(`${where}: the engine does not breathe`);
           }
@@ -74,5 +80,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     console.error(problems.join("\n"));
     process.exit(1);
   }
-  console.log(`check-motion: ${checks} page × viewport × theme × motion preference, the engine flow moves (and rests under reduced motion)`);
+  console.log(
+    `check-motion: ${checks} page × viewport × theme × motion preference, the engine flow moves (and rests under reduced motion)`,
+  );
 }

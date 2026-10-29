@@ -15,25 +15,55 @@ export interface ItemData {
 }
 
 export const ITEMS: ItemData[] = [
-  { id: "button", group: "feedback", declared: ["button"], props: ["variant", "shape=\"cut\"", "loading"] },
-  { id: "toast", group: "feedback", declared: ["toast"], props: ["label", "closeLabel", "position", "undoLabel", "onUndo"] },
+  { id: "button", group: "feedback", declared: ["button"], props: ["variant", 'shape="cut"', "loading"] },
+  {
+    id: "toast",
+    group: "feedback",
+    declared: ["toast"],
+    props: ["label", "closeLabel", "position", "undoLabel", "onUndo"],
+  },
   { id: "progress", group: "feedback", declared: ["progress"], props: ["value", "label", "showLabel"] },
-  { id: "dialog", group: "feedback", declared: ["dialog"], props: ["placement=\"right\"", "closeLabel", "Dialog.Trigger asChild", "Dialog.Close asChild"] },
+  {
+    id: "dialog",
+    group: "feedback",
+    declared: ["dialog"],
+    props: ['placement="right"', "closeLabel", "Dialog.Trigger asChild", "Dialog.Close asChild"],
+  },
   { id: "glow-card", group: "emphasis", declared: ["glow-card"], props: ["alive"] },
-  { id: "badge", group: "emphasis", declared: ["badge", "chip"], props: ["tone", "dot", "pulse", "type=\"single\"", "required", "onValueChange"] },
+  {
+    id: "badge",
+    group: "emphasis",
+    declared: ["badge", "chip"],
+    props: ["tone", "dot", "pulse", 'type="single"', "required", "onValueChange"],
+  },
   { id: "tabs", group: "emphasis", declared: ["tabs"], props: ["defaultValue", "Tabs.Trigger value"] },
   { id: "stat", group: "data", declared: ["stat", "number-ticker"], props: ["label", "value", "trend", "trendLabel"] },
-  { id: "data-table", group: "data", declared: ["data-table"], props: ["rows", "columns", "selectable", "defaultSelected", "density"] },
+  {
+    id: "data-table",
+    group: "data",
+    declared: ["data-table"],
+    props: ["rows", "columns", "selectable", "defaultSelected", "density"],
+  },
   { id: "engine-flow", group: "data", declared: ["engine-flow"], props: ["hub", "nodes", "compactLayout", "label"] },
   { id: "lattice-card", group: "data", declared: ["NeuralLatticeView"], props: ["nodeCount", "theme", "interactive"] },
   { id: "waveform", group: "ambient", declared: ["waveform"], props: ["playing", "bars", "size", "label"] },
   { id: "chat", group: "ambient", declared: ["chat"], props: ["text", "mine", "time", "label", "showLabel"] },
   { id: "marquee", group: "ambient", declared: ["marquee"], props: ["label", "pauseLabel", "playLabel", "speed"] },
   { id: "navbar", group: "ambient", declared: ["nav-bar"], props: ["label", "NavBar.Link active", "asChild"] },
-  { id: "glass-card", group: "ambient", declared: ["LiquidCausticsView"], props: ["fluidMedium", "palette", "interactive"] },
+  {
+    id: "glass-card",
+    group: "ambient",
+    declared: ["LiquidCausticsView"],
+    props: ["fluidMedium", "palette", "interactive"],
+  },
 ];
 
 /** The code a card prints: its example's source, one import path aside (the lab's views are not on npm yet). */
 export function shownCode(source: string): string {
-  return source.replace(/from "\.\.\/\.\.\/react\/(\w+)";/g, 'from "@krizaka/motion/react"; // not on npm: krizaka/krizaka-lab src/react/$1').trimEnd();
+  return source
+    .replace(
+      /from "\.\.\/\.\.\/react\/(\w+)";/g,
+      'from "@krizaka/motion/react"; // not on npm: krizaka/krizaka-lab src/react/$1',
+    )
+    .trimEnd();
 }

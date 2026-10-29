@@ -6,7 +6,9 @@ export function Example() {
   return (
     <Marquee label="Built on" pauseLabel="Pause" playLabel="Play" speed={32}>
       {names.map((n) => (
-        <span key={n} className="lab-g-name">{n}</span>
+        <span key={n} className="lab-g-name">
+          {n}
+        </span>
       ))}
     </Marquee>
   );
