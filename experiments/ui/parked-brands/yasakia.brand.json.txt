@@ -1,0 +1,104 @@
+{
+  "$description": "Yasakia — émeraude → turquoise, le vert libre de la famille, qui prend le contre-pied du rouge et du rose des applications de rencontre. L'accent (boutons, liens, anneau) est le turquoise, teinte 174 : à 14° de --kz-success (160, l'émeraude des statuts), pour qu'un bouton principal ne se lise jamais comme un succès. Dark : turquoise clair sous texte quasi noir ; light : turquoise profond sous texte blanc (5.9:1). accent-2 est l'émeraude (teinte 152), le second temps du dégradé des boutons et de la mascotte, jamais un statut. info reste bleu. Le logo (mark) est un dégradé émeraude (156) → turquoise (178) de teinte moyenne, identique dans les deux thèmes et ≥ 3:1 sur les surfaces 0–2 des deux thèmes.",
+  "$extensions": {
+    "com.krizaka": {
+      "mark": [
+        [
+          "0%",
+          "hsl(156 92% 32%)"
+        ],
+        [
+          "100%",
+          "hsl(178 90% 32%)"
+        ]
+      ]
+    }
+  },
+  "accent": {
+    "$type": "color",
+    "$root": {
+      "$value": "hsl(174 72% 50%)",
+      "$extensions": {
+        "com.krizaka": {
+          "light": "hsl(175 85% 24%)"
+        }
+      }
+    },
+    "hover": {
+      "$value": "hsl(174 72% 58%)",
+      "$extensions": {
+        "com.krizaka": {
+          "light": "hsl(175 85% 20%)"
+        }
+      }
+    },
+    "soft": {
+      "$value": "hsl(174 72% 50% / 0.12)",
+      "$extensions": {
+        "com.krizaka": {
+          "light": "hsl(175 85% 24% / 0.08)"
+        }
+      }
+    },
+    "text": {
+      "$value": "hsl(174 72% 56%)",
+      "$extensions": {
+        "com.krizaka": {
+          "light": "hsl(175 85% 23%)"
+        }
+      }
+    }
+  },
+  "accent-2": {
+    "$type": "color",
+    "$value": "hsl(152 70% 45%)",
+    "$extensions": {
+      "com.krizaka": {
+        "light": "hsl(152 76% 26%)"
+      }
+    }
+  },
+  "on-accent": {
+    "$type": "color",
+    "$value": "hsl(240 6% 5%)",
+    "$extensions": {
+      "com.krizaka": {
+        "light": "hsl(0 0% 100%)"
+      }
+    }
+  },
+  "ring": {
+    "$type": "color",
+    "$value": "{accent.$root}"
+  },
+  "info": {
+    "$type": "color",
+    "$value": "hsl(207 50% 58%)",
+    "$extensions": {
+      "com.krizaka": {
+        "light": "hsl(208 54% 36%)"
+      }
+    }
+  },
+  "info-text": {
+    "$type": "color",
+    "$value": "hsl(206 58% 72%)",
+    "$extensions": {
+      "com.krizaka": {
+        "light": "hsl(208 54% 33%)"
+      }
+    }
+  },
+  "brand-gradient": {
+    "$type": "color",
+    "from": {
+      "$value": "{surface.0}"
+    },
+    "via": {
+      "$value": "{surface.0}"
+    },
+    "to": {
+      "$value": "{surface.0}"
+    }
+  }
+}

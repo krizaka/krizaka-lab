@@ -1,0 +1,45 @@
+/* DEPRECATED — a paused product (2026-10-25); removed in the next major.
+   @krizaka/tokens — GÉNÉRÉ depuis src/brands/yororis.brand.json par scripts/build.mjs : ne pas éditer.
+   Yororis — sable → sauge, un neutre chaud qui glisse vers un vert gris doux : apaisant, distinct de l'émeraude de Yasakia, du bleu de Krizaka, de l'orange d'Orazaka et du violet d'Orochia. L'accent (boutons, liens, anneau) est la sauge, teinte 98 : à 60° de --kz-success (160) et de --kz-warning (38), pour qu'un bouton principal ne se lise jamais comme un statut. Dark : sauge claire sous texte quasi noir ; light : sauge profonde sous texte blanc. accent-2 est le sable (teinte 36), le second temps du dégradé des boutons et de la mascotte, jamais un statut : sa teinte est voisine de --kz-warning, il s'en sépare par la saturation (≤ 40 %, contre 92 % pour l'ambre des avertissements — un test). info reste bleu. Le logo (mark) est un dégradé sable (34) → sauge (104) de teinte moyenne, identique dans les deux thèmes et ≥ 3:1 sur les surfaces 0–2 des deux thèmes.
+   Importé après tokens.css (ou @krizaka/tailwind) : l'identité yororis sur toute l'app, dans les deux thèmes. */
+
+:root, .theme-dark {
+  --kz-accent: hsl(98 24% 62%);
+  --kz-accent-hover: hsl(98 26% 70%);
+  --kz-accent-soft: hsl(98 24% 62% / 0.12);
+  --kz-accent-text: hsl(98 28% 68%);
+  --kz-accent-2: hsl(36 38% 62%);
+  --kz-on-accent: hsl(240 6% 5%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(207 50% 58%);
+  --kz-info-text: hsl(206 58% 72%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+
+html.light {
+  --kz-accent: hsl(100 28% 30%);
+  --kz-accent-hover: hsl(100 30% 25%);
+  --kz-accent-soft: hsl(100 28% 30% / 0.08);
+  --kz-accent-text: hsl(100 28% 28%);
+  --kz-accent-2: hsl(34 38% 33%);
+  --kz-on-accent: hsl(0 0% 100%);
+  --kz-info: hsl(208 54% 36%);
+  --kz-info-text: hsl(208 54% 33%);
+}
+
+.theme-light {
+  --kz-accent: hsl(100 28% 30%);
+  --kz-accent-hover: hsl(100 30% 25%);
+  --kz-accent-soft: hsl(100 28% 30% / 0.08);
+  --kz-accent-text: hsl(100 28% 28%);
+  --kz-accent-2: hsl(34 38% 33%);
+  --kz-on-accent: hsl(0 0% 100%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(208 54% 36%);
+  --kz-info-text: hsl(208 54% 33%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}

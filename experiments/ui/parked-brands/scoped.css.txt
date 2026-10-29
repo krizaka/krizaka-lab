@@ -1,0 +1,395 @@
+/* @krizaka/tokens — GÉNÉRÉ depuis src/brands/*.brand.json par scripts/build.mjs : ne pas éditer.
+   Chaque marque en classe `.brand-<id>` : pour une page qui montre plusieurs marques (le site, le catalogue). */
+
+.brand-krizaka {
+  --kz-accent: hsl(208 46% 45%);
+  --kz-accent-hover: hsl(208 48% 39%);
+  --kz-accent-soft: hsl(208 46% 45% / 0.12);
+  --kz-accent-text: hsl(206 58% 72%);
+  --kz-accent-2: var(--kz-accent);
+  --kz-on-accent: hsl(0 0% 100%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: var(--kz-accent);
+  --kz-info-text: var(--kz-accent-text);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+html.light .brand-krizaka, html .theme-light .brand-krizaka, html .brand-krizaka.theme-light {
+  --kz-accent: hsl(208 54% 36%);
+  --kz-accent-hover: hsl(208 58% 29%);
+  --kz-accent-soft: hsl(208 54% 36% / 0.08);
+  --kz-accent-text: hsl(208 54% 33%);
+  --kz-accent-2: var(--kz-accent);
+  --kz-on-accent: hsl(0 0% 100%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: var(--kz-accent);
+  --kz-info-text: var(--kz-accent-text);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+html .theme-dark .brand-krizaka, html .brand-krizaka.theme-dark {
+  --kz-accent: hsl(208 46% 45%);
+  --kz-accent-hover: hsl(208 48% 39%);
+  --kz-accent-soft: hsl(208 46% 45% / 0.12);
+  --kz-accent-text: hsl(206 58% 72%);
+  --kz-accent-2: var(--kz-accent);
+  --kz-on-accent: hsl(0 0% 100%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: var(--kz-accent);
+  --kz-info-text: var(--kz-accent-text);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+
+.brand-orazaka {
+  --kz-accent: hsl(26 92% 55%);
+  --kz-accent-hover: hsl(26 92% 62%);
+  --kz-accent-soft: hsl(26 92% 55% / 0.12);
+  --kz-accent-text: hsl(26 92% 60%);
+  --kz-accent-2: hsl(37.7 92.1% 50.2%);
+  --kz-on-accent: hsl(240 6% 5%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(207 50% 58%);
+  --kz-info-text: hsl(206 58% 72%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+html.light .brand-orazaka, html .theme-light .brand-orazaka, html .brand-orazaka.theme-light {
+  --kz-accent: hsl(26 90.5% 37.1%);
+  --kz-accent-hover: hsl(26 90% 31%);
+  --kz-accent-soft: hsl(26 90.5% 37.1% / 0.08);
+  --kz-accent-text: hsl(26 90% 32%);
+  --kz-accent-2: hsl(32 95% 33%);
+  --kz-on-accent: hsl(0 0% 100%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(208 54% 36%);
+  --kz-info-text: hsl(208 54% 33%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+html .theme-dark .brand-orazaka, html .brand-orazaka.theme-dark {
+  --kz-accent: hsl(26 92% 55%);
+  --kz-accent-hover: hsl(26 92% 62%);
+  --kz-accent-soft: hsl(26 92% 55% / 0.12);
+  --kz-accent-text: hsl(26 92% 60%);
+  --kz-accent-2: hsl(37.7 92.1% 50.2%);
+  --kz-on-accent: hsl(240 6% 5%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(207 50% 58%);
+  --kz-info-text: hsl(206 58% 72%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+
+/* DEPRECATED — .brand-orochia: a paused product (2026-10-25); removed in the next major. */
+.brand-orochia {
+  --kz-accent: hsl(262.1 83.3% 57.8%);
+  --kz-accent-hover: hsl(263.4 70% 50.4%);
+  --kz-accent-soft: hsl(258.3 89.5% 66.3% / 0.12);
+  --kz-accent-text: hsl(255.1 91.7% 76.3%);
+  --kz-accent-2: hsl(333.3 71.4% 50.6%);
+  --kz-on-accent: hsl(0 0% 100%);
+  --kz-ring: hsl(255.1 91.7% 76.3%);
+  --kz-info: var(--kz-accent);
+  --kz-info-text: var(--kz-accent-text);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+html.light .brand-orochia, html .theme-light .brand-orochia, html .brand-orochia.theme-light {
+  --kz-accent: hsl(262.1 83.3% 57.8%);
+  --kz-accent-hover: hsl(263.4 70% 50.4%);
+  --kz-accent-soft: hsl(262.1 83.3% 57.8% / 0.08);
+  --kz-accent-text: hsl(263.4 70% 50.4%);
+  --kz-accent-2: hsl(333.3 71.4% 50.6%);
+  --kz-on-accent: hsl(0 0% 100%);
+  --kz-ring: hsl(262.1 83.3% 57.8%);
+  --kz-info: var(--kz-accent);
+  --kz-info-text: var(--kz-accent-text);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+html .theme-dark .brand-orochia, html .brand-orochia.theme-dark {
+  --kz-accent: hsl(262.1 83.3% 57.8%);
+  --kz-accent-hover: hsl(263.4 70% 50.4%);
+  --kz-accent-soft: hsl(258.3 89.5% 66.3% / 0.12);
+  --kz-accent-text: hsl(255.1 91.7% 76.3%);
+  --kz-accent-2: hsl(333.3 71.4% 50.6%);
+  --kz-on-accent: hsl(0 0% 100%);
+  --kz-ring: hsl(255.1 91.7% 76.3%);
+  --kz-info: var(--kz-accent);
+  --kz-info-text: var(--kz-accent-text);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+
+/* DEPRECATED — .brand-yasakia: a paused product (2026-10-25); removed in the next major. */
+.brand-yasakia {
+  --kz-accent: hsl(174 72% 50%);
+  --kz-accent-hover: hsl(174 72% 58%);
+  --kz-accent-soft: hsl(174 72% 50% / 0.12);
+  --kz-accent-text: hsl(174 72% 56%);
+  --kz-accent-2: hsl(152 70% 45%);
+  --kz-on-accent: hsl(240 6% 5%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(207 50% 58%);
+  --kz-info-text: hsl(206 58% 72%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+html.light .brand-yasakia, html .theme-light .brand-yasakia, html .brand-yasakia.theme-light {
+  --kz-accent: hsl(175 85% 24%);
+  --kz-accent-hover: hsl(175 85% 20%);
+  --kz-accent-soft: hsl(175 85% 24% / 0.08);
+  --kz-accent-text: hsl(175 85% 23%);
+  --kz-accent-2: hsl(152 76% 26%);
+  --kz-on-accent: hsl(0 0% 100%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(208 54% 36%);
+  --kz-info-text: hsl(208 54% 33%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+html .theme-dark .brand-yasakia, html .brand-yasakia.theme-dark {
+  --kz-accent: hsl(174 72% 50%);
+  --kz-accent-hover: hsl(174 72% 58%);
+  --kz-accent-soft: hsl(174 72% 50% / 0.12);
+  --kz-accent-text: hsl(174 72% 56%);
+  --kz-accent-2: hsl(152 70% 45%);
+  --kz-on-accent: hsl(240 6% 5%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(207 50% 58%);
+  --kz-info-text: hsl(206 58% 72%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+
+/* DEPRECATED — .brand-yororis: a paused product (2026-10-25); removed in the next major. */
+.brand-yororis {
+  --kz-accent: hsl(98 24% 62%);
+  --kz-accent-hover: hsl(98 26% 70%);
+  --kz-accent-soft: hsl(98 24% 62% / 0.12);
+  --kz-accent-text: hsl(98 28% 68%);
+  --kz-accent-2: hsl(36 38% 62%);
+  --kz-on-accent: hsl(240 6% 5%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(207 50% 58%);
+  --kz-info-text: hsl(206 58% 72%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+html.light .brand-yororis, html .theme-light .brand-yororis, html .brand-yororis.theme-light {
+  --kz-accent: hsl(100 28% 30%);
+  --kz-accent-hover: hsl(100 30% 25%);
+  --kz-accent-soft: hsl(100 28% 30% / 0.08);
+  --kz-accent-text: hsl(100 28% 28%);
+  --kz-accent-2: hsl(34 38% 33%);
+  --kz-on-accent: hsl(0 0% 100%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(208 54% 36%);
+  --kz-info-text: hsl(208 54% 33%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+html .theme-dark .brand-yororis, html .brand-yororis.theme-dark {
+  --kz-accent: hsl(98 24% 62%);
+  --kz-accent-hover: hsl(98 26% 70%);
+  --kz-accent-soft: hsl(98 24% 62% / 0.12);
+  --kz-accent-text: hsl(98 28% 68%);
+  --kz-accent-2: hsl(36 38% 62%);
+  --kz-on-accent: hsl(240 6% 5%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(207 50% 58%);
+  --kz-info-text: hsl(206 58% 72%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+
+.brand-yomizaka {
+  --kz-accent: hsl(240 80% 74%);
+  --kz-accent-hover: hsl(240 82% 80%);
+  --kz-accent-soft: hsl(240 80% 74% / 0.12);
+  --kz-accent-text: hsl(240 85% 78%);
+  --kz-accent-2: hsl(232 72% 74%);
+  --kz-on-accent: hsl(240 6% 5%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(207 50% 58%);
+  --kz-info-text: hsl(206 58% 72%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+html.light .brand-yomizaka, html .theme-light .brand-yomizaka, html .brand-yomizaka.theme-light {
+  --kz-accent: hsl(242 52% 46%);
+  --kz-accent-hover: hsl(242 55% 40%);
+  --kz-accent-soft: hsl(242 52% 46% / 0.08);
+  --kz-accent-text: hsl(242 52% 44%);
+  --kz-accent-2: hsl(232 56% 40%);
+  --kz-on-accent: hsl(0 0% 100%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(208 54% 36%);
+  --kz-info-text: hsl(208 54% 33%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+html .theme-dark .brand-yomizaka, html .brand-yomizaka.theme-dark {
+  --kz-accent: hsl(240 80% 74%);
+  --kz-accent-hover: hsl(240 82% 80%);
+  --kz-accent-soft: hsl(240 80% 74% / 0.12);
+  --kz-accent-text: hsl(240 85% 78%);
+  --kz-accent-2: hsl(232 72% 74%);
+  --kz-on-accent: hsl(240 6% 5%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(207 50% 58%);
+  --kz-info-text: hsl(206 58% 72%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+
+/* DEPRECATED — .brand-kachizaka: a paused product (2026-10-25); removed in the next major. */
+.brand-kachizaka {
+  --kz-accent: hsl(48 96% 56%);
+  --kz-accent-hover: hsl(48 98% 66%);
+  --kz-accent-soft: hsl(48 96% 56% / 0.12);
+  --kz-accent-text: hsl(48 96% 64%);
+  --kz-accent-2: hsl(226 92% 72%);
+  --kz-on-accent: hsl(230 30% 7%);
+  --kz-ring: hsl(48 96% 56%);
+  --kz-info: hsl(207 50% 58%);
+  --kz-info-text: hsl(206 58% 72%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+html.light .brand-kachizaka, html .theme-light .brand-kachizaka, html .brand-kachizaka.theme-light {
+  --kz-accent: hsl(48 96% 50%);
+  --kz-accent-hover: hsl(48 96% 44%);
+  --kz-accent-soft: hsl(46 96% 50% / 0.14);
+  --kz-accent-text: hsl(226 72% 40%);
+  --kz-accent-2: hsl(226 92% 68%);
+  --kz-on-accent: hsl(230 30% 7%);
+  --kz-ring: hsl(226 80% 46%);
+  --kz-info: hsl(208 54% 36%);
+  --kz-info-text: hsl(208 54% 33%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+html .theme-dark .brand-kachizaka, html .brand-kachizaka.theme-dark {
+  --kz-accent: hsl(48 96% 56%);
+  --kz-accent-hover: hsl(48 98% 66%);
+  --kz-accent-soft: hsl(48 96% 56% / 0.12);
+  --kz-accent-text: hsl(48 96% 64%);
+  --kz-accent-2: hsl(226 92% 72%);
+  --kz-on-accent: hsl(230 30% 7%);
+  --kz-ring: hsl(48 96% 56%);
+  --kz-info: hsl(207 50% 58%);
+  --kz-info-text: hsl(206 58% 72%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+
+.brand-akinaza {
+  --kz-accent: hsl(130 44% 58%);
+  --kz-accent-hover: hsl(130 48% 66%);
+  --kz-accent-soft: hsl(130 44% 58% / 0.12);
+  --kz-accent-text: hsl(130 50% 66%);
+  --kz-accent-2: hsl(22 62% 64%);
+  --kz-on-accent: hsl(140 20% 5%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(207 50% 58%);
+  --kz-info-text: hsl(206 58% 72%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+html.light .brand-akinaza, html .theme-light .brand-akinaza, html .brand-akinaza.theme-light {
+  --kz-accent: hsl(132 52% 27%);
+  --kz-accent-hover: hsl(132 55% 22%);
+  --kz-accent-soft: hsl(132 52% 27% / 0.08);
+  --kz-accent-text: hsl(132 52% 26%);
+  --kz-accent-2: hsl(20 62% 36%);
+  --kz-on-accent: hsl(0 0% 100%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(208 54% 36%);
+  --kz-info-text: hsl(208 54% 33%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+html .theme-dark .brand-akinaza, html .brand-akinaza.theme-dark {
+  --kz-accent: hsl(130 44% 58%);
+  --kz-accent-hover: hsl(130 48% 66%);
+  --kz-accent-soft: hsl(130 44% 58% / 0.12);
+  --kz-accent-text: hsl(130 50% 66%);
+  --kz-accent-2: hsl(22 62% 64%);
+  --kz-on-accent: hsl(140 20% 5%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(207 50% 58%);
+  --kz-info-text: hsl(206 58% 72%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+
+/* DEPRECATED — `.brand-yazakia` is `.brand-yasakia` (Yazakia was renamed Yasakia); kept for one minor version. */
+/* DEPRECATED — .brand-yazakia: a paused product (2026-10-25); removed in the next major. */
+.brand-yazakia {
+  --kz-accent: hsl(174 72% 50%);
+  --kz-accent-hover: hsl(174 72% 58%);
+  --kz-accent-soft: hsl(174 72% 50% / 0.12);
+  --kz-accent-text: hsl(174 72% 56%);
+  --kz-accent-2: hsl(152 70% 45%);
+  --kz-on-accent: hsl(240 6% 5%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(207 50% 58%);
+  --kz-info-text: hsl(206 58% 72%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+html.light .brand-yazakia, html .theme-light .brand-yazakia, html .brand-yazakia.theme-light {
+  --kz-accent: hsl(175 85% 24%);
+  --kz-accent-hover: hsl(175 85% 20%);
+  --kz-accent-soft: hsl(175 85% 24% / 0.08);
+  --kz-accent-text: hsl(175 85% 23%);
+  --kz-accent-2: hsl(152 76% 26%);
+  --kz-on-accent: hsl(0 0% 100%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(208 54% 36%);
+  --kz-info-text: hsl(208 54% 33%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}
+html .theme-dark .brand-yazakia, html .brand-yazakia.theme-dark {
+  --kz-accent: hsl(174 72% 50%);
+  --kz-accent-hover: hsl(174 72% 58%);
+  --kz-accent-soft: hsl(174 72% 50% / 0.12);
+  --kz-accent-text: hsl(174 72% 56%);
+  --kz-accent-2: hsl(152 70% 45%);
+  --kz-on-accent: hsl(240 6% 5%);
+  --kz-ring: var(--kz-accent);
+  --kz-info: hsl(207 50% 58%);
+  --kz-info-text: hsl(206 58% 72%);
+  --kz-brand-gradient-from: var(--kz-surface-0);
+  --kz-brand-gradient-via: var(--kz-surface-0);
+  --kz-brand-gradient-to: var(--kz-surface-0);
+}

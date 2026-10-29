@@ -1,0 +1,104 @@
+{
+  "$description": "Yororis — sable → sauge, un neutre chaud qui glisse vers un vert gris doux : apaisant, distinct de l'émeraude de Yasakia, du bleu de Krizaka, de l'orange d'Orazaka et du violet d'Orochia. L'accent (boutons, liens, anneau) est la sauge, teinte 98 : à 60° de --kz-success (160) et de --kz-warning (38), pour qu'un bouton principal ne se lise jamais comme un statut. Dark : sauge claire sous texte quasi noir ; light : sauge profonde sous texte blanc. accent-2 est le sable (teinte 36), le second temps du dégradé des boutons et de la mascotte, jamais un statut : sa teinte est voisine de --kz-warning, il s'en sépare par la saturation (≤ 40 %, contre 92 % pour l'ambre des avertissements — un test). info reste bleu. Le logo (mark) est un dégradé sable (34) → sauge (104) de teinte moyenne, identique dans les deux thèmes et ≥ 3:1 sur les surfaces 0–2 des deux thèmes.",
+  "$extensions": {
+    "com.krizaka": {
+      "mark": [
+        [
+          "0%",
+          "hsl(34 46% 44%)"
+        ],
+        [
+          "100%",
+          "hsl(104 28% 42%)"
+        ]
+      ]
+    }
+  },
+  "accent": {
+    "$type": "color",
+    "$root": {
+      "$value": "hsl(98 24% 62%)",
+      "$extensions": {
+        "com.krizaka": {
+          "light": "hsl(100 28% 30%)"
+        }
+      }
+    },
+    "hover": {
+      "$value": "hsl(98 26% 70%)",
+      "$extensions": {
+        "com.krizaka": {
+          "light": "hsl(100 30% 25%)"
+        }
+      }
+    },
+    "soft": {
+      "$value": "hsl(98 24% 62% / 0.12)",
+      "$extensions": {
+        "com.krizaka": {
+          "light": "hsl(100 28% 30% / 0.08)"
+        }
+      }
+    },
+    "text": {
+      "$value": "hsl(98 28% 68%)",
+      "$extensions": {
+        "com.krizaka": {
+          "light": "hsl(100 28% 28%)"
+        }
+      }
+    }
+  },
+  "accent-2": {
+    "$type": "color",
+    "$value": "hsl(36 38% 62%)",
+    "$extensions": {
+      "com.krizaka": {
+        "light": "hsl(34 38% 33%)"
+      }
+    }
+  },
+  "on-accent": {
+    "$type": "color",
+    "$value": "hsl(240 6% 5%)",
+    "$extensions": {
+      "com.krizaka": {
+        "light": "hsl(0 0% 100%)"
+      }
+    }
+  },
+  "ring": {
+    "$type": "color",
+    "$value": "{accent.$root}"
+  },
+  "info": {
+    "$type": "color",
+    "$value": "hsl(207 50% 58%)",
+    "$extensions": {
+      "com.krizaka": {
+        "light": "hsl(208 54% 36%)"
+      }
+    }
+  },
+  "info-text": {
+    "$type": "color",
+    "$value": "hsl(206 58% 72%)",
+    "$extensions": {
+      "com.krizaka": {
+        "light": "hsl(208 54% 33%)"
+      }
+    }
+  },
+  "brand-gradient": {
+    "$type": "color",
+    "from": {
+      "$value": "{surface.0}"
+    },
+    "via": {
+      "$value": "{surface.0}"
+    },
+    "to": {
+      "$value": "{surface.0}"
+    }
+  }
+}

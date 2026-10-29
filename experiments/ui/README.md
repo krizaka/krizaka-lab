@@ -9,6 +9,7 @@ promoted into a real package by an ADR; nothing outside the lab imports from her
 | Experiment | Status | What it is |
 | :--- | :--- | :--- |
 | [`parked-marks/`](parked-marks/) | dropped | the marks of the products that left the organisation |
+| [`parked-brands/`](parked-brands/) | dropped | the brand palettes (tokens, scoped classes) of the products that left the organisation |
 | [`iso/`](iso/) | idea | the isometric hero kit taken out of `@krizaka/ui` (ADR-008), parked, decide later |
 | [`meta-row/`](meta-row/) | idea | the quiet line of facts taken out of `@krizaka/ui` (ADR-008), parked, decide later |
 | [`audio-player/`](audio-player/) | idea | the seekable sound player taken out of `@krizaka/ui` (ADR-008), parked, decide later |
