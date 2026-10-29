@@ -35,13 +35,10 @@ import { type Knob, Playground } from "./playground";
 
 type FlowMode = "in" | "out" | "both";
 const PRODUCTS = [
-  { id: "orochia", live: true },
   { id: "yomizaka", live: true },
-  { id: "kachizaka", live: true },
   { id: "akinaza", live: false },
-  { id: "yasakia", live: false },
 ] as const;
-const NAMES: Record<string, string> = { orochia: "Orochia", yomizaka: "Yomizaka", kachizaka: "Kachizaka", akinaza: "Akinaza", yasakia: "Yasakia" };
+const NAMES: Record<string, string> = { yomizaka: "Yomizaka", akinaza: "Akinaza" };
 
 /** The demo's settings, folded into a side panel (Dialog placement="right"): the animation stays large and centred. */
 function Settings({ children }: { children: ReactNode }) {
@@ -194,7 +191,7 @@ function HudStage() {
         <JarvisHUD theme={theme} tacticalMode={posture} overdrive={posture === "overdrive"} />
       </Box>
       <Settings>
-        <Choice label={c.hudTheme} value={theme} options={["cyan", "orazaka", "yororis", "crimson", "gold"] as const} names={c.hudThemes} onChange={setTheme} />
+        <Choice label={c.hudTheme} value={theme} options={["cyan", "orazaka", "sage", "crimson", "gold"] as const} names={c.hudThemes} onChange={setTheme} />
         <Choice label={c.posture} value={posture} options={["standard", "combat", "stealth", "overdrive"] as const} names={c.postures} onChange={setPosture} />
       </Settings>
     </div>
@@ -214,7 +211,7 @@ function CausticsStage() {
       </Box>
       <Settings>
         <Choice label={c.medium} value={medium} options={["water", "glass", "mercury", "helium"] as const} names={c.media} onChange={setMedium} />
-        <Choice label={c.palette} value={palette} options={["obsidian", "prussian", "yororis", "amber"] as const} names={c.palettes} onChange={setPalette} />
+        <Choice label={c.palette} value={palette} options={["obsidian", "prussian", "sage", "amber"] as const} names={c.palettes} onChange={setPalette} />
         <Slider label={c.refraction} showLabel value={refraction} min={0.2} max={2} step={0.1} onValueChange={(v) => setRefraction(v as number)} />
       </Settings>
     </div>
@@ -274,8 +271,8 @@ import { EngineFlow } from "@krizaka/ui/engine-flow";
   label="Orazaka and the products it powers"
   hub={{ label: "Orazaka", mark: <ProductLogo id="orazaka" size={56} /> }}
   nodes={[
-    { id: "orochia", label: "Orochia", flow: "both", className: "brand-orochia",
-      description: "Search and recommendations.", href: "https://dev.orochia.com" },
+    { id: "yomizaka", label: "Yomizaka", flow: "both", className: "brand-yomizaka",
+      description: "Document checks.", href: "https://dev.yomizaka.com" },
   ]}
   layout="radial"
   compactLayout="top-to-bottom"

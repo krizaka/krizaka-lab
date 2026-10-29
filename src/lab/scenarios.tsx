@@ -30,7 +30,7 @@ import { shownAt, tokens } from "./stream-lib";
 export type ScenarioId = "dashboard" | "chat" | "checkout" | "delivery" | "wall";
 
 /** An app screen: the product's mark (none for a generic app, the courier) and name, the screen's title, then the screen. Decorative chrome is the frame only. */
-export function Screen({ product, app, title, children, actions }: { product?: "orazaka" | "yasakia" | "akinaza"; app: string; title: string; children: ReactNode; actions?: ReactNode }) {
+export function Screen({ product, app, title, children, actions }: { product?: "orazaka" | "akinaza"; app: string; title: string; children: ReactNode; actions?: ReactNode }) {
   return (
     <div className={product ? `lab-screen brand-${product}` : "lab-screen"}>
       <div className="lab-screen-bar">
@@ -114,7 +114,7 @@ export function Dashboard({ v = {} }: { v?: Values }) {
   );
 }
 
-/* ── Chat: Yasakia's support assistant — an answer that streams in ───────────────────────────────────────────────── */
+/* ── Chat: a support assistant — an answer that streams in ───────────────────────────────────────────────── */
 
 const ANSWER = "Your table for four is booked for Friday at 7:30 pm. I added a note about the high chair. You will get a reminder on Thursday evening, and you can change the time from that message.";
 
@@ -138,8 +138,8 @@ export function Chat({ v = {} }: { v?: Values }) {
   return (
     <div ref={host} data-motion-scope="">
       <Screen
-        product="yasakia"
-        app="Yasakia"
+        product="orazaka"
+        app="Orazaka"
         title="Chez Lina · assistant"
         actions={
           <Button variant="ghost" size="sm" onClick={() => { setElapsed(0); setRun((n) => n + 1); }}>
@@ -350,7 +350,7 @@ export function Delivery({ v = {} }: { v?: Values }) {
 
 export const SCENARIOS: Record<ScenarioId, { title: string; product: string; lead: string; View: (p: { v?: Values; motion?: string }) => ReactNode }> = {
   dashboard: { title: "An operations dashboard", product: "Orazaka", lead: "The runs of the day: figures that climb as runs land, new rows that arrive on top.", View: Dashboard },
-  chat: { title: "A support chat", product: "Yasakia", lead: "A restaurant's assistant answers: the typing indicator, then the answer streaming in.", View: Chat },
+  chat: { title: "A support chat", product: "Orazaka", lead: "A restaurant's assistant answers: the typing indicator, then the answer streaming in.", View: Chat },
   checkout: { title: "A booking checkout", product: "Akinaza", lead: "Pick a time, review, pay: each step crosses to the next, the button says it is working.", View: Checkout },
   delivery: { title: "A delivery on a map", product: "Courier", lead: "An order on its way: the route draws itself, the courier travels, the arrival counts down.", View: Delivery },
   wall: { title: "Akinaza's shop wall", product: "Akinaza", lead: "A pinned photograph, a taped note, a small sign and a screen; each motion is tuned separately.", View: WallMotionWall },

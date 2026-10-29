@@ -8,7 +8,7 @@
 import { Point2D } from "./types";
 import { SpringVector2D } from "./spring-physics";
 
-export type CausticPalette = "obsidian" | "prussian" | "yororis" | "amber";
+export type CausticPalette = "obsidian" | "prussian" | "sage" | "amber";
 export type FluidMedium = "water" | "glass" | "mercury" | "helium";
 
 export const CAUSTIC_PALETTES: Record<
@@ -44,8 +44,8 @@ export const CAUSTIC_PALETTES: Record<
     causticB: "rgba(90, 140, 255, 0.45)",
     glow: "rgba(30, 144, 255, 0.14)",
   },
-  yororis: {
-    name: "Yororis Quartz",
+  sage: {
+    name: "Sage Quartz",
     bg: "#090d0b",
     rim: "#223129",
     highlight: "#d8e3dc",
