@@ -88,3 +88,8 @@
 @keyframes kz-iso-breathe { from { opacity: 0.6; } to { opacity: 1; } }
 @keyframes kz-iso-blink { 50% { opacity: 0.35; } }
 @keyframes kz-iso-sheen { 0% { stroke-dashoffset: 40; } 60%, 100% { stroke-dashoffset: -400; } }
+
+/* Also in motion.css, outside this block (removed with it):
+   - the reduced-motion list named `.kz-iso-rise`;
+   - `.kz-iso-item > .kz-iso-lift, .kz-iso-tip { transition: none; }` under prefers-reduced-motion;
+   - `.kz-iso` in the off-screen scopes of MotionObserver. */
