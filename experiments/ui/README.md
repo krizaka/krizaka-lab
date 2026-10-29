@@ -14,3 +14,5 @@ promoted into a real package by an ADR; nothing outside the lab imports from her
 | [`audio-player/`](audio-player/) | idea | the seekable sound player taken out of `@krizaka/ui` (ADR-008), parked, decide later |
 | [`media-grid/`](media-grid/) | idea | the video feed grid taken out of `@krizaka/ui` (ADR-008), parked, decide later |
 | [`photo-grid/`](photo-grid/) | idea | the profile photo grid (web and native) taken out of `@krizaka/ui` (ADR-008), parked, decide later |
+| [`marquee/`](marquee/) | idea | the sliding band of logos or quotes taken out of `@krizaka/ui` (ADR-008), parked, decide later |
+| [`how-it-works-page/`](how-it-works-page/) | idea | the numbered "how it works" page template taken out of `@krizaka/ui` (ADR-008), parked, decide later |
