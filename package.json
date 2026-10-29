@@ -25,7 +25,8 @@
     "check:budget": "node scripts/check-budget.mjs",
     "lint:workspace": "npx --yes -p @krizaka/config krizaka-workspace-guard",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,mjs,cjs,json,css}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mjs,cjs,json,css}\""
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mjs,cjs,json,css}\"",
+    "lint": "pnpm run format:check"
   },
   "dependencies": {
     "@krizaka/charts": "^0.6.0",
