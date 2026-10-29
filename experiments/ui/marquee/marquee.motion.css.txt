@@ -1,0 +1,24 @@
+/* Marquee (logos, feature words): two copies side by side, sliding forever. */
+.kz-marquee {
+  display: flex;
+  width: max-content;
+  animation: kz-marquee var(--kz-marquee-duration, 40s) linear infinite;
+}
+@keyframes kz-marquee {
+  to { transform: translateX(-50%); }
+}
+
+/* ─── Marquee: a band that slides at a speed, pauses for the reader, and is a still row under reduced motion ─── */
+.kz-band {
+  --kz-band-gap: 2.5rem;
+}
+.kz-band[data-fade] > .kz-band-viewport {
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.kz-band[data-direction="right"] .kz-marquee {
+  animation-direction: reverse;
+}
+.kz-band:is([data-paused], :hover, :focus-within) .kz-marquee {
+  animation-play-state: paused;
+}
+
