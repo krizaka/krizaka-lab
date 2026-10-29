@@ -1,0 +1,95 @@
+/* ─── The isometric kit (@krizaka/ui/iso) ───
+   Objects built from the Krizaka vocabulary — hexagons, cut corners, the node — extruded in isometric projection and lit
+   from inside in the brand accent (a `.brand-<id>` ancestor re-points it). Faces read the surfaces, edges the accent
+   text: both themes. Motion: stages that stack once at the entrance, a dome that breathes, light that flows along the
+   links, satellites that float; the pointer brightens an object and shows its label. */
+/* Unlayered CSS beats Tailwind's layers: the kit sets no size, the app's classes do (`w-full max-w-xl`). */
+.kz-iso {
+  overflow: visible;
+}
+/* Light, glass and floor never catch the pointer: the objects under the dome stay reachable. */
+:is(.kz-iso-floor, .kz-iso-rim, .kz-iso-dome, .kz-iso-dome-sheen, .kz-iso-link, .kz-iso-particle, .kz-iso-link-label, .kz-iso-shadow, .kz-iso-tether, .kz-iso-breathe) {
+  pointer-events: none;
+}
+.kz-iso-floor { fill: none; stroke: var(--kz-border-strong); stroke-width: 0.8; }
+.kz-iso-face { stroke: color-mix(in oklab, var(--kz-accent-text) 40%, transparent); stroke-width: 0.8; stroke-linejoin: round; }
+.kz-iso-base .kz-iso-top { fill: var(--kz-surface-3); }
+.kz-iso-base .kz-iso-left { fill: var(--kz-surface-2); }
+.kz-iso-base .kz-iso-right { fill: var(--kz-surface-1); }
+.kz-iso-base .kz-iso-face { stroke: color-mix(in oklab, var(--kz-accent-text) 24%, var(--kz-border-default)); }
+.kz-iso-accent .kz-iso-top { fill: color-mix(in oklab, var(--kz-accent) 72%, var(--kz-surface-3)); }
+.kz-iso-accent .kz-iso-left { fill: color-mix(in oklab, var(--kz-accent) 50%, var(--kz-surface-1)); }
+.kz-iso-accent .kz-iso-right { fill: color-mix(in oklab, var(--kz-accent) 32%, var(--kz-surface-0)); }
+.kz-iso-accent2 .kz-iso-top { fill: color-mix(in oklab, var(--kz-accent-2) 70%, var(--kz-surface-3)); }
+.kz-iso-accent2 .kz-iso-left { fill: color-mix(in oklab, var(--kz-accent) 62%, var(--kz-surface-1)); }
+.kz-iso-accent2 .kz-iso-right { fill: color-mix(in oklab, var(--kz-accent-2) 40%, var(--kz-surface-0)); }
+.kz-iso-glass .kz-iso-face { fill: color-mix(in oklab, var(--kz-accent) 14%, var(--kz-surface-1)); fill-opacity: 0.92; }
+.kz-iso-glass .kz-iso-top { fill: color-mix(in oklab, var(--kz-accent) 10%, var(--kz-surface-2)); }
+.kz-iso-strip { fill: none; stroke: var(--kz-accent-text); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 2 7; opacity: 0.85; }
+.kz-iso-strip.kz-loop { animation: kz-iso-blink 2.8s steps(2, jump-none) infinite; animation-delay: calc(var(--kz-iso-i, 0) * -0.7s); }
+.kz-iso-glyph { fill: none; stroke: var(--kz-on-accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; opacity: 0.9; }
+.kz-iso-base .kz-iso-glyph, .kz-iso-glass .kz-iso-glyph { stroke: var(--kz-text-secondary); }
+.kz-iso-glyph-fill { fill: var(--kz-on-accent); opacity: 0.9; }
+.kz-iso-base .kz-iso-glyph-fill, .kz-iso-glass .kz-iso-glyph-fill { fill: var(--kz-text-secondary); }
+.kz-iso-node { fill: var(--kz-accent-text); }
+.kz-iso-shadow { fill: color-mix(in oklab, var(--kz-accent) 9%, transparent); stroke: color-mix(in oklab, var(--kz-accent-text) 22%, transparent); stroke-width: 0.6; }
+.kz-iso-tether { stroke: color-mix(in oklab, var(--kz-accent-text) 45%, transparent); stroke-width: 1; stroke-dasharray: 1 4; stroke-linecap: round; }
+.kz-iso-glow-stop { stop-color: var(--kz-accent); }
+.kz-iso-rim { fill: color-mix(in oklab, var(--kz-accent) 6%, transparent); stroke: color-mix(in oklab, var(--kz-accent-text) 30%, transparent); stroke-width: 1; }
+.kz-iso-dome { fill: color-mix(in oklab, var(--kz-accent) 5%, transparent); stroke: color-mix(in oklab, var(--kz-accent-text) 34%, transparent); stroke-width: 1.2; }
+.kz-iso-dome-sheen { fill: none; stroke: color-mix(in oklab, var(--kz-accent-text) 55%, transparent); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 40 400; }
+.kz-iso-dome-sheen.kz-loop { animation: kz-iso-sheen 9s var(--kz-ease) infinite; }
+.kz-iso-link { fill: none; stroke: var(--kz-accent-text); stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 2 8; opacity: 0.7; }
+.kz-iso-link.kz-loop { animation: kz-iso-flow 2.4s linear infinite; }
+.kz-iso-link[data-direction="in"].kz-loop { animation-direction: reverse; }
+.kz-iso-particle {
+  fill: var(--kz-accent-text);
+  offset-rotate: 0deg;
+  offset-distance: var(--kz-iso-at, 50%);
+}
+.kz-iso-particle.kz-loop {
+  animation: kz-iso-travel var(--kz-iso-dur, 3.6s) cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  animation-delay: var(--kz-iso-delay, 0s);
+}
+.kz-iso-link-label rect { fill: var(--kz-surface-1); stroke: color-mix(in oklab, var(--kz-accent-text) 45%, var(--kz-border-default)); }
+.kz-iso-link-label text, .kz-iso-tip text {
+  fill: var(--kz-text-primary);
+  font: 600 12px/1 var(--kz-font-sans, system-ui), system-ui, sans-serif;
+  letter-spacing: 0.01em;
+}
+.kz-iso-link-label .kz-iso-strong { fill: var(--kz-accent-text); font-weight: 700; }
+.kz-iso-breathe.kz-loop { animation: kz-iso-breathe 5s ease-in-out infinite alternate; }
+.kz-iso-float.kz-loop { animation: kz-iso-float 8s ease-in-out infinite alternate; animation-delay: calc(var(--kz-iso-i, 0) * -2.3s); }
+/* `animated={false}` on a scene: the still frame, as prefers-reduced-motion shows it. */
+.kz-iso[data-animated="false"] :is(.kz-loop, .kz-iso-rise) { animation: none; }
+/* Entrance: each object rises into place once, in order (--kz-iso-i), when its scene first shows. */
+.kz-iso-rise { animation: kz-iso-rise 0.9s var(--kz-ease) backwards; animation-delay: calc(var(--kz-iso-i, 0) * 110ms + 120ms); }
+/* The pointer (or the focus, in an interactive scene) outlines an object and shows its label — nothing moves. */
+.kz-iso-item { outline: none; }
+.kz-iso-item > .kz-iso-lift { transition: filter 150ms var(--kz-ease); }
+.kz-iso-tip { opacity: 0; transition: opacity 150ms var(--kz-ease); pointer-events: none; }
+.kz-iso-leader { stroke: var(--kz-accent-text); stroke-width: 1; }
+.kz-iso-tip rect { fill: var(--kz-surface-1); stroke: var(--kz-border-strong); }
+@media (hover: hover) {
+  .kz-iso-item:hover > .kz-iso-lift { filter: brightness(1.12); }
+  .kz-iso-item:hover > .kz-iso-tip { opacity: 1; }
+}
+.kz-iso-item:focus-visible > .kz-iso-lift { filter: drop-shadow(0 0 0 2px var(--kz-ring, currentColor)) drop-shadow(0 0 2px var(--kz-ring, currentColor)); }
+.kz-iso-item:focus-visible > .kz-iso-tip { opacity: 1; }
+@keyframes kz-iso-rise { from { opacity: 0; transform: translateY(-34px); } }
+@keyframes kz-iso-flow { to { stroke-dashoffset: -40; } }
+@keyframes kz-iso-travel {
+  0% { offset-distance: 0%; opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+@keyframes kz-iso-float { from { transform: translateY(0); } to { transform: translateY(-9px); } }
+@keyframes kz-iso-breathe { from { opacity: 0.6; } to { opacity: 1; } }
+@keyframes kz-iso-blink { 50% { opacity: 0.35; } }
+@keyframes kz-iso-sheen { 0% { stroke-dashoffset: 40; } 60%, 100% { stroke-dashoffset: -400; } }
+
+/* Also in motion.css, outside this block (removed with it):
+   - the reduced-motion list named `.kz-iso-rise`;
+   - `.kz-iso-item > .kz-iso-lift, .kz-iso-tip { transition: none; }` under prefers-reduced-motion;
+   - `.kz-iso` in the off-screen scopes of MotionObserver. */
