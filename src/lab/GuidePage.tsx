@@ -101,7 +101,7 @@ export function GuidePage({ id }: { id: GuideId }) {
         {g.scenario === "checkout" ? (
           <p className="lab-sublead">
             {i18n.t("checkout.guides.sourceNote")}{" "}
-            <a href="https://github.com/krizaka/krizaka-motion/tree/main/src/lab/scenarios.tsx">{i18n.t("checkout.guides.source")}</a>
+            <a href="https://github.com/krizaka/krizaka-lab/tree/main/src/lab/scenarios.tsx">{i18n.t("checkout.guides.source")}</a>
           </p>
         ) : null}
       </Section>

@@ -2,7 +2,7 @@
  * @krizaka/motion — Jarvis Holographic HUD Engine (V2 Next-Level)
  * Cinema-grade Iron Man Mark LXXXV interface with interactive click-to-lock targeting,
  * flight telemetry, energy shunt matrix, and multi-plane 3D gyroscopic projection.
- * 100% self-contained in krizaka-motion.
+ * 100% self-contained in krizaka-lab.
  */
 
 import { JarvisTheme, Point2D } from "./types";

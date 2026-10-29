@@ -23,7 +23,7 @@ import { SCENARIOS } from "./lab/scenarios";
 import { LabContext } from "./lab/context";
 import { i18n, LOCALE } from "./lab/messages";
 
-const REPO = "https://github.com/krizaka/krizaka-motion";
+const REPO = "https://github.com/krizaka/krizaka-lab";
 const isGuide = (p: LabPage): p is GuideId => (GUIDE_PATHS as readonly string[]).includes(p);
 const isScenario = (p: LabPage): p is ScenarioId => (SCENARIO_PATHS as readonly string[]).includes(p);
 function Shell() {

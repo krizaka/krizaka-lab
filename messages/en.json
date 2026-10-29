@@ -45,9 +45,9 @@
     }
   },
   "bar": {
-    "label": "Krizaka Motion",
-    "mainAria": "Krizaka Motion, main navigation",
-    "homeAria": "Krizaka Motion, the lab's home",
+    "label": "Krizaka Lab",
+    "mainAria": "Krizaka Lab, main navigation",
+    "homeAria": "Krizaka Lab, the lab's home",
     "demos": "Demos",
     "inUi": "In Krizaka UI",
     "specs": "Specs",
@@ -60,7 +60,7 @@
     "gallery": "Krizaka UI + Motion"
   },
   "home": {
-    "eyebrow": "Krizaka Motion · the lab",
+    "eyebrow": "Krizaka Lab · experiments",
     "title": "Motion that brings Krizaka screens to life.",
     "lead": "Try each animation live, change its settings, copy its code. What proves itself here ships in Krizaka UI.",
     "primary": "See the engine flow",

@@ -27,7 +27,7 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     id: "orazaka",
     path: "orazaka",
     label: "Orazaka Engine",
-    title: "Orazaka Neural Flow — Krizaka Motion",
+    title: "Orazaka Neural Flow — Krizaka Lab",
     description: "Multi-direction packet convergence & foundational neural pipeline",
     aliases: ["orazaka", "flow", "engine", "neural-flow"],
   },
@@ -35,7 +35,7 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     id: "jarvis",
     path: "jarvis",
     label: "Jarvis HUD",
-    title: "Jarvis Holographic HUD (Mark LXXXV) — Krizaka Motion",
+    title: "Jarvis Holographic HUD (Mark LXXXV) — Krizaka Lab",
     description: "Tactical target tracking, 3D gyro perspective & energy matrix",
     aliases: ["jarvis", "hud", "tactical", "iron-man"],
   },
@@ -43,7 +43,7 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     id: "caustics",
     path: "liquid-glass",
     label: "Liquid Glass",
-    title: "Liquid Glass Snell Caustics — Krizaka Motion",
+    title: "Liquid Glass Snell Caustics — Krizaka Lab",
     description: "Snell's law physical refraction & chromatic dispersion",
     aliases: ["liquid-glass", "caustics", "glass", "snell"],
   },
@@ -51,7 +51,7 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     id: "lattice",
     path: "neural-lattice",
     label: "Neural Lattice",
-    title: "Quantum Neural Synapse Lattice — Krizaka Motion",
+    title: "Quantum Neural Synapse Lattice — Krizaka Lab",
     description: "Hodgkin-Huxley membrane action potentials & synaptic plasticity",
     aliases: ["neural-lattice", "lattice", "synapse", "quantum"],
   },
@@ -61,7 +61,7 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     id: "journey",
     path: "journey",
     label: "Journey",
-    title: "A job as a journey — Krizaka Motion",
+    title: "A job as a journey — Krizaka Lab",
     description: "Steps that complete, a step in progress, a step that fails",
     aliases: ["journey", "stepper", "steps", "job"],
   },
@@ -70,7 +70,7 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     id: "overlays",
     path: "overlays",
     label: "Overlays",
-    title: "Dialog, sheet and indicator — Krizaka Motion",
+    title: "Dialog, sheet and indicator — Krizaka Lab",
     description: "A dialog in four placements, the sliding indicator of NavBar and Tabs",
     aliases: ["overlays","dialog","sheet","navbar","indicator"],
   },
@@ -78,7 +78,7 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     id: "people",
     path: "people",
     label: "People",
-    title: "People arriving — Krizaka Motion",
+    title: "People arriving — Krizaka Lab",
     description: "An avatar stack that fills, a verified badge, milestones that unlock",
     aliases: ["people","avatars","verified","achievements"],
   },
@@ -88,7 +88,7 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     id: "kz-ui",
     path: "krizaka-ui",
     label: "Krizaka UI + Motion",
-    title: "Krizaka UI + Motion Integration — Krizaka Motion",
+    title: "Krizaka UI + Motion Integration — Krizaka Lab",
     description: "Direct augmentation of official npm @krizaka/ui components",
     aliases: ["krizaka-ui", "kz-ui", "components", "ui"],
   },
@@ -96,7 +96,7 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     id: "architecture",
     path: "specs",
     label: "Mobile & Specs",
-    title: "Mobile Architecture & Technical Specs — Krizaka Motion",
+    title: "Mobile Architecture & Technical Specs — Krizaka Lab",
     description: "Zero-bloat React Native Skia adapters & mathematical specifications",
     aliases: ["specs", "architecture", "mobile", "docs"],
   },
@@ -132,7 +132,7 @@ export function resolveTabFromLocation(loc: {
       }
     }
 
-    // 1b. Check GitHub Pages 404 SPA format: ?/yororis or ?/krizaka-motion/yororis
+    // 1b. Check GitHub Pages 404 SPA format: ?/yororis or ?/krizaka-lab/yororis
     const firstKey = Array.from(params.keys())[0];
     if (firstKey && firstKey.startsWith("/")) {
       const parts = firstKey.split("/").filter(Boolean);
@@ -161,7 +161,7 @@ export function resolveTabFromLocation(loc: {
     }
   }
 
-  // 3. Check pathname: /krizaka-motion/yororis or /yororis
+  // 3. Check pathname: /krizaka-lab/yororis or /yororis
   if (loc.pathname) {
     const segments = loc.pathname.split("/").filter(Boolean);
     const candidate = segments[segments.length - 1]?.toLowerCase();
@@ -178,8 +178,8 @@ export function resolveTabFromLocation(loc: {
 }
 
 export function getHrefForTab(tab: TabId | GuidePage | ScenarioPage | "experiments", currentPathname: string = ""): string {
-  const isKrizakaMotionBase = currentPathname.includes("/krizaka-motion");
-  const prefix = isKrizakaMotionBase ? "/krizaka-motion/" : "/";
+  const isKrizakaMotionBase = currentPathname.includes("/krizaka-lab");
+  const prefix = isKrizakaMotionBase ? "/krizaka-lab/" : "/";
   return `${prefix}${tab in TAB_ROUTES ? TAB_ROUTES[tab as TabId].path : tab}`;
 }
 
@@ -219,7 +219,7 @@ function namedPage(word: string | undefined): LabPage | undefined {
 
 /** The page at a location: the page its query, hash or last path segment names, else the home. */
 export function resolvePage(loc: { pathname?: string; search?: string; hash?: string }): LabPage {
-  const segments = (loc.pathname ?? "").split("/").filter(Boolean).filter((s) => s !== "krizaka-motion" && s !== "index.html");
+  const segments = (loc.pathname ?? "").split("/").filter(Boolean).filter((s) => s !== "krizaka-lab" && s !== "index.html");
   const spa = (loc.search ?? "").startsWith("?/") ? (loc.search ?? "").slice(2).split("&")[0]!.split("/").filter(Boolean).pop() : undefined;
   const page = namedPage(segments[segments.length - 1]) ?? namedPage(spa) ?? namedPage((loc.hash ?? "").replace(/^#\/?/, "")) ?? namedPage(new URLSearchParams((loc.search ?? "").replace(/^\?\/[^&]*&?/, "?")).get("tab") ?? undefined);
   if (page) return page;
@@ -232,19 +232,19 @@ export function resolvePage(loc: { pathname?: string; search?: string; hash?: st
   return words.some((w) => TAB_ROUTES.orazaka.aliases.includes(w) || w === "orazaka") ? "orazaka" : "home";
 }
 
-/** The lab's home under the current base (`/krizaka-motion/` on GitHub Pages, `/` locally). */
+/** The lab's home under the current base (`/krizaka-lab/` on GitHub Pages, `/` locally). */
 export function homeHref(currentPathname = ""): string {
-  return currentPathname.includes("/krizaka-motion") ? "/krizaka-motion/" : "/";
+  return currentPathname.includes("/krizaka-lab") ? "/krizaka-lab/" : "/";
 }
 
 /** The canonical URL for a page path on the motion lab's custom domain. */
 export function getCanonicalUrl(pathname: string): string {
   let routePath = pathname;
-  if (routePath.startsWith("/krizaka-motion")) {
-    const remainder = routePath.slice("/krizaka-motion".length);
+  if (routePath.startsWith("/krizaka-lab")) {
+    const remainder = routePath.slice("/krizaka-lab".length);
     if (remainder === "" || remainder.startsWith("/")) routePath = remainder;
   }
   if (routePath.toLowerCase().endsWith("/index.html")) routePath = routePath.slice(0, -"/index.html".length);
   const route = routePath.split("/").filter(Boolean).join("/");
-  return `https://motion.krizaka.com/${route ? `${route}/` : ""}`;
+  return `https://lab.krizaka.com/${route ? `${route}/` : ""}`;
 }

@@ -2,7 +2,7 @@
  * @krizaka/motion — Liquid Glass Caustics & Chromatic Refraction Engine (V2 Next-Level)
  * Optical Snell's law refraction with hydrodynamic drag wake, surface tension modes,
  * and realistic underlying typography optical distortion.
- * 100% self-contained in krizaka-motion.
+ * 100% self-contained in krizaka-lab.
  */
 
 import { Point2D } from "./types";

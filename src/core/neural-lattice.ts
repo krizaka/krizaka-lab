@@ -2,7 +2,7 @@
  * @krizaka/motion — Quantum Neural Synapse Lattice Engine (V2 Next-Level)
  * Biological Hodgkin-Huxley action potential propagation, cognitive cluster engrams,
  * Hebbian synaptic plasticity, and synchronous neuro-cascade avalanche.
- * 100% self-contained in krizaka-motion.
+ * 100% self-contained in krizaka-lab.
  */
 
 import { Point2D } from "./types";

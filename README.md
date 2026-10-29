@@ -5,55 +5,57 @@
   <img src="https://raw.githubusercontent.com/krizaka/.github/main/profile/assets/krizaka-light.svg" alt="Krizaka" width="96">
 </picture>
 
-# krizaka-motion
+# krizaka-lab
 
-**The Krizaka motion lab.** Experimental generative visuals — the Orazaka neural flow, a holographic
+**Krizaka Lab: the family's lab for UI, motion, Java, AI and data experiments.** Nothing here is a product. It started as the motion lab: experimental generative visuals — the Orazaka neural flow, a holographic
 HUD, liquid glass, a neural lattice — played live, each one a shareable address.
 
 **A lab, not a package**: nothing here is published on npm. What proves itself moves into
 [Krizaka UI](https://ui.krizaka.com) as SVG + CSS on the one motion system — the flow already did:
 [`@krizaka/ui/engine-flow`](https://ui.krizaka.com/components/engine-flow). Audit: [docs/AUDIT-2026-10-20.md](docs/AUDIT-2026-10-20.md).
 
-[![CI](https://github.com/krizaka/krizaka-motion/actions/workflows/ci.yml/badge.svg)](https://github.com/krizaka/krizaka-motion/actions/workflows/ci.yml)
-[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/krizaka/krizaka-motion/badge)](https://scorecard.dev/viewer/?uri=github.com/krizaka/krizaka-motion)
-[![Lab](https://img.shields.io/badge/lab-motion.krizaka.com-196df5)](https://motion.krizaka.com/)
+[![CI](https://github.com/krizaka/krizaka-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/krizaka/krizaka-lab/actions/workflows/ci.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/krizaka/krizaka-lab/badge)](https://scorecard.dev/viewer/?uri=github.com/krizaka/krizaka-lab)
+[![Lab](https://img.shields.io/badge/lab-lab.krizaka.com-196df5)](https://lab.krizaka.com/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-motion&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-motion) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-motion&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-motion) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-motion&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-motion) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-motion&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-motion) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-motion&metric=coverage)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-motion)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-lab&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-motion) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-motion&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-motion) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-motion&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-motion) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-motion&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-motion) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=krizaka_krizaka-motion&metric=coverage)](https://sonarcloud.io/summary/new_code?id=krizaka_krizaka-motion)
 
 </div>
 
 
 ## The lab
 
-**https://motion.krizaka.com/** (the docs live here; `krizaka.github.io/krizaka-motion` redirects to it) — English, dark and light. Organised by task (krizaka-ui#434).
+Experiments are organised by area (`experiments/motion`, `java`, `ai`, `ui`, `data`), each with a README that says what it tests, its status (`idea`, `prototype`, `promoted`, `dropped`) and the issue or ADR it feeds: see [experiments/README.md](experiments/README.md). `motion.krizaka.com` answers 301 to the same path here.
+
+**https://lab.krizaka.com/** (the docs live here; `krizaka.github.io/krizaka-lab` redirects to it) — English, dark and light. Organised by task (krizaka-ui#434).
 
 **Guides** — one task each, played on a real app screen made of `@krizaka/ui`, with its settings, the code to copy
 (it follows the settings), every option in a table and what happens under reduced motion:
 
 | Guide | Address | Screen |
 | :-- | :-- | :-- |
-| Animate a list arriving | [`/list-arrival`](https://motion.krizaka.com/list-arrival/) | dashboard |
-| Show a live number | [`/live-number`](https://motion.krizaka.com/live-number/) | dashboard |
-| Stream an answer into a chat | [`/streaming-answer`](https://motion.krizaka.com/streaming-answer/) | chat |
-| Cross from one step to the next | [`/page-transition`](https://motion.krizaka.com/page-transition/) | checkout |
-| Say an action is working, then done | [`/button-feedback`](https://motion.krizaka.com/button-feedback/) | checkout |
-| Draw a route and follow a courier | [`/route-draw`](https://motion.krizaka.com/route-draw/) | delivery |
-| Drop a pin onto a shop wall | [`/pin-drop`](https://motion.krizaka.com/pin-drop/) | wall |
-| Press tape onto a note | [`/tape-stick`](https://motion.krizaka.com/tape-stick/) | wall |
-| Let pinned paper sway | [`/paper-sway`](https://motion.krizaka.com/paper-sway/) | wall |
-| Develop a pinned photograph | [`/develop`](https://motion.krizaka.com/develop/) | wall |
-| Power on a wall display | [`/crt-power-on`](https://motion.krizaka.com/crt-power-on/) | wall |
-| Power off a wall display | [`/crt-power-off`](https://motion.krizaka.com/crt-power-off/) | wall |
-| Settle a neon sign | [`/neon-flicker`](https://motion.krizaka.com/neon-flicker/) | wall |
+| Animate a list arriving | [`/list-arrival`](https://lab.krizaka.com/list-arrival/) | dashboard |
+| Show a live number | [`/live-number`](https://lab.krizaka.com/live-number/) | dashboard |
+| Stream an answer into a chat | [`/streaming-answer`](https://lab.krizaka.com/streaming-answer/) | chat |
+| Cross from one step to the next | [`/page-transition`](https://lab.krizaka.com/page-transition/) | checkout |
+| Say an action is working, then done | [`/button-feedback`](https://lab.krizaka.com/button-feedback/) | checkout |
+| Draw a route and follow a courier | [`/route-draw`](https://lab.krizaka.com/route-draw/) | delivery |
+| Drop a pin onto a shop wall | [`/pin-drop`](https://lab.krizaka.com/pin-drop/) | wall |
+| Press tape onto a note | [`/tape-stick`](https://lab.krizaka.com/tape-stick/) | wall |
+| Let pinned paper sway | [`/paper-sway`](https://lab.krizaka.com/paper-sway/) | wall |
+| Develop a pinned photograph | [`/develop`](https://lab.krizaka.com/develop/) | wall |
+| Power on a wall display | [`/crt-power-on`](https://lab.krizaka.com/crt-power-on/) | wall |
+| Power off a wall display | [`/crt-power-off`](https://lab.krizaka.com/crt-power-off/) | wall |
+| Settle a neon sign | [`/neon-flicker`](https://lab.krizaka.com/neon-flicker/) | wall |
 
-**Scenarios** — the screens, whole, with every motion they use: [`/dashboard`](https://motion.krizaka.com/dashboard/),
-[`/chat`](https://motion.krizaka.com/chat/), [`/checkout`](https://motion.krizaka.com/checkout/),
-[`/delivery`](https://motion.krizaka.com/delivery/), and [`/wall`](https://motion.krizaka.com/wall/).
+**Scenarios** — the screens, whole, with every motion they use: [`/dashboard`](https://lab.krizaka.com/dashboard/),
+[`/chat`](https://lab.krizaka.com/chat/), [`/checkout`](https://lab.krizaka.com/checkout/),
+[`/delivery`](https://lab.krizaka.com/delivery/), and [`/wall`](https://lab.krizaka.com/wall/).
 The old demo addresses (`/data-motion`, `/figures`,
 `/transitions`, `/conversation`, `/maps`) open the guide that replaced them.
 
-**Also**: [`/krizaka-ui`](https://motion.krizaka.com/krizaka-ui/) (components with their motion),
-`/journey`, `/overlays`, `/people`, and [`/experiments`](https://motion.krizaka.com/experiments/) — the
+**Also**: [`/krizaka-ui`](https://lab.krizaka.com/krizaka-ui/) (components with their motion),
+`/journey`, `/overlays`, `/people`, and [`/experiments`](https://lab.krizaka.com/experiments/) — the
 canvas studies (engine flow, HUD, liquid glass, neural lattice).
 
 ## Lab, then Krizaka UI

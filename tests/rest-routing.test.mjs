@@ -18,11 +18,11 @@ describe("RESTful Routing & URL Resolution", () => {
     assert.equal(resolveTabFromLocation({ pathname: "/specs" }), "architecture");
   });
 
-  it("resolves tabs under GitHub Pages repository subpath /krizaka-motion/", () => {
-    assert.equal(resolveTabFromLocation({ pathname: "/krizaka-motion/jarvis" }), "jarvis");
-    assert.equal(resolveTabFromLocation({ pathname: "/krizaka-motion/liquid-glass/" }), "caustics");
-    assert.equal(resolveTabFromLocation({ pathname: "/krizaka-motion/neural-lattice" }), "lattice");
-    assert.equal(resolveTabFromLocation({ pathname: "/krizaka-motion/krizaka-ui" }), "kz-ui");
+  it("resolves tabs under GitHub Pages repository subpath /krizaka-lab/", () => {
+    const expected = { jarvis: "jarvis", "liquid-glass/": "caustics", "neural-lattice": "lattice", "krizaka-ui": "kz-ui" };
+    for (const [path, tab] of Object.entries(expected)) {
+      assert.equal(resolveTabFromLocation({ pathname: `/krizaka-lab/${path}` }), tab, path);
+    }
   });
 
   it("resolves tab aliases correctly", () => {
@@ -38,7 +38,7 @@ describe("RESTful Routing & URL Resolution", () => {
 
   it("resolves tabs from GitHub Pages 404 SPA fallback (?/path)", () => {
     assert.equal(resolveTabFromLocation({ search: "?/jarvis" }), "jarvis");
-    assert.equal(resolveTabFromLocation({ search: "?/krizaka-motion/jarvis" }), "jarvis");
+    assert.equal(resolveTabFromLocation({ search: "?/krizaka-lab/jarvis" }), "jarvis");
   });
 
   it("resolves tabs from hash (#/tab or #tab)", () => {
@@ -50,8 +50,8 @@ describe("RESTful Routing & URL Resolution", () => {
   it("generates correct href paths with and without subpath prefix", () => {
     assert.equal(getHrefForTab("orazaka", "/"), "/orazaka");
     assert.equal(getHrefForTab("jarvis", "/"), "/jarvis");
-    assert.equal(getHrefForTab("jarvis", "/krizaka-motion/"), "/krizaka-motion/jarvis");
-    assert.equal(getHrefForTab("caustics", "/krizaka-motion/orazaka"), "/krizaka-motion/liquid-glass");
+    assert.equal(getHrefForTab("jarvis", "/krizaka-lab/"), "/krizaka-lab/jarvis");
+    assert.equal(getHrefForTab("caustics", "/krizaka-lab/orazaka"), "/krizaka-lab/liquid-glass");
   });
 });
 
@@ -61,13 +61,13 @@ const { cleanSpaRedirect } = core;
 
 describe("GitHub Pages 404 fallback", () => {
   it("turns ?/<route> back into the REST path under the project base", () => {
-    assert.equal(cleanSpaRedirect({ pathname: "/krizaka-motion/", search: "?/jarvis", hash: "" }), "/krizaka-motion/jarvis");
-    assert.equal(cleanSpaRedirect({ pathname: "/krizaka-motion/", search: "?/specs&x=1", hash: "#top" }), "/krizaka-motion/specs?x=1#top");
+    assert.equal(cleanSpaRedirect({ pathname: "/krizaka-lab/", search: "?/jarvis", hash: "" }), "/krizaka-lab/jarvis");
+    assert.equal(cleanSpaRedirect({ pathname: "/krizaka-lab/", search: "?/specs&x=1", hash: "#top" }), "/krizaka-lab/specs?x=1#top");
   });
 
   it("leaves a normal address alone", () => {
-    assert.equal(cleanSpaRedirect({ pathname: "/krizaka-motion/orazaka", search: "", hash: "" }), null);
-    assert.equal(cleanSpaRedirect({ pathname: "/krizaka-motion/", search: "?tab=jarvis", hash: "" }), null);
+    assert.equal(cleanSpaRedirect({ pathname: "/krizaka-lab/orazaka", search: "", hash: "" }), null);
+    assert.equal(cleanSpaRedirect({ pathname: "/krizaka-lab/", search: "?tab=jarvis", hash: "" }), null);
   });
 });
 
@@ -76,14 +76,14 @@ const { resolvePage, homeHref } = core;
 
 describe("Lab pages", () => {
   it("the base is the home, a demo path its demo", () => {
-    assert.equal(resolvePage({ pathname: "/krizaka-motion/", search: "", hash: "" }), "home");
+    assert.equal(resolvePage({ pathname: "/krizaka-lab/", search: "", hash: "" }), "home");
     assert.equal(resolvePage({ pathname: "/", search: "", hash: "" }), "home");
-    assert.equal(resolvePage({ pathname: "/krizaka-motion/liquid-glass", search: "", hash: "" }), "caustics");
-    assert.equal(resolvePage({ pathname: "/krizaka-motion/", search: "?tab=jarvis", hash: "" }), "jarvis");
-    assert.equal(resolvePage({ pathname: "/krizaka-motion/unknown", search: "", hash: "" }), "home");
+    assert.equal(resolvePage({ pathname: "/krizaka-lab/liquid-glass", search: "", hash: "" }), "caustics");
+    assert.equal(resolvePage({ pathname: "/krizaka-lab/", search: "?tab=jarvis", hash: "" }), "jarvis");
+    assert.equal(resolvePage({ pathname: "/krizaka-lab/unknown", search: "", hash: "" }), "home");
   });
   it("the home's address keeps the project base", () => {
-    assert.equal(homeHref("/krizaka-motion/jarvis"), "/krizaka-motion/");
+    assert.equal(homeHref("/krizaka-lab/jarvis"), "/krizaka-lab/");
     assert.equal(homeHref("/jarvis"), "/");
   });
 });
@@ -93,26 +93,26 @@ describe("Lab pages", () => {
 const { GUIDE_PATHS, SCENARIO_PATHS, LEGACY_PATHS } = core;
 
 describe("guides, scenarios and the old addresses", () => {
-  it("each guide and each scenario is its own address, also under /krizaka-motion/", () => {
+  it("each guide and each scenario is its own address, also under /krizaka-lab/", () => {
     for (const id of ["list-arrival", "live-number", "page-transition", "button-feedback", "streaming-answer", "route-draw", "pin-drop", "tape-stick", "paper-sway", "develop", "crt-power-on", "crt-power-off", "neon-flicker"]) {
       assert.ok(GUIDE_PATHS.includes(id), id);
-      assert.equal(resolvePage({ pathname: `/krizaka-motion/${id}`, search: "", hash: "" }), id);
+      assert.equal(resolvePage({ pathname: `/krizaka-lab/${id}`, search: "", hash: "" }), id);
     }
     for (const id of ["dashboard", "chat", "checkout", "delivery", "wall"]) {
       assert.ok(SCENARIO_PATHS.includes(id), id);
       assert.equal(resolvePage({ pathname: `/${id}/`, search: "", hash: "" }), id);
     }
-    assert.equal(resolvePage({ pathname: "/krizaka-motion/experiments", search: "", hash: "" }), "experiments");
+    assert.equal(resolvePage({ pathname: "/krizaka-lab/experiments", search: "", hash: "" }), "experiments");
   });
 
   it("the old demo pages lead to their guide", () => {
     assert.deepEqual(LEGACY_PATHS, { "data-motion": "list-arrival", figures: "live-number", transitions: "page-transition", conversation: "streaming-answer", maps: "route-draw" });
-    assert.equal(resolvePage({ pathname: "/krizaka-motion/data-motion", search: "", hash: "" }), "list-arrival");
+    assert.equal(resolvePage({ pathname: "/krizaka-lab/data-motion", search: "", hash: "" }), "list-arrival");
     assert.equal(resolvePage({ pathname: "/maps/", search: "", hash: "" }), "route-draw");
-    assert.equal(resolvePage({ pathname: "/krizaka-motion/", search: "?/conversation", hash: "" }), "streaming-answer");
+    assert.equal(resolvePage({ pathname: "/krizaka-lab/", search: "?/conversation", hash: "" }), "streaming-answer");
   });
 
   it("an address names a page or the home, never something else", () => {
-    assert.equal(resolvePage({ pathname: "/krizaka-motion/checkoutx", search: "", hash: "" }), "home");
+    assert.equal(resolvePage({ pathname: "/krizaka-lab/checkoutx", search: "", hash: "" }), "home");
   });
 });
