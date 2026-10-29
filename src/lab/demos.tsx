@@ -21,13 +21,11 @@ import { type ReactNode, useRef, useState } from "react";
 import type { JarvisTacticalMode } from "../core/jarvis-hud";
 import type { CausticPalette, FluidMedium } from "../core/liquid-caustics";
 import type { TabId } from "../core/router";
-import type { FlowDirection, FlowMode as CanvasMode, JarvisTheme, YororisState } from "../core/types";
-import type { YororisVoiceTone } from "../core/yororis-synthesis";
+import type { FlowDirection, FlowMode as CanvasMode, JarvisTheme } from "../core/types";
 import { JarvisHUD } from "../react/JarvisHUD";
 import { LiquidCausticsView } from "../react/LiquidCausticsView";
 import { NeuralLatticeView, type NeuralLatticeViewHandle } from "../react/NeuralLatticeView";
 import { OrazakaEngineFlow } from "../react/OrazakaEngineFlow";
-import { YororisPresenceOrb } from "../react/YororisPresenceOrb";
 import { useLab } from "./context";
 import { Gallery } from "./gallery";
 import { JourneyStage } from "./journey";
@@ -42,9 +40,8 @@ const PRODUCTS = [
   { id: "kachizaka", live: true },
   { id: "akinaza", live: false },
   { id: "yasakia", live: false },
-  { id: "yororis", live: false },
 ] as const;
-const NAMES: Record<string, string> = { orochia: "Orochia", yomizaka: "Yomizaka", kachizaka: "Kachizaka", akinaza: "Akinaza", yasakia: "Yasakia", yororis: "Yororis" };
+const NAMES: Record<string, string> = { orochia: "Orochia", yomizaka: "Yomizaka", kachizaka: "Kachizaka", akinaza: "Akinaza", yasakia: "Yasakia" };
 
 /** The demo's settings, folded into a side panel (Dialog placement="right"): the animation stays large and centred. */
 function Settings({ children }: { children: ReactNode }) {
@@ -186,26 +183,6 @@ function OrazakaStage() {
   );
 }
 
-function YororisStage() {
-  const { t } = useLab();
-  const c = t.controls;
-  const [state, setState] = useState<YororisState>("resting");
-  const [tone, setTone] = useState<YororisVoiceTone>("lea");
-  const [intensity, setIntensity] = useState(0.7);
-  return (
-    <div className="lab-stage">
-      <Box tall>
-        <YororisPresenceOrb state={state} voiceTone={tone} intensity={intensity} enableAudio={false} />
-      </Box>
-      <Settings>
-        <Choice label={c.state} value={state} options={["idle", "listening", "speaking", "resting", "reflecting"] as const} names={c.states} onChange={setState} />
-        <Choice label={c.tone} value={tone} options={["lea", "theta", "solfeggio", "aurora"] as const} names={c.tones} onChange={setTone} />
-        <Slider label={c.intensity} showLabel value={intensity} min={0.1} max={1} step={0.05} onValueChange={(v) => setIntensity(v as number)} />
-      </Settings>
-    </div>
-  );
-}
-
 function HudStage() {
   const { t } = useLab();
   const c = t.controls;
@@ -299,7 +276,6 @@ import { EngineFlow } from "@krizaka/ui/engine-flow";
   nodes={[
     { id: "orochia", label: "Orochia", flow: "both", className: "brand-orochia",
       description: "Search and recommendations.", href: "https://dev.orochia.com" },
-    { id: "yororis", label: "Yororis", planned: true, status: "planned" },
   ]}
   layout="radial"
   compactLayout="top-to-bottom"
@@ -325,7 +301,6 @@ export interface Demo {
 
 export const DEMOS: Record<TabId, Demo> = {
   orazaka: { Preview: () => <Flow compact={false} />, Stage: OrazakaStage, usage: { code: ENGINE_FLOW_USAGE, file: "EngineFlow.tsx" }, lab: false },
-  yororis: { Preview: () => <YororisPresenceOrb state="resting" interactive={false} enableAudio={false} />, Stage: YororisStage, usage: { code: canvasUsage("YororisPresenceOrb", 'state="listening" voiceTone="lea" intensity={0.7}'), file: "Presence.tsx" }, lab: true },
   jarvis: { Preview: () => <JarvisHUD interactive3D={false} />, Stage: HudStage, usage: { code: canvasUsage("JarvisHUD", 'theme="cyan" tacticalMode="standard"'), file: "Hud.tsx" }, lab: true },
   caustics: { Preview: () => <LiquidCausticsView interactive={false} />, Stage: CausticsStage, usage: { code: canvasUsage("LiquidCausticsView", 'fluidMedium="glass" palette="prussian"'), file: "Glass.tsx" }, lab: true },
   lattice: { Preview: () => <NeuralLatticeView interactive={false} nodeCount={60} />, Stage: LatticeStage, usage: { code: canvasUsage("NeuralLatticeView", 'theme="prussian-cyan" nodeCount={90}'), file: "Lattice.tsx" }, lab: true },

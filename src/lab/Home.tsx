@@ -88,7 +88,7 @@ export function Home() {
             <a href={href("experiments")} onClick={go("experiments")}>
               Experiments
             </a>
-            <span> — the lab's canvas studies (a voice presence, a HUD, liquid glass, a neural lattice) and the first engine flow.</span>
+            <span> — the lab's canvas studies (a HUD, liquid glass, a neural lattice) and the first engine flow.</span>
           </li>
         </ul>
       </Section>
@@ -99,7 +99,7 @@ export function Home() {
 /** The canvas studies: the lab's drawings, kept apart from what an app ships. */
 export function Experiments() {
   const { t, href, go } = useLab();
-  const ids = TAB_ORDER.filter((id): id is TabId => ["orazaka", "yororis", "jarvis", "caustics", "lattice"].includes(id));
+  const ids = TAB_ORDER.filter((id): id is TabId => ["orazaka", "jarvis", "caustics", "lattice"].includes(id));
   return (
     <>
       <PageHero eyebrow="Krizaka Motion" title="Experiments" lead="Canvas studies: what the motion system can draw before a piece of it moves into Krizaka UI as SVG and CSS. Krizaka sites use no canvas." back={{ href: href("home"), label: "Guides" }} linkAs={(props: React.ComponentProps<"a">) => <a {...props} onClick={go("home")} />} />

@@ -82,10 +82,6 @@ const CARDS = {
     const glide = (await names(r)).filter((n) => /translate|width/.test(n)).length;
     ok(rm ? glide === 0 : glide > 0, rm ? "the indicator moves at once under reduced motion" : "the indicator glides (translate/width transition)");
   },
-  async "avatar-presence"(p, r, rm, ok) {
-    const a = await canvasSig(r); await p.waitForTimeout(500); const b = await canvasSig(r);
-    ok(rm ? a === b : a !== b, rm ? "the sphere is still under reduced motion" : "the sphere moves");
-  },
   async stat(p, r, rm, ok) {
     await p.waitForTimeout(rm ? 100 : 1800);
     ok(/5,?940/.test(await r.innerText()), "the figure ends on 5,940");

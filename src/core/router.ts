@@ -4,7 +4,6 @@
 
 export type TabId =
   | "orazaka"
-  | "yororis"
   | "jarvis"
   | "caustics"
   | "lattice"
@@ -31,14 +30,6 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
     title: "Orazaka Neural Flow — Krizaka Motion",
     description: "Multi-direction packet convergence & foundational neural pipeline",
     aliases: ["orazaka", "flow", "engine", "neural-flow"],
-  },
-  yororis: {
-    id: "yororis",
-    path: "yororis",
-    label: "Yororis Voice",
-    title: "Yororis Acoustic Presence — Krizaka Motion",
-    description: "3D acoustic sphere, real-time microphone FFT & harmonic voice frequencies",
-    aliases: ["yororis", "voice", "audio", "orb", "presence"],
   },
   jarvis: {
     id: "jarvis",
@@ -113,7 +104,6 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
 
 export const TAB_ORDER: TabId[] = [
   "orazaka",
-  "yororis",
   "jarvis",
   "caustics",
   "lattice",

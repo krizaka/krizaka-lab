@@ -1,7 +1,8 @@
+import { core } from "./support/core.mjs";
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 
-import { PRODUCT_BRANDS, JARVIS_THEMES, CAUSTIC_PALETTES } from "../dist/core/index.js";
+const { PRODUCT_BRANDS, JARVIS_THEMES, CAUSTIC_PALETTES } = core;
 
 describe("Brand Color Palettes & Tokens", () => {
   it("defines all seven Krizaka product brands", () => {

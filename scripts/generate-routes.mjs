@@ -17,7 +17,6 @@ const SITE = "https://motion.krizaka.com";
 
 const ROUTES = [
   "orazaka",
-  "yororis",
   "jarvis",
   "liquid-glass",
   "neural-lattice",

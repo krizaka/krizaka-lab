@@ -1,8 +1,8 @@
+import { core } from "./support/core.mjs";
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 
-// Dynamic import from built dist/core
-import { SpringSolver, SpringVector2D } from "../dist/core/index.js";
+const { SpringSolver, SpringVector2D } = core;
 
 describe("Second-Order Spring Physics Solver", () => {
   it("initializes with initial value and zero velocity", () => {

@@ -10,7 +10,6 @@ const base = arg("--base", "http://localhost:4173").replace(/\/$/, "");
 const only = arg("--only", "").split(",").filter(Boolean);
 const PAGES = [
   { path: "/orazaka/", kind: "flow" },
-  { path: "/yororis/", kind: "canvas" },
   { path: "/jarvis/", kind: "canvas" },
   { path: "/liquid-glass/", kind: "canvas" },
   { path: "/neural-lattice/", kind: "canvas" },

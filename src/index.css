@@ -68,11 +68,6 @@ body { margin: 0; background: var(--kz-surface-0); color: var(--kz-text-primary)
 .lab-g-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
 .lab-g-tabs { width: 100%; max-width: 380px; }
 .lab-g-chat { align-items: stretch; }
-.lab-g-presence { position: relative; display: grid; place-items: center; width: 240px; height: 240px; margin-bottom: 24px; }
-.lab-g-orb { position: absolute; inset: 0; }
-.lab-g-orb > * { position: absolute; inset: 0; }
-.lab-g-avatar { position: relative; }
-.lab-g-caption { position: absolute; bottom: -26px; font-size: 13px; color: var(--kz-text-secondary); }
 .lab-g-flow { width: 100%; max-width: 420px; --kz-flow-mark: 2.25rem; --kz-flow-hub: 3.5rem; }
 .lab-g-layer { position: absolute; inset: 0; display: grid; place-items: center; }
 .lab-g-back { position: absolute; inset: 0; }

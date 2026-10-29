@@ -22,7 +22,6 @@ export const ITEMS: ItemData[] = [
   { id: "glow-card", group: "emphasis", declared: ["glow-card"], props: ["alive"] },
   { id: "badge", group: "emphasis", declared: ["badge", "chip"], props: ["tone", "dot", "pulse", "type=\"single\"", "required", "onValueChange"] },
   { id: "tabs", group: "emphasis", declared: ["tabs"], props: ["defaultValue", "Tabs.Trigger value"] },
-  { id: "avatar-presence", group: "emphasis", declared: ["avatar", "YororisPresenceOrb"], props: ["state=\"speaking\"", "interactive", "enableAudio", "size", "fallback"] },
   { id: "stat", group: "data", declared: ["stat", "number-ticker"], props: ["label", "value", "trend", "trendLabel"] },
   { id: "data-table", group: "data", declared: ["data-table"], props: ["rows", "columns", "selectable", "defaultSelected", "density"] },
   { id: "engine-flow", group: "data", declared: ["engine-flow"], props: ["hub", "nodes", "compactLayout", "label"] },

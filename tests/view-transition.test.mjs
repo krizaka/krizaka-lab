@@ -1,12 +1,7 @@
+import { core } from "./support/core.mjs";
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import {
-  canViewTransition,
-  runViewTransition,
-  crossFallback,
-  transitionPage,
-  sharedElementStyle,
-} from "../dist/core/index.js";
+const { canViewTransition, runViewTransition, crossFallback, transitionPage, sharedElementStyle, } = core;
 
 const finishedOk = () => ({ finished: Promise.resolve() });
 

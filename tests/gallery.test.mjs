@@ -28,7 +28,7 @@ test("the printed code only rewrites the lab's relative view import", () => {
 });
 
 test("the guard passes, and fails when a listed prop is not in the example", () => {
-  assert.equal(ITEMS.length, 17);
+  assert.equal(ITEMS.length, 16);
   execFileSync("node", ["scripts/check-gallery.mjs"], { stdio: "pipe" });
   const file = new URL("../src/lab/examples/tabs.tsx", import.meta.url);
   const original = readFileSync(file, "utf8");
