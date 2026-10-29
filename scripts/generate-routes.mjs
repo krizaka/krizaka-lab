@@ -13,7 +13,7 @@ if (!fs.existsSync(DIST_DEMO)) {
 }
 
 const rootHtml = fs.readFileSync(path.join(DIST_DEMO, "index.html"), "utf8");
-const SITE = "https://motion.krizaka.com";
+const SITE = "https://lab.krizaka.com";
 
 const ROUTES = [
   "orazaka",
@@ -82,7 +82,7 @@ const spa404Html = `<!DOCTYPE html>
     <meta charset="utf-8">
     <title>Redirecting...</title>
     <script>
-      // Single Page Apps for GitHub Pages; the lab is served from the root of motion.krizaka.com (no repo subpath)
+      // Single Page Apps for GitHub Pages; the lab is served from the root of lab.krizaka.com (no repo subpath)
       // MIT License https://github.com/rafgraph/spa-github-pages
       var pathSegmentsToKeep = 0;
       var l = window.location;

@@ -28,7 +28,7 @@ export function Home() {
   }));
   return (
     <>
-      <PageHero eyebrow="Krizaka Motion" title="Motion for Krizaka UI, by task." lead="Each guide answers one thing you want to animate, on a real app screen made of @krizaka/ui: the screen plays it, the settings change it, the code follows, every option is in the table.">
+      <PageHero eyebrow="Krizaka Lab" title="Motion for Krizaka UI, by task." lead="Each guide answers one thing you want to animate, on a real app screen made of @krizaka/ui: the screen plays it, the settings change it, the code follows, every option is in the table. Krizaka Lab is where the family tries things (UI, motion, Java, AI, data): an entry is an experiment with a status, and nothing here is a product.">
         <CodeBlock code={SETUP} language="tsx" file="App.tsx" copyLabel={t.demo.copy} copiedLabel={t.demo.copied} />
       </PageHero>
 
@@ -102,7 +102,7 @@ export function Experiments() {
   const ids = TAB_ORDER.filter((id): id is TabId => ["orazaka", "jarvis", "caustics", "lattice"].includes(id));
   return (
     <>
-      <PageHero eyebrow="Krizaka Motion" title="Experiments" lead="Canvas studies: what the motion system can draw before a piece of it moves into Krizaka UI as SVG and CSS. Krizaka sites use no canvas." back={{ href: href("home"), label: "Guides" }} linkAs={(props: React.ComponentProps<"a">) => <a {...props} onClick={go("home")} />} />
+      <PageHero eyebrow="Krizaka Lab" title="Experiments" lead="Canvas studies: what the motion system can draw before a piece of it moves into Krizaka UI as SVG and CSS. Krizaka sites use no canvas." back={{ href: href("home"), label: "Guides" }} linkAs={(props: React.ComponentProps<"a">) => <a {...props} onClick={go("home")} />} />
       <Section id="studies" spacing="sm">
         <CardGrid as="ul" min={300} columns={3}>
           {ids.map((id) => {
