@@ -40,3 +40,9 @@ test("the lab is not a package (ADR-008 §6): no exports, no library build, noth
 test("yororis-synthesis is gone with the paused product", () => {
   assert.equal(existsSync(new URL("../src/core/yororis-synthesis.ts", import.meta.url)), false);
 });
+
+test("no check script or route list names the removed /yororis/ page (a page that is gone cannot be opened by the checks)", () => {
+  for (const file of ["check-experiments", "check-overflow", "generate-routes"]) {
+    assert.ok(!readFileSync(new URL(`../scripts/${file}.mjs`, import.meta.url), "utf8").includes("yororis"), `${file}.mjs still names yororis`);
+  }
+});
