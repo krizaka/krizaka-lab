@@ -3,6 +3,10 @@
 # the performance budget, then a real browser (reduced motion OFF) on the built demo.
 set -euo pipefail
 
+echo "::group::Unit tests (they read the built demo)"
+pnpm test
+echo "::endgroup::"
+
 echo "::group::Catalogue, gallery, budget"
 # The lab is English only: its catalogue is complete (no empty string, valid placeholders and markup, @krizaka/i18n).
 pnpm exec krizaka-i18n check messages

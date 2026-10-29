@@ -24,6 +24,8 @@ jobs:
       package-manager: pnpm
       lint-script: ""
       typecheck-script: typecheck
+      # The unit tests read the built demo (dist-demo): they run in after-build, once the build exists.
+      test-script: ""
       playwright: chromium
       after-build: scripts/ci-after-build.sh
       timeout-minutes: 30
