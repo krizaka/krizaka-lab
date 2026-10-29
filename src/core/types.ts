@@ -6,11 +6,7 @@
 export type ProductId =
   | "orazaka"
   | "yomizaka"
-  | "orochia"
-  | "kachizaka"
-  | "akinaza"
-  | "yasakia"
-  | "yororis";
+  | "akinaza";
 
 export type IconType =
   | "doc"
@@ -84,10 +80,10 @@ export interface ProductSourceNode {
   activeRequests: number;
 }
 
-export type YororisState = "idle" | "listening" | "speaking" | "resting" | "reflecting";
+export type VoiceState = "idle" | "listening" | "speaking" | "resting" | "reflecting";
 
-export interface YororisConfig {
-  state: YororisState;
+export interface VoiceConfig {
+  state: VoiceState;
   intensity: number;
   audioFrequencies?: Float32Array | number[];
   colorBase: string;
@@ -95,7 +91,7 @@ export interface YororisConfig {
   glowIntensity: number;
 }
 
-export type JarvisTheme = "cyan" | "orazaka" | "yororis" | "crimson" | "gold";
+export type JarvisTheme = "cyan" | "orazaka" | "sage" | "crimson" | "gold";
 
 export interface JarvisConfig {
   theme: JarvisTheme;

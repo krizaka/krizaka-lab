@@ -5,15 +5,11 @@ import assert from "node:assert/strict";
 const { PRODUCT_BRANDS, JARVIS_THEMES, CAUSTIC_PALETTES } = core;
 
 describe("Brand Color Palettes & Tokens", () => {
-  it("defines all seven Krizaka product brands", () => {
+  it("defines the Krizaka product brands", () => {
     const requiredBrands = [
       "orazaka",
       "yomizaka",
-      "orochia",
-      "kachizaka",
       "akinaza",
-      "yasakia",
-      "yororis",
     ];
 
     for (const id of requiredBrands) {
@@ -28,13 +24,13 @@ describe("Brand Color Palettes & Tokens", () => {
     }
   });
 
-  it("verifies Orazaka uses brand orange and Yororis uses sage", () => {
+  it("verifies Orazaka uses brand orange and the sage theme uses sage", () => {
     assert.equal(PRODUCT_BRANDS.orazaka.primary.toLowerCase(), "#f97316");
-    assert.equal(PRODUCT_BRANDS.yororis.primary.toLowerCase(), "#7c9082");
+    assert.equal(JARVIS_THEMES.sage.primary.toLowerCase(), "#7c9082");
   });
 
   it("defines all Jarvis HUD themes with valid contrasts", () => {
-    const themes = ["cyan", "orazaka", "yororis", "crimson", "gold"];
+    const themes = ["cyan", "orazaka", "sage", "crimson", "gold"];
     for (const t of themes) {
       const theme = JARVIS_THEMES[t];
       assert.ok(theme, `Theme ${t} must exist`);
@@ -45,7 +41,7 @@ describe("Brand Color Palettes & Tokens", () => {
   });
 
   it("defines all Caustic mineral palettes", () => {
-    const palettes = ["obsidian", "prussian", "yororis", "amber"];
+    const palettes = ["obsidian", "prussian", "sage", "amber"];
     for (const p of palettes) {
       const pal = CAUSTIC_PALETTES[p];
       assert.ok(pal, `Caustic palette ${p} must exist`);

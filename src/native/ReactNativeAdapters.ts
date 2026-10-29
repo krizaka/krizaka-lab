@@ -3,8 +3,6 @@
  *
  * Provides drop-in adapters and bridge guidelines for:
  * - orazaka-mobile
- * - yororis-mobile
- * - orochia-mobile
  *
  * Supported React Native Rendering Backends:
  * 1. React Native Skia (@shopify/react-native-skia) — Native C++ 120 FPS
@@ -16,7 +14,7 @@ export interface NativeMotionProps {
   playing?: boolean;
   width?: number;
   height?: number;
-  mode?: "engine" | "yororis" | "jarvis";
+  mode?: "engine" | "voice" | "jarvis";
   theme?: string;
   style?: Record<string, unknown>;
 }
@@ -27,7 +25,7 @@ export interface NativeMotionProps {
  * without requiring any native compilation or CocoaPods linking.
  */
 export function generateNativeWebViewHTML(
-  mode: "engine" | "yororis" | "jarvis",
+  mode: "engine" | "voice" | "jarvis",
   options: Record<string, unknown> = {}
 ): string {
   const jsonOptions = JSON.stringify(options);
@@ -69,7 +67,7 @@ export function generateNativeWebViewHTML(
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
       // Render mode
-      if (mode === "yororis") {
+      if (mode === "voice") {
         const cx = window.innerWidth / 2;
         const cy = window.innerHeight / 2;
         const r = Math.min(cx, cy) * 0.45;

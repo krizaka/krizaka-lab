@@ -121,11 +121,8 @@
     "engine": "Orazaka",
     "engineCaption": "the engine",
     "uses": {
-      "orochia": "Search and recommendations.",
       "yomizaka": "Document checks, each a traced run.",
-      "kachizaka": "Live match feeds.",
-      "akinaza": "The tax assistant (planned).",
-      "yasakia": "The matching agent (planned)."
+      "akinaza": "The tax assistant (planned)."
     },
     "planned": "planned",
     "canvasTitle": "The canvas experiment",
@@ -146,7 +143,7 @@
     "hudThemes": {
       "cyan": "Cyan",
       "orazaka": "Orange",
-      "yororis": "Sage",
+      "sage": "Sage",
       "crimson": "Crimson",
       "gold": "Gold"
     },
@@ -168,7 +165,7 @@
     "palettes": {
       "obsidian": "Obsidian",
       "prussian": "Prussian",
-      "yororis": "Sage",
+      "sage": "Sage",
       "amber": "Amber"
     },
     "refraction": "Refraction",

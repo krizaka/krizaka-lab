@@ -119,7 +119,7 @@ export function resolveTabFromLocation(loc: {
   search?: string;
   hash?: string;
 }): TabId {
-  // 1. Check query parameter: ?tab=yororis
+  // 1. Check query parameter: ?tab=voice
   if (loc.search) {
     const rawSearch = loc.search.replace(/^\?/, "");
     const params = new URLSearchParams(rawSearch);
@@ -132,7 +132,7 @@ export function resolveTabFromLocation(loc: {
       }
     }
 
-    // 1b. Check GitHub Pages 404 SPA format: ?/yororis or ?/krizaka-lab/yororis
+    // 1b. Check GitHub Pages 404 SPA format: ?/voice or ?/krizaka-lab/voice
     const firstKey = Array.from(params.keys())[0];
     if (firstKey && firstKey.startsWith("/")) {
       const parts = firstKey.split("/").filter(Boolean);
@@ -147,7 +147,7 @@ export function resolveTabFromLocation(loc: {
     }
   }
 
-  // 2. Check hash: #/yororis or #yororis
+  // 2. Check hash: #/voice or #voice
   if (loc.hash) {
     const rawHash = loc.hash.replace(/^#[/]?/, "").trim().toLowerCase();
     if (rawHash) {
@@ -161,7 +161,7 @@ export function resolveTabFromLocation(loc: {
     }
   }
 
-  // 3. Check pathname: /krizaka-lab/yororis or /yororis
+  // 3. Check pathname: /krizaka-lab/voice or /voice
   if (loc.pathname) {
     const segments = loc.pathname.split("/").filter(Boolean);
     const candidate = segments[segments.length - 1]?.toLowerCase();

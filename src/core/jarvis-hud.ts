@@ -96,7 +96,7 @@ export class JarvisHUDRenderer {
     if (mode === "overdrive") {
       this.options.overdrive = true;
     } else if (mode === "stealth") {
-      this.theme = "yororis";
+      this.theme = "sage";
       this.options.overdrive = false;
     } else {
       this.options.overdrive = false;
