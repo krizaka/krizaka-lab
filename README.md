@@ -7,7 +7,7 @@
 
 # krizaka-motion
 
-**The Krizaka motion lab.** Experimental generative visuals — the Orazaka neural flow, a voice presence, a holographic
+**The Krizaka motion lab.** Experimental generative visuals — the Orazaka neural flow, a holographic
 HUD, liquid glass, a neural lattice — played live, each one a shareable address.
 
 **A lab, not a package**: nothing here is published on npm. What proves itself moves into
@@ -54,7 +54,7 @@ The old demo addresses (`/data-motion`, `/figures`,
 
 **Also**: [`/krizaka-ui`](https://motion.krizaka.com/krizaka-ui/) (components with their motion),
 `/journey`, `/overlays`, `/people`, and [`/experiments`](https://motion.krizaka.com/experiments/) — the
-canvas studies (engine flow, voice presence, HUD, liquid glass, neural lattice).
+canvas studies (engine flow, HUD, liquid glass, neural lattice).
 
 ## Lab, then Krizaka UI
 
@@ -70,7 +70,7 @@ canvas studies (engine flow, voice presence, HUD, liquid glass, neural lattice).
 
 ```text
 src/core/      the renderers (canvas) and their maths — springs, Bézier lengths, optics, routes
-src/react/     the React views over them (OrazakaEngineFlow, YororisPresenceOrb, JarvisHUD, LiquidCausticsView, NeuralLatticeView)
+src/react/     the React views over them (OrazakaEngineFlow, JarvisHUD, LiquidCausticsView, NeuralLatticeView)
 src/lab/       the shell on @krizaka/ui: home, demo pages (demos.tsx), the gallery (gallery.tsx), English-only i18n binding
 messages/      en.json (the reference) and fr.json
 scripts/       generate-routes.mjs (a folder per route + 404.html for Pages), check-overflow.mjs (360–1440 px)
@@ -86,7 +86,7 @@ docs/          AUDIT-2026-10-20.md
 pnpm install          # pnpm 10 (packageManager)
 pnpm dev              # the lab on http://localhost:5173
 pnpm test             # builds the library, then the unit tests (node --test)
-pnpm run build        # library + demo (dist-demo/, what Pages serves)
+pnpm run build        # the lab (dist-demo/, what Pages serves); it is not a package, nothing is published
 pnpm run check:budget   # gzip ceiling per entry (scripts/budget.json), no requestAnimationFrame outside src/core and src/native
 pnpm exec krizaka-i18n check messages
 node scripts/check-overflow.mjs --base http://localhost:4173   # after `pnpm exec vite preview --outDir dist-demo`

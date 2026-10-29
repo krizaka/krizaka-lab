@@ -1,7 +1,8 @@
+import { core } from "./support/core.mjs";
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
-import { getCanonicalUrl } from "../dist/core/index.js";
+const { getCanonicalUrl } = core;
 
 const read = (p) => fs.readFileSync(new URL(`../${p}`, import.meta.url), "utf8");
 

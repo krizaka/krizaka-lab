@@ -2,7 +2,7 @@
   "name": "@krizaka/motion",
   "version": "1.0.0",
   "private": true,
-  "description": "The Krizaka motion lab: experimental generative visuals (canvas demos). Not published: its generic flow ships as @krizaka/ui/engine-flow.",
+  "description": "The Krizaka motion lab: experimental generative visuals and the guides of @krizaka/ui's motion. Not a package: nothing is published or imported from it.",
   "author": "Krizaka <contact@krizaka.com>",
   "license": "Apache-2.0",
   "repository": {
@@ -14,42 +14,9 @@
   },
   "homepage": "https://motion.krizaka.com/",
   "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    },
-    "./react": {
-      "types": "./dist/react/index.d.ts",
-      "import": "./dist/react/index.js",
-      "require": "./dist/react/index.cjs"
-    },
-    "./core": {
-      "types": "./dist/core/index.d.ts",
-      "import": "./dist/core/index.js",
-      "require": "./dist/core/index.cjs"
-    },
-    "./native": {
-      "types": "./dist/native/ReactNativeAdapters.d.ts",
-      "import": "./dist/native/index.js",
-      "require": "./dist/native/index.cjs"
-    }
-  },
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE",
-    "NOTICE"
-  ],
   "scripts": {
     "dev": "vite",
-    "build": "pnpm run build:lib && pnpm run build:types && pnpm run build:demo",
-    "build:lib": "vite build --config vite.config.lib.ts",
-    "build:types": "tsc -p tsconfig.build.json",
+    "build": "pnpm run build:demo",
     "build:demo": "vite build --outDir dist-demo && node scripts/generate-routes.mjs",
     "preview": "vite preview --outDir dist-demo",
     "test": "node --test tests/*.test.mjs",
@@ -67,10 +34,6 @@
     "@krizaka/ui": "^3.43.0",
     "maplibre-gl": "6.11.2",
     "pmtiles": "^4.5.0"
-  },
-  "peerDependencies": {
-    "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.0",

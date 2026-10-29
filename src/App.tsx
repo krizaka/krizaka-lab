@@ -66,7 +66,7 @@ function Shell() {
     { id: "kz-ui", label: t.bar.gallery },
     { id: "experiments", label: "Experiments" },
   ];
-  const section: LabPage = isGuide(page) || isScenario(page) ? "home" : page === "experiments" || ["orazaka", "yororis", "jarvis", "caustics", "lattice"].includes(page) ? "experiments" : page;
+  const section: LabPage = isGuide(page) || isScenario(page) ? "home" : page === "experiments" || ["orazaka", "jarvis", "caustics", "lattice"].includes(page) ? "experiments" : page;
 
   return (
     <LabContext.Provider value={lab}>

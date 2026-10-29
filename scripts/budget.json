@@ -1,10 +1,7 @@
 {
-  "_": "Performance budget (ADR-001 §6): gzip bytes of each published entry with every chunk it imports. Ceilings, not targets: a raise needs a reason in the PR.",
-  "entries": {
-    "react/index.js": 19500,
-    "index.js": 24000,
-    "core/index.js": 19500,
-    "native/index.js": 1500
-  },
-  "rafAllowed": ["src/core/", "src/native/"]
+  "_": "Performance guard (ADR-001 §6): no permanent requestAnimationFrame outside the experiments. The lab is not a package, so there is no size ceiling to hold.",
+  "rafAllowed": [
+    "src/core/",
+    "src/native/"
+  ]
 }

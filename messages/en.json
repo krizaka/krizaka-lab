@@ -125,8 +125,7 @@
       "yomizaka": "Document checks, each a traced run.",
       "kachizaka": "Live match feeds.",
       "akinaza": "The tax assistant (planned).",
-      "yasakia": "The matching agent (planned).",
-      "yororis": "The wellbeing pack (planned)."
+      "yasakia": "The matching agent (planned)."
     },
     "planned": "planned",
     "canvasTitle": "The canvas experiment",
@@ -143,22 +142,6 @@
       "outbound": "Outbound",
       "bidirectional": "Both ways"
     },
-    "state": "State",
-    "states": {
-      "idle": "Idle",
-      "listening": "Listening",
-      "speaking": "Speaking",
-      "resting": "At rest",
-      "reflecting": "Reflecting"
-    },
-    "tone": "Voice tone",
-    "tones": {
-      "lea": "Léa",
-      "theta": "Theta",
-      "solfeggio": "Solfeggio",
-      "aurora": "Aurora"
-    },
-    "intensity": "Intensity",
     "hudTheme": "Colour",
     "hudThemes": {
       "cyan": "Cyan",
@@ -218,13 +201,6 @@
       "title": "One engine, the products it powers.",
       "lead": "Requests flow in, results come back — the flow krizaka.com's home draws, with its settings.",
       "card": "Radial, top to bottom or left to right; in, out or both."
-    },
-    "yororis": {
-      "name": "Voice presence",
-      "eyebrow": "Voice study",
-      "title": "A presence that rests, listens and speaks.",
-      "lead": "An acoustic sphere that follows a voice's frequencies — procedural, or your microphone if you allow it.",
-      "card": "At rest, listening, speaking: a sphere that follows the voice."
     },
     "jarvis": {
       "name": "Holographic HUD",
@@ -359,11 +335,6 @@
         "title": "Tabs",
         "what": "Views of one subject, the light gliding under the chosen one.",
         "reduced": "The indicator moves at once."
-      },
-      "avatar-presence": {
-        "title": "Avatar with a presence",
-        "what": "Someone speaking: the lab's voice presence glowing behind an avatar.",
-        "reduced": "A still sphere behind the avatar."
       },
       "stat": {
         "title": "Stat with NumberTicker",
