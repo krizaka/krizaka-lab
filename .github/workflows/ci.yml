@@ -22,7 +22,7 @@ jobs:
       contents: read
     with:
       package-manager: pnpm
-      lint-script: ""
+      lint-script: lint
       typecheck-script: typecheck
       # The unit tests read the built demo (dist-demo): they run in after-build, once the build exists.
       test-script: ""
