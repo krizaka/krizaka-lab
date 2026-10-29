@@ -11,8 +11,8 @@ describe("lab.krizaka.com", () => {
     assert.equal(read("public/CNAME").trim(), "lab.krizaka.com");
   });
   it("declares its canonical address and a sitemap", () => {
-    assert.match(read("index.html"), /rel="canonical" href="https:\/\/motion\.krizaka\.com\/"/);
-    assert.match(read("public/robots.txt"), /Sitemap: https:\/\/motion\.krizaka\.com\/sitemap\.xml/);
+    assert.match(read("index.html"), /rel="canonical" href="https:\/\/lab.krizaka.com\/"/);
+    assert.match(read("public/robots.txt"), /Sitemap: https:\/\/lab.krizaka.com\/sitemap\.xml/);
     assert.match(read("scripts/generate-routes.mjs"), /sitemap\.xml/);
   });
   it("gives generated routes their own canonical and Open Graph URLs", () => {

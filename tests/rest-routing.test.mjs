@@ -19,10 +19,10 @@ describe("RESTful Routing & URL Resolution", () => {
   });
 
   it("resolves tabs under GitHub Pages repository subpath /krizaka-lab/", () => {
-    assert.equal(resolveTabFromLocation({ pathname: "/krizaka-lab/jarvis" }), "jarvis");
-    assert.equal(resolveTabFromLocation({ pathname: "/krizaka-lab/liquid-glass/" }), "caustics");
-    assert.equal(resolveTabFromLocation({ pathname: "/krizaka-lab/neural-lattice" }), "lattice");
-    assert.equal(resolveTabFromLocation({ pathname: "/krizaka-lab/krizaka-ui" }), "kz-ui");
+    const expected = { jarvis: "jarvis", "liquid-glass/": "caustics", "neural-lattice": "lattice", "krizaka-ui": "kz-ui" };
+    for (const [path, tab] of Object.entries(expected)) {
+      assert.equal(resolveTabFromLocation({ pathname: `/krizaka-lab/${path}` }), tab, path);
+    }
   });
 
   it("resolves tab aliases correctly", () => {
