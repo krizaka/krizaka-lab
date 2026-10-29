@@ -22,6 +22,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
       # pnpm's version comes from package.json "packageManager"; its settings from pnpm-workspace.yaml (never .npmrc:
       # `only-built-dependencies=esbuild` there is a string, and the action's installer crashed on it — the Pages demo
       # never deployed).
