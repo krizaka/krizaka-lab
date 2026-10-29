@@ -10,3 +10,4 @@ promoted into a real package by an ADR; nothing outside the lab imports from her
 | :--- | :--- | :--- |
 | [`parked-marks/`](parked-marks/) | dropped | the marks of the products that left the organisation |
 | [`iso/`](iso/) | idea | the isometric hero kit taken out of `@krizaka/ui` (ADR-008), parked, decide later |
+| [`meta-row/`](meta-row/) | idea | the quiet line of facts taken out of `@krizaka/ui` (ADR-008), parked, decide later |
