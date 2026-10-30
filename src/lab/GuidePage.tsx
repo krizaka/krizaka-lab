@@ -14,6 +14,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import type { LabPage } from "../core/router";
 import { useLab } from "./context";
+import { HomeLink } from "./home-link";
 import { type ConfigRow, type GuideId, guideById, guidesOf } from "./guides";
 import { type Knob, type Values, defaults, readValues, writeValues } from "./playground-lib";
 import { SCENARIOS } from "./scenarios";
@@ -89,7 +90,7 @@ export function GuidePage({ id }: { id: GuideId }) {
         title={g.title}
         lead={g.lead}
         back={{ href: href("home"), label: "All guides" }}
-        linkAs={(props: React.ComponentProps<"a">) => <a {...props} onClick={go("home")} />}
+        linkAs={HomeLink}
       >
         <p className="lab-uses">
           Uses{" "}
@@ -199,7 +200,7 @@ export function ScenarioPage({ id }: { id: keyof typeof SCENARIOS }) {
         title={s.title}
         lead={s.lead}
         back={{ href: href("home"), label: "All scenarios" }}
-        linkAs={(props: React.ComponentProps<"a">) => <a {...props} onClick={go("home")} />}
+        linkAs={HomeLink}
       />
       <Section id="screen" spacing="sm">
         <figure className="lab-scenario-screen">

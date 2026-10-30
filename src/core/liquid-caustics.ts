@@ -287,6 +287,24 @@ export class LiquidCausticsRenderer {
     this.ripples = alive;
   }
 
+  /** The push the ripples give a grid point: along the line from each ripple, shaped by its wavefront. */
+  private rippleDisplacement(bx: number, by: number): [number, number] {
+    let x = 0;
+    let y = 0;
+    for (const rip of this.ripples) {
+      const dx = bx - rip.x;
+      const dy = by - rip.y;
+      const deltaDist = Math.sqrt(dx * dx + dy * dy) - rip.radius;
+      if (Math.abs(deltaDist) < 45) {
+        const waveProfile = Math.sin((deltaDist / 45) * Math.PI) * rip.strength * 18;
+        const angle = Math.atan2(dy, dx);
+        x += Math.cos(angle) * waveProfile;
+        y += Math.sin(angle) * waveProfile;
+      }
+    }
+    return [x, y];
+  }
+
   private drawChromaticCaustics(ctx: CanvasRenderingContext2D, palette: (typeof CAUSTIC_PALETTES)["obsidian"]): void {
     const gridCountX = this.options.gridDensity || 32;
     const stepX = this.width / gridCountX;
@@ -317,21 +335,7 @@ export class LiquidCausticsRenderer {
           const wave1 = Math.sin(bx * 0.016 + this.time * 1.5) * Math.cos(by * 0.016 + this.time * 1.2) * 9;
           const wave2 = Math.sin((bx + by) * 0.03 - this.time * 2.2) * 5;
 
-          let rippleDispX = 0;
-          let rippleDispY = 0;
-          for (const rip of this.ripples) {
-            const dx = bx - rip.x;
-            const dy = by - rip.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            const deltaDist = dist - rip.radius;
-
-            if (Math.abs(deltaDist) < 45) {
-              const waveProfile = Math.sin((deltaDist / 45) * Math.PI) * rip.strength * 18;
-              const angle = Math.atan2(dy, dx);
-              rippleDispX += Math.cos(angle) * waveProfile;
-              rippleDispY += Math.sin(angle) * waveProfile;
-            }
-          }
+          const [rippleDispX, rippleDispY] = this.rippleDisplacement(bx, by);
 
           const dispX = bx + (wave1 + rippleDispX) * (this.options.refractionStrength || 1) + ch.offset;
           const dispY = by + (wave2 + rippleDispY) * (this.options.refractionStrength || 1);
