@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useRef,
-  useImperativeHandle,
-  forwardRef,
-  type CSSProperties,
-} from "react";
+import { useEffect, useRef, useImperativeHandle, forwardRef, type CSSProperties } from "react";
 import {
   LiquidCausticsRenderer,
   type CausticsOptions,
@@ -45,7 +39,7 @@ export const LiquidCausticsView = forwardRef<LiquidCausticsViewHandle, LiquidCau
       className = "",
       style,
     },
-    ref
+    ref,
   ) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const rendererRef = useRef<LiquidCausticsRenderer | null>(null);
@@ -126,5 +120,5 @@ export const LiquidCausticsView = forwardRef<LiquidCausticsViewHandle, LiquidCau
         />
       </div>
     );
-  }
+  },
 );

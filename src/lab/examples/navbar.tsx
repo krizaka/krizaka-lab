@@ -1,7 +1,11 @@
 import { NavBar } from "@krizaka/ui/nav-bar";
 import { useState } from "react";
 
-const pages = [["home", "Home"], ["demos", "Demos"], ["about", "About"]] as const;
+const pages = [
+  ["home", "Home"],
+  ["demos", "Demos"],
+  ["about", "About"],
+] as const;
 
 export function Example() {
   const [at, setAt] = useState("home");
@@ -10,7 +14,9 @@ export function Example() {
       <NavBar.Items>
         {pages.map(([key, label]) => (
           <NavBar.Link key={key} active={at === key} asChild>
-            <button type="button" onClick={() => setAt(key)}>{label}</button>
+            <button type="button" onClick={() => setAt(key)}>
+              {label}
+            </button>
           </NavBar.Link>
         ))}
       </NavBar.Items>

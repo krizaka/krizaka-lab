@@ -24,5 +24,6 @@ test("every study handles prefers-reduced-motion and says its status honestly", 
 });
 
 test("native web tech only: no animation library, no canvas, no requestAnimationFrame", () => {
-  for (const { id } of STUDIES) assert.doesNotMatch(read(`${id}.tsx`), /requestAnimationFrame|<canvas|framer-motion|gsap/, id);
+  for (const { id } of STUDIES)
+    assert.doesNotMatch(read(`${id}.tsx`), /requestAnimationFrame|<canvas|framer-motion|gsap/, id);
 });

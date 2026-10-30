@@ -12,7 +12,13 @@ import { useInView, useReducedMotion } from "./hooks";
 import { type Knob, Playground } from "./playground";
 
 export const DIALOG_KNOBS: readonly Knob[] = [
-  { kind: "choice", key: "placement", label: "placement", options: ["center", "bottom", "right", "left"], value: "bottom" },
+  {
+    kind: "choice",
+    key: "placement",
+    label: "placement",
+    options: ["center", "bottom", "right", "left"],
+    value: "bottom",
+  },
   { kind: "choice", key: "size", label: "size", options: ["sm", "md", "lg"], value: "md" },
 ];
 
@@ -21,12 +27,20 @@ function DialogDemo({ v }: { v: Record<string, string | number | boolean> }) {
     <div className="lab-overlay">
       <Dialog.Root>
         <Dialog.Trigger asChild>
-          <Button variant="primary">Open the {v.placement === "bottom" ? "sheet" : v.placement === "center" ? "dialog" : "drawer"}</Button>
+          <Button variant="primary">
+            Open the {v.placement === "bottom" ? "sheet" : v.placement === "center" ? "dialog" : "drawer"}
+          </Button>
         </Dialog.Trigger>
-        <Dialog.Content placement={v.placement as "center" | "bottom" | "right" | "left"} size={v.size as "sm" | "md" | "lg"} closeLabel="Close">
+        <Dialog.Content
+          placement={v.placement as "center" | "bottom" | "right" | "left"}
+          size={v.size as "sm" | "md" | "lg"}
+          closeLabel="Close"
+        >
           <Dialog.Header>
             <Dialog.Title>Publish “Night walk”?</Dialog.Title>
-            <Dialog.Description>It becomes visible to your supporters. You can unpublish it at any time.</Dialog.Description>
+            <Dialog.Description>
+              It becomes visible to your supporters. You can unpublish it at any time.
+            </Dialog.Description>
           </Dialog.Header>
           <Dialog.Footer>
             <Dialog.Close asChild>
@@ -75,7 +89,11 @@ function IndicatorDemo({ v }: { v: Record<string, string | number | boolean> }) 
           </NavBar.Items>
         </NavBar.Root>
       ) : (
-        <Tabs.Root value={ITEMS[at]} onValueChange={(name) => setAt(ITEMS.indexOf(name as (typeof ITEMS)[number]))} className="lab-indicator-nav">
+        <Tabs.Root
+          value={ITEMS[at]}
+          onValueChange={(name) => setAt(ITEMS.indexOf(name as (typeof ITEMS)[number]))}
+          className="lab-indicator-nav"
+        >
           <Tabs.List>
             {ITEMS.map((name) => (
               <Tabs.Trigger key={name} value={name}>
@@ -90,7 +108,9 @@ function IndicatorDemo({ v }: { v: Record<string, string | number | boolean> }) 
           ))}
         </Tabs.Root>
       )}
-      <p className="lab-sublead" data-testid="active">Active: {ITEMS[at]}</p>
+      <p className="lab-sublead" data-testid="active">
+        Active: {ITEMS[at]}
+      </p>
     </div>
   );
 }
@@ -116,7 +136,7 @@ export function OverlaysStage() {
         skip={["component", "cycle", "every"]}
         render={(v) => <IndicatorDemo v={v} />}
       >
-        {'  active={at === i}'}
+        {"  active={at === i}"}
       </Playground>
     </>
   );

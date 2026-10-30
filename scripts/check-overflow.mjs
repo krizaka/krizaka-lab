@@ -4,7 +4,29 @@
      node scripts/check-overflow.mjs --base http://localhost:4173 */
 import { chromium } from "playwright";
 
-export const PATHS = ["/", "/orazaka/", "/jarvis/", "/liquid-glass/", "/neural-lattice/", "/krizaka-ui/", "/journey/", "/overlays/", "/people/", "/specs/", "/experiments/", "/list-arrival/", "/live-number/", "/page-transition/", "/button-feedback/", "/streaming-answer/", "/route-draw/", "/dashboard/", "/chat/", "/checkout/", "/delivery/"];
+export const PATHS = [
+  "/",
+  "/orazaka/",
+  "/jarvis/",
+  "/liquid-glass/",
+  "/neural-lattice/",
+  "/krizaka-ui/",
+  "/journey/",
+  "/overlays/",
+  "/people/",
+  "/specs/",
+  "/experiments/",
+  "/list-arrival/",
+  "/live-number/",
+  "/page-transition/",
+  "/button-feedback/",
+  "/streaming-answer/",
+  "/route-draw/",
+  "/dashboard/",
+  "/chat/",
+  "/checkout/",
+  "/delivery/",
+];
 export const WIDTHS = [360, 768, 1024, 1440];
 
 const i = process.argv.indexOf("--base");
@@ -14,7 +36,11 @@ const problems = [];
 for (const theme of ["dark", "light"])
   for (const width of WIDTHS)
     for (const path of PATHS) {
-      const context = await browser.newContext({ viewport: { width, height: 900 }, colorScheme: theme, reducedMotion: "reduce" });
+      const context = await browser.newContext({
+        viewport: { width, height: 900 },
+        colorScheme: theme,
+        reducedMotion: "reduce",
+      });
       await context.addInitScript((t) => localStorage.setItem("kz-theme", t), theme);
       const page = await context.newPage();
       await page.goto(base + path, { waitUntil: "networkidle" });

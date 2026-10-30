@@ -3,28 +3,11 @@
  * Shared types for generative physics, canvas rendering, and synthesis engines.
  */
 
-export type ProductId =
-  | "orazaka"
-  | "yomizaka"
-  | "akinaza";
+export type ProductId = "orazaka" | "yomizaka" | "akinaza";
 
-export type IconType =
-  | "doc"
-  | "video"
-  | "chart"
-  | "calendar"
-  | "chat"
-  | "voice"
-  | "brain"
-  | "cpu"
-  | "shield"
-  | "zap";
+export type IconType = "doc" | "video" | "chart" | "calendar" | "chat" | "voice" | "brain" | "cpu" | "shield" | "zap";
 
-export type FlowDirection =
-  | "left-to-right"
-  | "right-to-left"
-  | "top-to-bottom"
-  | "radial";
+export type FlowDirection = "left-to-right" | "right-to-left" | "top-to-bottom" | "radial";
 
 export type FlowMode = "inbound" | "outbound" | "bidirectional";
 

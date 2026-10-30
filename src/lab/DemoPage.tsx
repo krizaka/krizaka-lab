@@ -26,14 +26,28 @@ export function DemoPage({ id }: { id: TabId }) {
           <strong>{t.demo.whatFor} · </strong>
           {d.card}
         </p>
-        <Facts items={[demo.lab ? { label: t.home.experimental, tone: "wip" } : { label: t.home.shipped, tone: "ok" }]} />
+        <Facts
+          items={[demo.lab ? { label: t.home.experimental, tone: "wip" } : { label: t.home.shipped, tone: "ok" }]}
+        />
       </PageHero>
       <Section id="stage" spacing="sm">
         <Stage />
       </Section>
       {demo.usage && (
-        <Section id="usage" title={t.demo.usage} lead={demo.lab ? t.demo.usageLead : undefined} headingSize="sm" divider>
-          <CodeBlock code={demo.usage.code} language="tsx" file={demo.usage.file} copyLabel={t.demo.copy} copiedLabel={t.demo.copied} />
+        <Section
+          id="usage"
+          title={t.demo.usage}
+          lead={demo.lab ? t.demo.usageLead : undefined}
+          headingSize="sm"
+          divider
+        >
+          <CodeBlock
+            code={demo.usage.code}
+            language="tsx"
+            file={demo.usage.file}
+            copyLabel={t.demo.copy}
+            copiedLabel={t.demo.copied}
+          />
           {demo.lab && <p className="lab-status">{t.demo.statusLab}</p>}
         </Section>
       )}

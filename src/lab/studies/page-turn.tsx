@@ -26,8 +26,12 @@ export function Example() {
         <p>{page.text}</p>
       </article>
       <span className="lab-g-row">
-        <Button variant="ghost" size="sm" disabled={at === 0} onClick={() => turn(0)}>Previous page</Button>
-        <Button variant="secondary" size="sm" disabled={at === 1} onClick={() => turn(1)}>Next page</Button>
+        <Button variant="ghost" size="sm" disabled={at === 0} onClick={() => turn(0)}>
+          Previous page
+        </Button>
+        <Button variant="secondary" size="sm" disabled={at === 1} onClick={() => turn(1)}>
+          Next page
+        </Button>
       </span>
     </div>
   );

@@ -14,8 +14,16 @@ describe("the playground's configuration", () => {
   });
 
   it("reads a shared address, checking every value against its knob", () => {
-    assert.deepEqual(readValues(knobs, "?density=dense&speed=24&breathe=0"), { density: "dense", speed: 24, breathe: false });
-    assert.deepEqual(readValues(knobs, "?density=wild&speed=9999&breathe=maybe"), { density: "normal", speed: 40, breathe: true });
+    assert.deepEqual(readValues(knobs, "?density=dense&speed=24&breathe=0"), {
+      density: "dense",
+      speed: 24,
+      breathe: false,
+    });
+    assert.deepEqual(readValues(knobs, "?density=wild&speed=9999&breathe=maybe"), {
+      density: "normal",
+      speed: 40,
+      breathe: true,
+    });
     assert.deepEqual(readValues(knobs, "?speed=abc"), defaults(knobs));
   });
 
@@ -28,7 +36,10 @@ describe("the playground's configuration", () => {
 
   it("writes the copied snippet's props from the knobs that changed, never the defaults or the skipped ones", () => {
     assert.equal(propsSnippet(knobs, defaults(knobs)), "");
-    assert.equal(propsSnippet(knobs, { density: "dense", speed: 24, breathe: false }), '\n  density="dense"\n  speed={24}\n  breathe={false}');
+    assert.equal(
+      propsSnippet(knobs, { density: "dense", speed: 24, breathe: false }),
+      '\n  density="dense"\n  speed={24}\n  breathe={false}',
+    );
     assert.equal(propsSnippet(knobs, { density: "dense", speed: 24, breathe: true }, ["speed"]), '\n  density="dense"');
   });
 });

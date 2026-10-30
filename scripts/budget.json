@@ -1,7 +1,4 @@
 {
   "_": "Performance guard (ADR-001 §6): no permanent requestAnimationFrame outside the experiments. The lab is not a package, so there is no size ceiling to hold.",
-  "rafAllowed": [
-    "src/core/",
-    "src/native/"
-  ]
+  "rafAllowed": ["src/core/", "src/native/"]
 }

@@ -8,7 +8,12 @@ export function tokens(text: string, unit: "word" | "char"): string[] {
 }
 
 /** The text shown after `elapsedMs` at `perSecond` tokens a second, once `delayMs` of typing indicator has passed. */
-export function shownAt(all: readonly string[], elapsedMs: number, perSecond: number, delayMs: number): { text: string; phase: "typing" | "streaming" | "done" } {
+export function shownAt(
+  all: readonly string[],
+  elapsedMs: number,
+  perSecond: number,
+  delayMs: number,
+): { text: string; phase: "typing" | "streaming" | "done" } {
   if (elapsedMs < delayMs) return { text: "", phase: "typing" };
   const n = Math.min(all.length, Math.floor(((elapsedMs - delayMs) / 1000) * Math.max(1, perSecond)) + 1);
   return { text: all.slice(0, n).join(""), phase: n >= all.length ? "done" : "streaming" };

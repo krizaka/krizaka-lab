@@ -7,7 +7,10 @@ import { chromium } from "playwright";
 
 const i = process.argv.indexOf("--base");
 const base = (i > 0 ? process.argv[i + 1] : "http://localhost:4173").replace(/\/$/, "");
-const VIEWPORTS = [{ name: "desktop", width: 1280, height: 900 }, { name: "phone", width: 390, height: 844 }];
+const VIEWPORTS = [
+  { name: "desktop", width: 1280, height: 900 },
+  { name: "phone", width: 390, height: 844 },
+];
 
 /** The in-page readings each page is judged on: the guides' screens (krizaka-ui#434) and the component demos. */
 const READ = {
@@ -16,7 +19,10 @@ const READ = {
   "/live-number/": () => document.querySelector(".lab-dash-figures .sr-only, .lab-dash-figures")?.textContent ?? "",
   "/route-draw/": () => document.querySelector(".lab-delivery-side")?.textContent ?? "",
   "/page-transition/": () => document.querySelector(".lab-checkout-title")?.textContent ?? "",
-  "/journey/": () => [...document.querySelectorAll(".lab-journey li")].map((li) => li.textContent.length + (li.getAttribute("aria-current") ? "c" : "")).join(","),
+  "/journey/": () =>
+    [...document.querySelectorAll(".lab-journey li")]
+      .map((li) => li.textContent.length + (li.getAttribute("aria-current") ? "c" : ""))
+      .join(","),
   "/overlays/": () => document.querySelector("[data-testid=active]")?.textContent ?? "",
   "/people/": () => document.querySelector(".lab-people")?.textContent ?? "",
 };
@@ -28,7 +34,11 @@ for (const reducedMotion of ["no-preference", "reduce"])
   for (const theme of ["dark", "light"])
     for (const vp of VIEWPORTS)
       for (const [path, read] of Object.entries(READ)) {
-        const context = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, colorScheme: theme, reducedMotion });
+        const context = await browser.newContext({
+          viewport: { width: vp.width, height: vp.height },
+          colorScheme: theme,
+          reducedMotion,
+        });
         await context.addInitScript((t) => localStorage.setItem("kz-theme", t), theme);
         const page = await context.newPage();
         await page.goto(base + path, { waitUntil: "load" });
@@ -48,13 +58,30 @@ for (const reducedMotion of ["no-preference", "reduce"])
           const anim = dialog ? await dialog.evaluate((el) => el.getAnimations().length) : -1;
           const label = `${path} ${vp.name} ${theme} reduced-motion=${reducedMotion}`;
           if (!dialog) problems.push(`${label}: the dialog did not open`);
-          else if (reducedMotion === "no-preference" && anim === 0) problems.push(`${label}: the dialog enters without an animation`);
-          else if (reducedMotion === "reduce" && anim > 0) problems.push(`${label}: the dialog animates under reduced motion`);
+          else if (reducedMotion === "no-preference" && anim === 0)
+            problems.push(`${label}: the dialog enters without an animation`);
+          else if (reducedMotion === "reduce" && anim > 0)
+            problems.push(`${label}: the dialog animates under reduced motion`);
           await page.keyboard.press("Escape");
         }
         if (path === "/page-transition/") {
           // Continue: the checkout's step changes; with the API and motion on, its directional transition runs, never under reduced motion.
-          const seen = page.evaluate(() => new Promise((resolve) => { const o = new MutationObserver(() => { if (document.documentElement.dataset.checkoutDirection) { o.disconnect(); resolve(true); } }); o.observe(document.documentElement, { attributes: true }); setTimeout(() => { o.disconnect(); resolve(false); }, 1500); }));
+          const seen = page.evaluate(
+            () =>
+              new Promise((resolve) => {
+                const o = new MutationObserver(() => {
+                  if (document.documentElement.dataset.checkoutDirection) {
+                    o.disconnect();
+                    resolve(true);
+                  }
+                });
+                o.observe(document.documentElement, { attributes: true });
+                setTimeout(() => {
+                  o.disconnect();
+                  resolve(false);
+                }, 1500);
+              }),
+          );
           await page.getByRole("button", { name: "Continue" }).click();
           const ran = await seen;
           const label = `${path} ${vp.name} ${theme} reduced-motion=${reducedMotion}`;
@@ -66,8 +93,14 @@ for (const reducedMotion of ["no-preference", "reduce"])
         }
         const where = `${path} ${vp.name} ${theme} reduced-motion=${reducedMotion}`;
         checks++;
-        if (path !== "/page-transition/" && reducedMotion === "no-preference" && JSON.stringify(a) === JSON.stringify(b)) problems.push(`${where}: nothing changed in 2.6 s`);
-        if (path !== "/page-transition/" && reducedMotion === "reduce" && JSON.stringify(a) !== JSON.stringify(c)) problems.push(`${where}: it moves under reduced motion`);
+        if (
+          path !== "/page-transition/" &&
+          reducedMotion === "no-preference" &&
+          JSON.stringify(a) === JSON.stringify(b)
+        )
+          problems.push(`${where}: nothing changed in 2.6 s`);
+        if (path !== "/page-transition/" && reducedMotion === "reduce" && JSON.stringify(a) !== JSON.stringify(c))
+          problems.push(`${where}: it moves under reduced motion`);
         await context.close();
       }
 await browser.close();

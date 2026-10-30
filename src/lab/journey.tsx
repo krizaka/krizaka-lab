@@ -30,7 +30,9 @@ function Job({ v }: { v: Record<string, string | number | boolean> }) {
   const [elapsed, setElapsed] = useState(0);
   const failAt = v.failAt === "none" ? -1 : NAMES.indexOf(v.failAt as (typeof NAMES)[number]);
   const stepMs = v.stepMs as number;
-  const state = reduce ? journeyAt(1e9, NAMES.length, stepMs, failAt) : journeyAt(elapsed, NAMES.length, stepMs, failAt);
+  const state = reduce
+    ? journeyAt(1e9, NAMES.length, stepMs, failAt)
+    : journeyAt(elapsed, NAMES.length, stepMs, failAt);
   useEffect(() => {
     if (!visible || reduce) return;
     const began = performance.now() - elapsed;
@@ -47,7 +49,11 @@ function Job({ v }: { v: Record<string, string | number | boolean> }) {
   const percent = Math.round(state.value * 100);
   return (
     <div ref={host} className="lab-journey" data-motion-scope="">
-      <StepProgress step={Math.min(state.current, NAMES.length - 1) + 1} total={NAMES.length} label={(s, t) => `Step ${s} of ${t}`} />
+      <StepProgress
+        step={Math.min(state.current, NAMES.length - 1) + 1}
+        total={NAMES.length}
+        label={(s, t) => `Step ${s} of ${t}`}
+      />
       <Stepper
         aria-label="Publishing “Night walk”"
         labels={LABELS}
@@ -57,7 +63,9 @@ function Job({ v }: { v: Record<string, string | number | boolean> }) {
           title,
           description: state.failed === i ? "Something went wrong — retry" : DETAIL[i],
           status: state.failed === i ? ("error" as const) : undefined,
-          ...(i === 2 && state.current === 2 && state.failed === null ? { value: state.value, content: <Progress label="Transcoding" value={percent} showLabel size="sm" /> } : {}),
+          ...(i === 2 && state.current === 2 && state.failed === null
+            ? { value: state.value, content: <Progress label="Transcoding" value={percent} showLabel size="sm" /> }
+            : {}),
         }))}
       />
       <Button variant="secondary" size="sm" onClick={() => setElapsed(0)}>
@@ -77,7 +85,9 @@ export function JourneyStage() {
       note="Each state is said in words for assistive technology (Done, In progress, Upcoming, Failed). Under reduced motion the finished journey is shown at once."
       render={(v) => <Job v={v} />}
     >
-      {'  aria-label="Publishing “Night walk”"\n  labels={{ done: "Done", current: "In progress", upcoming: "Upcoming", error: "Failed" }}\n  current={2}\n  steps={steps}'}
+      {
+        '  aria-label="Publishing “Night walk”"\n  labels={{ done: "Done", current: "In progress", upcoming: "Upcoming", error: "Failed" }}\n  current={2}\n  steps={steps}'
+      }
     </Playground>
   );
 }

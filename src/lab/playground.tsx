@@ -12,14 +12,29 @@ import { type Knob, type Values, defaults, propsSnippet, readValues, writeValues
 
 export type { Knob, Values } from "./playground-lib";
 
-function Control({ knob, value, onChange }: { knob: Knob; value: string | number | boolean; onChange: (v: string | number | boolean) => void }) {
+function Control({
+  knob,
+  value,
+  onChange,
+}: {
+  knob: Knob;
+  value: string | number | boolean;
+  onChange: (v: string | number | boolean) => void;
+}) {
   if (knob.kind === "choice")
     return (
       <div className="lab-control">
         <span className="lab-control-label" aria-hidden>
           {knob.label}
         </span>
-        <Chip.Group type="single" required size="sm" label={knob.label} value={String(value)} onValueChange={(v) => v && onChange(v)}>
+        <Chip.Group
+          type="single"
+          required
+          size="sm"
+          label={knob.label}
+          value={String(value)}
+          onValueChange={(v) => v && onChange(v)}
+        >
           {knob.options.map((o) => (
             <Chip key={o} value={o}>
               {o}
@@ -29,7 +44,17 @@ function Control({ knob, value, onChange }: { knob: Knob; value: string | number
       </div>
     );
   if (knob.kind === "range")
-    return <Slider label={`${knob.label}${knob.unit ? ` (${knob.unit})` : ""}`} showLabel value={Number(value)} min={knob.min} max={knob.max} step={knob.step} onValueChange={(v) => onChange(v as number)} />;
+    return (
+      <Slider
+        label={`${knob.label}${knob.unit ? ` (${knob.unit})` : ""}`}
+        showLabel
+        value={Number(value)}
+        min={knob.min}
+        max={knob.max}
+        step={knob.step}
+        onValueChange={(v) => onChange(v as number)}
+      />
+    );
   return (
     <label className="lab-switch">
       <Switch checked={Boolean(value)} onCheckedChange={onChange} label={knob.label} />
@@ -60,7 +85,9 @@ export function Playground({
   skip?: readonly string[];
   note?: ReactNode;
 }) {
-  const [values, setValues] = useState<Values>(() => readValues(knobs, typeof window === "undefined" ? "" : window.location.search));
+  const [values, setValues] = useState<Values>(() =>
+    readValues(knobs, typeof window === "undefined" ? "" : window.location.search),
+  );
   useEffect(() => writeValues(knobs, values), [knobs, values]);
   const set = (key: string) => (v: string | number | boolean) => setValues((prev) => ({ ...prev, [key]: v }));
   const initial = useMemo(() => defaults(knobs), [knobs]);

@@ -14,7 +14,18 @@ import { familyLabels } from "@krizaka/ui/sites";
 import { ThemeProvider, useTheme } from "@krizaka/ui/theme";
 import { type MouseEvent, useEffect, useMemo, useState } from "react";
 
-import { GUIDE_PATHS, getCanonicalUrl, getHrefForTab, homeHref, type LabPage, resolvePage, SCENARIO_PATHS, type GuidePage as GuideId, type ScenarioPage as ScenarioId, type TabId } from "./core/router";
+import {
+  GUIDE_PATHS,
+  getCanonicalUrl,
+  getHrefForTab,
+  homeHref,
+  type LabPage,
+  resolvePage,
+  SCENARIO_PATHS,
+  type GuidePage as GuideId,
+  type ScenarioPage as ScenarioId,
+  type TabId,
+} from "./core/router";
 import { DemoPage } from "./lab/DemoPage";
 import { GuidePage, ScenarioPage } from "./lab/GuidePage";
 import { guideById } from "./lab/guides";
@@ -41,7 +52,16 @@ function Shell() {
 
   useEffect(() => {
     document.documentElement.lang = locale;
-    const name = page === "home" ? t.home.eyebrow : page === "experiments" ? "Experiments" : isGuide(page) ? guideById(page).title : isScenario(page) ? SCENARIOS[page].title : t.demos[page].name;
+    const name =
+      page === "home"
+        ? t.home.eyebrow
+        : page === "experiments"
+          ? "Experiments"
+          : isGuide(page)
+            ? guideById(page).title
+            : isScenario(page)
+              ? SCENARIOS[page].title
+              : t.demos[page].name;
     document.title = page === "home" ? `${t.bar.label} — ${name}` : `${name} — ${t.bar.label}`;
     const canonicalUrl = getCanonicalUrl(window.location.pathname);
     document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute("href", canonicalUrl);
@@ -49,7 +69,8 @@ function Shell() {
   }, [page, locale, t]);
 
   const lab = useMemo(() => {
-    const href = (to: LabPage) => (to === "home" ? homeHref(window.location.pathname) : getHrefForTab(to, window.location.pathname));
+    const href = (to: LabPage) =>
+      to === "home" ? homeHref(window.location.pathname) : getHrefForTab(to, window.location.pathname);
     /** An internal link: the history API, the page's top, no reload. */
     const go = (to: LabPage) => (e: MouseEvent<HTMLAnchorElement>) => {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
@@ -66,7 +87,12 @@ function Shell() {
     { id: "kz-ui", label: t.bar.gallery },
     { id: "experiments", label: "Experiments" },
   ];
-  const section: LabPage = isGuide(page) || isScenario(page) ? "home" : page === "experiments" || ["orazaka", "jarvis", "caustics", "lattice"].includes(page) ? "experiments" : page;
+  const section: LabPage =
+    isGuide(page) || isScenario(page)
+      ? "home"
+      : page === "experiments" || ["orazaka", "jarvis", "caustics", "lattice"].includes(page)
+        ? "experiments"
+        : page;
 
   return (
     <LabContext.Provider value={lab}>
@@ -113,7 +139,17 @@ function Shell() {
       </div>
 
       <main className="lab-main">
-        {page === "home" ? <Home /> : page === "experiments" ? <Experiments /> : isGuide(page) ? <GuidePage key={page} id={page} /> : isScenario(page) ? <ScenarioPage key={page} id={page} /> : <DemoPage id={page as TabId} />}
+        {page === "home" ? (
+          <Home />
+        ) : page === "experiments" ? (
+          <Experiments />
+        ) : isGuide(page) ? (
+          <GuidePage key={page} id={page} />
+        ) : isScenario(page) ? (
+          <ScenarioPage key={page} id={page} />
+        ) : (
+          <DemoPage id={page as TabId} />
+        )}
       </main>
 
       <SiteFooter current="github" labels={familyLabels[locale]}>

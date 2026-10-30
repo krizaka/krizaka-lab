@@ -13,22 +13,32 @@ import { PageHero } from "@krizaka/ui/page-hero";
 
 import { type LabPage, SCENARIO_PATHS, TAB_ORDER, type TabId } from "../core/router";
 import { useLab } from "./context";
+import { HomeLink } from "./home-link";
 import { DEMOS } from "./demos";
 import { GUIDES } from "./guides";
 import { SCENARIOS } from "./scenarios";
 
-const SETUP = 'pnpm add @krizaka/ui\n\n// once, at the root of the app\nimport { MotionObserver } from "@krizaka/ui/motion";\nimport "@krizaka/ui/motion.css";\n\n<MotionObserver />';
+const SETUP =
+  'pnpm add @krizaka/ui\n\n// once, at the root of the app\nimport { MotionObserver } from "@krizaka/ui/motion";\nimport "@krizaka/ui/motion.css";\n\n<MotionObserver />';
 
 export function Home() {
   const { t, href, go } = useLab();
   const as = (to: LabPage) => (props: React.ComponentProps<"a">) => <a {...props} onClick={go(to)} />;
   const byScenario = SCENARIO_PATHS.map((id) => ({
     title: SCENARIOS[id].title,
-    entries: GUIDES.filter((g) => g.scenario === id).map((g) => ({ label: g.title, href: href(g.id), page: String(GUIDES.indexOf(g) + 1).padStart(2, "0") })),
+    entries: GUIDES.filter((g) => g.scenario === id).map((g) => ({
+      label: g.title,
+      href: href(g.id),
+      page: String(GUIDES.indexOf(g) + 1).padStart(2, "0"),
+    })),
   }));
   return (
     <>
-      <PageHero eyebrow="Krizaka Lab" title="Motion for Krizaka UI, by task." lead="Each guide answers one thing you want to animate, on a real app screen made of @krizaka/ui: the screen plays it, the settings change it, the code follows, every option is in the table. Krizaka Lab is where the family tries things (UI, motion, Java, AI, data): an entry is an experiment with a status, and nothing here is a product.">
+      <PageHero
+        eyebrow="Krizaka Lab"
+        title="Motion for Krizaka UI, by task."
+        lead="Each guide answers one thing you want to animate, on a real app screen made of @krizaka/ui: the screen plays it, the settings change it, the code follows, every option is in the table. Krizaka Lab is where the family tries things (UI, motion, Java, AI, data): an entry is an experiment with a status, and nothing here is a product."
+      >
         <CodeBlock code={SETUP} language="tsx" file="App.tsx" copyLabel={t.demo.copy} copiedLabel={t.demo.copied} />
       </PageHero>
 
@@ -43,7 +53,13 @@ export function Home() {
         />
       </Section>
 
-      <Section id="scenarios" number="§ 2" title="Scenarios" lead="Four app screens built only from @krizaka/ui components, with every motion they use." divider>
+      <Section
+        id="scenarios"
+        number="§ 2"
+        title="Scenarios"
+        lead="Four app screens built only from @krizaka/ui components, with every motion they use."
+        divider
+      >
         <CardGrid as="ul" min={260} columns={2}>
           {SCENARIO_PATHS.map((id) => {
             const s = SCENARIOS[id];
@@ -102,7 +118,13 @@ export function Experiments() {
   const ids = TAB_ORDER.filter((id): id is TabId => ["orazaka", "jarvis", "caustics", "lattice"].includes(id));
   return (
     <>
-      <PageHero eyebrow="Krizaka Lab" title="Experiments" lead="Canvas studies: what the motion system can draw before a piece of it moves into Krizaka UI as SVG and CSS. Krizaka sites use no canvas." back={{ href: href("home"), label: "Guides" }} linkAs={(props: React.ComponentProps<"a">) => <a {...props} onClick={go("home")} />} />
+      <PageHero
+        eyebrow="Krizaka Lab"
+        title="Experiments"
+        lead="Canvas studies: what the motion system can draw before a piece of it moves into Krizaka UI as SVG and CSS. Krizaka sites use no canvas."
+        back={{ href: href("home"), label: "Guides" }}
+        linkAs={HomeLink}
+      />
       <Section id="studies" spacing="sm">
         <CardGrid as="ul" min={300} columns={3}>
           {ids.map((id) => {
@@ -121,7 +143,13 @@ export function Experiments() {
                     <div className="lab-preview" data-motion-scope="" inert aria-hidden>
                       <Preview />
                     </div>
-                    <Facts items={[id === "orazaka" ? { label: t.home.shipped, tone: "ok" } : { label: t.home.experimental, tone: "wip" }]} />
+                    <Facts
+                      items={[
+                        id === "orazaka"
+                          ? { label: t.home.shipped, tone: "ok" }
+                          : { label: t.home.experimental, tone: "wip" },
+                      ]}
+                    />
                   </>
                 }
                 linkAs={(props: React.ComponentProps<"a">) => <a {...props} onClick={go(id)} />}

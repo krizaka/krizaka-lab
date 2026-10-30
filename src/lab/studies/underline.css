@@ -1,11 +1,54 @@
 /* Pencil underline: a hand-drawn line that follows the reading position, driven by the scroll of its reader. */
-.st-reader { position: relative; width: 100%; height: 190px; overflow-y: auto; padding: 0 16px 16px; background: var(--kz-surface-1); border: 1px solid var(--kz-border-subtle); }
-.st-reader p { margin: 0 0 12px; line-height: 1.6; color: var(--kz-text-secondary); }
-.st-rule { position: sticky; top: 0; z-index: 1; display: block; width: 100%; height: 14px; background: var(--kz-surface-1); }
-.st-rule path { fill: none; stroke: var(--kz-accent); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
-@supports (animation-timeline: scroll()) {
-  .st-rule path { animation: st-draw linear both; animation-timeline: scroll(nearest block); }
+.st-reader {
+  position: relative;
+  width: 100%;
+  height: 190px;
+  overflow-y: auto;
+  padding: 0 16px 16px;
+  background: var(--kz-surface-1);
+  border: 1px solid var(--kz-border-subtle);
 }
-@supports not (animation-timeline: scroll()) { .st-rule path { stroke-dashoffset: 0; } }
-@media (prefers-reduced-motion: reduce) { .st-rule path { animation: none; stroke-dashoffset: 0; } }
-@keyframes st-draw { to { stroke-dashoffset: 0; } }
+.st-reader p {
+  margin: 0 0 12px;
+  line-height: 1.6;
+  color: var(--kz-text-secondary);
+}
+.st-rule {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 14px;
+  background: var(--kz-surface-1);
+}
+.st-rule path {
+  fill: none;
+  stroke: var(--kz-accent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+@supports (animation-timeline: scroll()) {
+  .st-rule path {
+    animation: st-draw linear both;
+    animation-timeline: scroll(nearest block);
+  }
+}
+@supports not (animation-timeline: scroll()) {
+  .st-rule path {
+    stroke-dashoffset: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .st-rule path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes st-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

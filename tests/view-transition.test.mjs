@@ -1,7 +1,7 @@
 import { core } from "./support/core.mjs";
 import { test } from "node:test";
 import assert from "node:assert/strict";
-const { canViewTransition, runViewTransition, crossFallback, transitionPage, sharedElementStyle, } = core;
+const { canViewTransition, runViewTransition, crossFallback, transitionPage, sharedElementStyle } = core;
 
 const finishedOk = () => ({ finished: Promise.resolve() });
 
@@ -70,7 +70,10 @@ test("cross-fallback: no API, motion allowed, an element that can animate: a fad
 test("cross-fallback: reduced motion applies the change and starts no animation", () => {
   const doc = { documentElement: { animate: () => assert.fail("no animation under reduced motion") } };
   let ran = 0;
-  assert.equal(crossFallback(() => ran++, { doc, reduced: true }), null);
+  assert.equal(
+    crossFallback(() => ran++, { doc, reduced: true }),
+    null,
+  );
   assert.equal(ran, 1);
 });
 

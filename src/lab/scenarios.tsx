@@ -23,14 +23,31 @@ import { WallMotionWall } from "./wall-motions";
 import { useInView, useReducedMotion } from "./hooks";
 import { defaults, type Values } from "./playground-lib";
 import { CHECKOUT_KNOBS } from "./guides";
-import { CheckoutPageTransition, CheckoutPayButton, checkoutMotionStyle, type CheckoutTransition } from "./checkout-motion";
+import {
+  CheckoutPageTransition,
+  CheckoutPayButton,
+  checkoutMotionStyle,
+  type CheckoutTransition,
+} from "./checkout-motion";
 import { i18n, format } from "./messages";
 import { shownAt, tokens } from "./stream-lib";
 
 export type ScenarioId = "dashboard" | "chat" | "checkout" | "delivery" | "wall";
 
 /** An app screen: the product's mark (none for a generic app, the courier) and name, the screen's title, then the screen. Decorative chrome is the frame only. */
-export function Screen({ product, app, title, children, actions }: { product?: "orazaka" | "akinaza"; app: string; title: string; children: ReactNode; actions?: ReactNode }) {
+export function Screen({
+  product,
+  app,
+  title,
+  children,
+  actions,
+}: {
+  product?: "orazaka" | "akinaza";
+  app: string;
+  title: string;
+  children: ReactNode;
+  actions?: ReactNode;
+}) {
   return (
     <div className={product ? `lab-screen brand-${product}` : "lab-screen"}>
       <div className="lab-screen-bar">
@@ -54,10 +71,28 @@ interface Run {
   trend: number[];
   fresh: boolean;
 }
-const PACKS = ["lease-check", "invoice-read", "voice-note", "clip-encode", "menu-translate", "receipt-scan", "chat-answer"];
+const PACKS = [
+  "lease-check",
+  "invoice-read",
+  "voice-note",
+  "clip-encode",
+  "menu-translate",
+  "receipt-scan",
+  "chat-answer",
+];
 const STATES = ["Done", "Running", "Queued"] as const;
-const trendOf = (seed: number) => Array.from({ length: 12 }, (_, i) => Math.round(30 + 20 * Math.sin(seed + i / 2) + i * 2 + ((seed * 7 + i * 13) % 9)));
-const runOf = (n: number, fresh: boolean): Run => ({ id: `run_${(9100 + n * 37).toString(16)}`, pack: PACKS[n % PACKS.length]!, state: STATES[n % 3]!, cost: 0.02 + ((n * 13) % 40) / 100, trend: trendOf(n), fresh });
+const trendOf = (seed: number) =>
+  Array.from({ length: 12 }, (_, i) =>
+    Math.round(30 + 20 * Math.sin(seed + i / 2) + i * 2 + ((seed * 7 + i * 13) % 9)),
+  );
+const runOf = (n: number, fresh: boolean): Run => ({
+  id: `run_${(9100 + n * 37).toString(16)}`,
+  pack: PACKS[n % PACKS.length]!,
+  state: STATES[n % 3]!,
+  cost: 0.02 + ((n * 13) % 40) / 100,
+  trend: trendOf(n),
+  fresh,
+});
 
 export const NUMBER_FORMATS: Record<string, Intl.NumberFormatOptions> = {
   number: { maximumFractionDigits: 0 },
@@ -84,15 +119,40 @@ export function Dashboard({ v = {} }: { v?: Values }) {
     return () => window.clearInterval(timer);
   }, [stream, interval, visible, reduce]);
   const spend = runs.reduce((s, r) => s + r.cost, 0) * 120;
-  const ticker = { duration: Number(v.duration ?? 900), easing: String(v.easing ?? "ease-out") as "ease-out" | "linear" | "ease-in-out", trigger: String(v.trigger ?? "change") as "view" | "change" };
+  const ticker = {
+    duration: Number(v.duration ?? 900),
+    easing: String(v.easing ?? "ease-out") as "ease-out" | "linear" | "ease-in-out",
+    trigger: String(v.trigger ?? "change") as "view" | "change",
+  };
   const style = { "--kz-arrive-duration": `${v.arrivalDuration ?? 420}ms` } as CSSProperties;
   return (
     <div ref={host} data-motion-scope="">
       <Screen product="orazaka" app="Orazaka" title="Runs today" actions={<Badge tone="neutral">demo data</Badge>}>
         <div className="lab-dash-figures">
-          <Stat label="Runs" value={<NumberTicker value={total} locale="en-CA" {...ticker} format={NUMBER_FORMATS[String(v.format ?? "number")]} announce={ticker.trigger === "change"} />} trend="up" trendLabel="since 8:00" />
-          <Stat label="Spend" value={<NumberTicker value={spend} locale="en-CA" {...ticker} format={NUMBER_FORMATS.currency} />} hint="CAD, all packs" />
-          <Stat label="p95 latency" value={<NumberTicker value={1.4} locale="en-CA" {...ticker} format={{ maximumFractionDigits: 1 }} />} hint="seconds" />
+          <Stat
+            label="Runs"
+            value={
+              <NumberTicker
+                value={total}
+                locale="en-CA"
+                {...ticker}
+                format={NUMBER_FORMATS[String(v.format ?? "number")]}
+                announce={ticker.trigger === "change"}
+              />
+            }
+            trend="up"
+            trendLabel="since 8:00"
+          />
+          <Stat
+            label="Spend"
+            value={<NumberTicker value={spend} locale="en-CA" {...ticker} format={NUMBER_FORMATS.currency} />}
+            hint="CAD, all packs"
+          />
+          <Stat
+            label="p95 latency"
+            value={<NumberTicker value={1.4} locale="en-CA" {...ticker} format={{ maximumFractionDigits: 1 }} />}
+            hint="seconds"
+          />
         </div>
         <div className="lab-dash-table" data-kz-arrival={String(v.arrival ?? "slide")} style={style}>
           <DataTable
@@ -101,11 +161,40 @@ export function Dashboard({ v = {} }: { v?: Values }) {
             getRowId={(r) => r.id}
             density="compact"
             columns={[
-              { id: "id", header: "Run", value: (r: Run) => r.id, cell: (r: Run) => <code data-kz-arrive={r.fresh ? "" : undefined}>{r.id}</code> },
+              {
+                id: "id",
+                header: "Run",
+                value: (r: Run) => r.id,
+                cell: (r: Run) => <code data-kz-arrive={r.fresh ? "" : undefined}>{r.id}</code>,
+              },
               { id: "pack", header: "Pack", sortable: true, value: (r: Run) => r.pack },
-              { id: "state", header: "State", sortable: true, value: (r: Run) => r.state, cell: (r: Run) => <Badge tone={r.state === "Done" ? "success" : r.state === "Running" ? "accent" : "neutral"}>{r.state}</Badge> },
-              { id: "cost", header: "Cost", align: "end", sortable: true, value: (r: Run) => r.cost, cell: (r: Run) => `$${r.cost.toFixed(2)}` },
-              { id: "trend", header: "Last hour", value: (r: Run) => r.id, cell: (r: Run) => <Sparkline data={r.trend} width={84} height={24} variant="area" title={`${r.pack}, last hour`} /> },
+              {
+                id: "state",
+                header: "State",
+                sortable: true,
+                value: (r: Run) => r.state,
+                cell: (r: Run) => (
+                  <Badge tone={r.state === "Done" ? "success" : r.state === "Running" ? "accent" : "neutral"}>
+                    {r.state}
+                  </Badge>
+                ),
+              },
+              {
+                id: "cost",
+                header: "Cost",
+                align: "end",
+                sortable: true,
+                value: (r: Run) => r.cost,
+                cell: (r: Run) => `$${r.cost.toFixed(2)}`,
+              },
+              {
+                id: "trend",
+                header: "Last hour",
+                value: (r: Run) => r.id,
+                cell: (r: Run) => (
+                  <Sparkline data={r.trend} width={84} height={24} variant="area" title={`${r.pack}, last hour`} />
+                ),
+              },
             ]}
           />
         </div>
@@ -116,7 +205,8 @@ export function Dashboard({ v = {} }: { v?: Values }) {
 
 /* ── Chat: a support assistant — an answer that streams in ───────────────────────────────────────────────── */
 
-const ANSWER = "Your table for four is booked for Friday at 7:30 pm. I added a note about the high chair. You will get a reminder on Thursday evening, and you can change the time from that message.";
+const ANSWER =
+  "Your table for four is booked for Friday at 7:30 pm. I added a note about the high chair. You will get a reminder on Thursday evening, and you can change the time from that message.";
 
 export function Chat({ v = {} }: { v?: Values }) {
   const host = useRef<HTMLDivElement>(null);
@@ -142,15 +232,36 @@ export function Chat({ v = {} }: { v?: Values }) {
         app="Orazaka"
         title="Chez Lina · assistant"
         actions={
-          <Button variant="ghost" size="sm" onClick={() => { setElapsed(0); setRun((n) => n + 1); }}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setElapsed(0);
+              setRun((n) => n + 1);
+            }}
+          >
             Replay
           </Button>
         }
       >
-        <div className="lab-chat-log" role="log" aria-busy={shown.phase !== "done"} aria-label="Conversation with the restaurant's assistant">
+        <div
+          className="lab-chat-log"
+          role="log"
+          aria-busy={shown.phase !== "done"}
+          aria-label="Conversation with the restaurant's assistant"
+        >
           <MessageBubble text="Hi! Lina's assistant here. How can I help?" time="18:01" grouped="single" />
-          <MessageBubble mine text="A table for 4 on Friday around 7:30? We need a high chair." time="18:02" grouped="single" />
-          {shown.phase === "typing" ? <TypingIndicator label="The assistant is typing" showLabel /> : <MessageBubble text={shown.text} time="18:02" grouped="single" />}
+          <MessageBubble
+            mine
+            text="A table for 4 on Friday around 7:30? We need a high chair."
+            time="18:02"
+            grouped="single"
+          />
+          {shown.phase === "typing" ? (
+            <TypingIndicator label="The assistant is typing" showLabel />
+          ) : (
+            <MessageBubble text={shown.text} time="18:02" grouped="single" />
+          )}
         </div>
         <span className="lab-visually-hidden" role="status">
           {shown.phase === "done" ? "Answer complete" : ""}
@@ -197,16 +308,28 @@ export function Checkout({ v = {} }: { v?: Values }) {
   }, [step]);
   useEffect(() => {
     mounted.current = true;
-    return () => { mounted.current = false; clearTimeout(timer.current); };
+    return () => {
+      mounted.current = false;
+      clearTimeout(timer.current);
+    };
   }, []);
   const go = async (to: number) => {
     setCrossing(true);
     moved.current = true;
-    const forward = (to > step) === (settings.direction === "right");
+    const forward = to > step === (settings.direction === "right");
     try {
-      await transition.current!.change(() => { setStep(to); setError(false); }, forward ? "forward" : "back");
+      await transition.current!.change(
+        () => {
+          setStep(to);
+          setError(false);
+        },
+        forward ? "forward" : "back",
+      );
     } finally {
-      if (mounted.current) { setCrossing(false); setPhase("idle"); }
+      if (mounted.current) {
+        setCrossing(false);
+        setPhase("idle");
+      }
       locked.current = false;
     }
   };
@@ -228,72 +351,137 @@ export function Checkout({ v = {} }: { v?: Values }) {
         return;
       }
       setPhase("done");
-      timer.current = setTimeout(() => {
-        void go(2).then(() => {
-          if (mounted.current) toast.success(format(words.toast, { slot }));
-        });
-      }, reduce ? 0 : timing.duration * 2);
+      timer.current = setTimeout(
+        () => {
+          void go(2).then(() => {
+            if (mounted.current) toast.success(format(words.toast, { slot }));
+          });
+        },
+        reduce ? 0 : timing.duration * 2,
+      );
     }, Number(settings.wait));
   };
   const tax = (rate: number) => Math.round(PRICE * rate * 100) / 100;
   const total = PRICE + tax(GST) + tax(QST);
   const money = (n: number) => new Intl.NumberFormat("en-CA", { style: "currency", currency: "CAD" }).format(n);
   return (
-    <div ref={host} className="lab-booking" data-motion-scope="" style={checkoutMotionStyle(String(settings.duration), String(settings.easing))}>
+    <div
+      ref={host}
+      className="lab-booking"
+      data-motion-scope=""
+      style={checkoutMotionStyle(String(settings.duration), String(settings.easing))}
+    >
       <Toaster label={words.notifications} closeLabel={words.close} position="bottom-right" />
       <Screen product="akinaza" app="Akinaza" title={words.title} actions={<Badge tone="neutral">{words.demo}</Badge>}>
         <StepProgress step={step + 1} total={3} label={(s, t) => format(words.step, { step: s, total: t })} />
         <CheckoutPageTransition ref={transition} reduced={reduce} duration={timing.duration} easing={timing.easing}>
-        <div className="lab-checkout">
-          {step === 0 && (
-            <>
-              <h3 ref={heading} tabIndex={-1} className="lab-checkout-title">{words.pick}</h3>
-              <Chip.Group type="single" required label={words.times} value={slot} onValueChange={(s) => !locked.current && s && setSlot(s)}>
-                {SLOTS.map((s) => (
-                  <Chip key={s} value={s}>
-                    {s}
-                  </Chip>
-                ))}
-              </Chip.Group>
-              <div className="lab-checkout-actions">
-                <Button variant="primary" disabled={crossing} onClick={() => navigate(1)}>
-                  {words.continue}
-                </Button>
-              </div>
-            </>
-          )}
-          {step === 1 && (
-            <>
-              <h3 ref={heading} tabIndex={-1} className="lab-checkout-title">{format(words.review, { slot })}</h3>
-              <dl className="lab-receipt">
-                <div><dt>{words.service}</dt><dd>{money(PRICE)}</dd></div>
-                <div><dt>{words.gst}</dt><dd>{money(tax(GST))}</dd></div>
-                <div><dt>{words.qst}</dt><dd>{money(tax(QST))}</dd></div>
-                <div><dt>{words.total}</dt><dd>{money(total)}</dd></div>
-              </dl>
-              {error ? <p id="checkout-payment-error" className="lab-checkout-error" role="alert">{words.error}</p> : null}
-              <div className="lab-checkout-actions">
-                <Button variant="ghost" disabled={crossing || phase !== "idle"} onClick={() => navigate(0)}>
-                  {words.back}
-                </Button>
-                <CheckoutPayButton phase={phase} disabled={crossing} label={format(words.pay, { total: money(total) })} working={words.working} done={words.done} onClick={pay} errorId={error ? "checkout-payment-error" : undefined} />
-              </div>
-            </>
-          )}
-          {step === 2 && (
-            <>
-              <h3 ref={heading} tabIndex={-1} className="lab-checkout-title">{format(words.confirmed, { slot })}</h3>
-              <Stat label={words.total} value={<NumberTicker value={reduce || !crossing ? total : 0} trigger="change" locale="en-CA" format={NUMBER_FORMATS.currency} duration={timing.duration} easing={timing.easing} announce />} />
-              <p data-reveal="soft" style={{ "--kz-delay": "0ms" } as CSSProperties}>{format(words.summary, { slot })}</p>
-              <p data-reveal="soft" style={{ "--kz-delay": "var(--lab-checkout-duration)" } as CSSProperties} className="lab-sublead">{words.nothingCharged}</p>
-              <div className="lab-checkout-actions">
-                <Button variant="secondary" disabled={crossing} onClick={() => navigate(0)}>
-                  {words.restart}
-                </Button>
-              </div>
-            </>
-          )}
-        </div>
+          <div className="lab-checkout">
+            {step === 0 && (
+              <>
+                <h3 ref={heading} tabIndex={-1} className="lab-checkout-title">
+                  {words.pick}
+                </h3>
+                <Chip.Group
+                  type="single"
+                  required
+                  label={words.times}
+                  value={slot}
+                  onValueChange={(s) => !locked.current && s && setSlot(s)}
+                >
+                  {SLOTS.map((s) => (
+                    <Chip key={s} value={s}>
+                      {s}
+                    </Chip>
+                  ))}
+                </Chip.Group>
+                <div className="lab-checkout-actions">
+                  <Button variant="primary" disabled={crossing} onClick={() => navigate(1)}>
+                    {words.continue}
+                  </Button>
+                </div>
+              </>
+            )}
+            {step === 1 && (
+              <>
+                <h3 ref={heading} tabIndex={-1} className="lab-checkout-title">
+                  {format(words.review, { slot })}
+                </h3>
+                <dl className="lab-receipt">
+                  <div>
+                    <dt>{words.service}</dt>
+                    <dd>{money(PRICE)}</dd>
+                  </div>
+                  <div>
+                    <dt>{words.gst}</dt>
+                    <dd>{money(tax(GST))}</dd>
+                  </div>
+                  <div>
+                    <dt>{words.qst}</dt>
+                    <dd>{money(tax(QST))}</dd>
+                  </div>
+                  <div>
+                    <dt>{words.total}</dt>
+                    <dd>{money(total)}</dd>
+                  </div>
+                </dl>
+                {error ? (
+                  <p id="checkout-payment-error" className="lab-checkout-error" role="alert">
+                    {words.error}
+                  </p>
+                ) : null}
+                <div className="lab-checkout-actions">
+                  <Button variant="ghost" disabled={crossing || phase !== "idle"} onClick={() => navigate(0)}>
+                    {words.back}
+                  </Button>
+                  <CheckoutPayButton
+                    phase={phase}
+                    disabled={crossing}
+                    label={format(words.pay, { total: money(total) })}
+                    working={words.working}
+                    done={words.done}
+                    onClick={pay}
+                    errorId={error ? "checkout-payment-error" : undefined}
+                  />
+                </div>
+              </>
+            )}
+            {step === 2 && (
+              <>
+                <h3 ref={heading} tabIndex={-1} className="lab-checkout-title">
+                  {format(words.confirmed, { slot })}
+                </h3>
+                <Stat
+                  label={words.total}
+                  value={
+                    <NumberTicker
+                      value={reduce || !crossing ? total : 0}
+                      trigger="change"
+                      locale="en-CA"
+                      format={NUMBER_FORMATS.currency}
+                      duration={timing.duration}
+                      easing={timing.easing}
+                      announce
+                    />
+                  }
+                />
+                <p data-reveal="soft" style={{ "--kz-delay": "0ms" } as CSSProperties}>
+                  {format(words.summary, { slot })}
+                </p>
+                <p
+                  data-reveal="soft"
+                  style={{ "--kz-delay": "var(--lab-checkout-duration)" } as CSSProperties}
+                  className="lab-sublead"
+                >
+                  {words.nothingCharged}
+                </p>
+                <div className="lab-checkout-actions">
+                  <Button variant="secondary" disabled={crossing} onClick={() => navigate(0)}>
+                    {words.restart}
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
         </CheckoutPageTransition>
       </Screen>
     </div>
@@ -332,13 +520,46 @@ export function Delivery({ v = {} }: { v?: Values }) {
         }
       >
         <div className="lab-delivery">
-          <Map key={`${run}-${v.duration}-${trip}-${v.easing}`} label={label} center={[-73.585, 45.521]} zoom={13.2} className="lab-map-view" fallback={<StaticMap label={label} center={[-73.585, 45.521]} zoom={13.2} places={[{ position: STUDIO, label: "Bakery" }, { position: HOME, label: "You" }]} />}>
-            <Route path={PATH} label="The courier's route, 3 km" draw duration={Number(v.duration ?? 1400)} courier tripDuration={trip} easing={String(v.easing ?? "ease-out") as "ease-out" | "linear" | "ease-in-out"} paused={Boolean(v.paused ?? false)} />
+          <Map
+            key={`${run}-${v.duration}-${trip}-${v.easing}`}
+            label={label}
+            center={[-73.585, 45.521]}
+            zoom={13.2}
+            className="lab-map-view"
+            fallback={
+              <StaticMap
+                label={label}
+                center={[-73.585, 45.521]}
+                zoom={13.2}
+                places={[
+                  { position: STUDIO, label: "Bakery" },
+                  { position: HOME, label: "You" },
+                ]}
+              />
+            }
+          >
+            <Route
+              path={PATH}
+              label="The courier's route, 3 km"
+              draw
+              duration={Number(v.duration ?? 1400)}
+              courier
+              tripDuration={trip}
+              easing={String(v.easing ?? "ease-out") as "ease-out" | "linear" | "ease-in-out"}
+              paused={Boolean(v.paused ?? false)}
+            />
             <Marker position={STUDIO} label="Bakery, Saint-Viateur" drop={0} />
             <Marker position={HOME} label="You, Parc La Fontaine" drop={240} />
           </Map>
           <div className="lab-delivery-side">
-            <Stat label="Arrives in" value={<span><NumberTicker value={eta} locale="en-CA" trigger="change" duration={500} /> min</span>} />
+            <Stat
+              label="Arrives in"
+              value={
+                <span>
+                  <NumberTicker value={eta} locale="en-CA" trigger="change" duration={500} /> min
+                </span>
+              }
+            />
             <Progress label="Trip" value={Math.round(((12 - eta) / 11) * 100)} showLabel size="sm" />
             <p className="lab-sublead">Two croissants, one sourdough. Demo data.</p>
           </div>
@@ -348,10 +569,38 @@ export function Delivery({ v = {} }: { v?: Values }) {
   );
 }
 
-export const SCENARIOS: Record<ScenarioId, { title: string; product: string; lead: string; View: (p: { v?: Values; motion?: string }) => ReactNode }> = {
-  dashboard: { title: "An operations dashboard", product: "Orazaka", lead: "The runs of the day: figures that climb as runs land, new rows that arrive on top.", View: Dashboard },
-  chat: { title: "A support chat", product: "Orazaka", lead: "A restaurant's assistant answers: the typing indicator, then the answer streaming in.", View: Chat },
-  checkout: { title: "A booking checkout", product: "Akinaza", lead: "Pick a time, review, pay: each step crosses to the next, the button says it is working.", View: Checkout },
-  delivery: { title: "A delivery on a map", product: "Courier", lead: "An order on its way: the route draws itself, the courier travels, the arrival counts down.", View: Delivery },
-  wall: { title: "Akinaza's shop wall", product: "Akinaza", lead: "A pinned photograph, a taped note, a small sign and a screen; each motion is tuned separately.", View: WallMotionWall },
+export const SCENARIOS: Record<
+  ScenarioId,
+  { title: string; product: string; lead: string; View: (p: { v?: Values; motion?: string }) => ReactNode }
+> = {
+  dashboard: {
+    title: "An operations dashboard",
+    product: "Orazaka",
+    lead: "The runs of the day: figures that climb as runs land, new rows that arrive on top.",
+    View: Dashboard,
+  },
+  chat: {
+    title: "A support chat",
+    product: "Orazaka",
+    lead: "A restaurant's assistant answers: the typing indicator, then the answer streaming in.",
+    View: Chat,
+  },
+  checkout: {
+    title: "A booking checkout",
+    product: "Akinaza",
+    lead: "Pick a time, review, pay: each step crosses to the next, the button says it is working.",
+    View: Checkout,
+  },
+  delivery: {
+    title: "A delivery on a map",
+    product: "Courier",
+    lead: "An order on its way: the route draws itself, the courier travels, the arrival counts down.",
+    View: Delivery,
+  },
+  wall: {
+    title: "Akinaza's shop wall",
+    product: "Akinaza",
+    lead: "A pinned photograph, a taped note, a small sign and a screen; each motion is tuned separately.",
+    View: WallMotionWall,
+  },
 };

@@ -1,7 +1,7 @@
 import { core } from "./support/core.mjs";
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-const { TAB_ROUTES, resolveTabFromLocation, getHrefForTab, } = core;
+const { TAB_ROUTES, resolveTabFromLocation, getHrefForTab } = core;
 
 describe("RESTful Routing & URL Resolution", () => {
   it("resolves default tab (orazaka) when path is root or empty", () => {
@@ -19,7 +19,12 @@ describe("RESTful Routing & URL Resolution", () => {
   });
 
   it("resolves tabs under GitHub Pages repository subpath /krizaka-lab/", () => {
-    const expected = { jarvis: "jarvis", "liquid-glass/": "caustics", "neural-lattice": "lattice", "krizaka-ui": "kz-ui" };
+    const expected = {
+      jarvis: "jarvis",
+      "liquid-glass/": "caustics",
+      "neural-lattice": "lattice",
+      "krizaka-ui": "kz-ui",
+    };
     for (const [path, tab] of Object.entries(expected)) {
       assert.equal(resolveTabFromLocation({ pathname: `/krizaka-lab/${path}` }), tab, path);
     }
@@ -62,7 +67,10 @@ const { cleanSpaRedirect } = core;
 describe("GitHub Pages 404 fallback", () => {
   it("turns ?/<route> back into the REST path under the project base", () => {
     assert.equal(cleanSpaRedirect({ pathname: "/krizaka-lab/", search: "?/jarvis", hash: "" }), "/krizaka-lab/jarvis");
-    assert.equal(cleanSpaRedirect({ pathname: "/krizaka-lab/", search: "?/specs&x=1", hash: "#top" }), "/krizaka-lab/specs?x=1#top");
+    assert.equal(
+      cleanSpaRedirect({ pathname: "/krizaka-lab/", search: "?/specs&x=1", hash: "#top" }),
+      "/krizaka-lab/specs?x=1#top",
+    );
   });
 
   it("leaves a normal address alone", () => {
@@ -94,7 +102,21 @@ const { GUIDE_PATHS, SCENARIO_PATHS, LEGACY_PATHS } = core;
 
 describe("guides, scenarios and the old addresses", () => {
   it("each guide and each scenario is its own address, also under /krizaka-lab/", () => {
-    for (const id of ["list-arrival", "live-number", "page-transition", "button-feedback", "streaming-answer", "route-draw", "pin-drop", "tape-stick", "paper-sway", "develop", "crt-power-on", "crt-power-off", "neon-flicker"]) {
+    for (const id of [
+      "list-arrival",
+      "live-number",
+      "page-transition",
+      "button-feedback",
+      "streaming-answer",
+      "route-draw",
+      "pin-drop",
+      "tape-stick",
+      "paper-sway",
+      "develop",
+      "crt-power-on",
+      "crt-power-off",
+      "neon-flicker",
+    ]) {
       assert.ok(GUIDE_PATHS.includes(id), id);
       assert.equal(resolvePage({ pathname: `/krizaka-lab/${id}`, search: "", hash: "" }), id);
     }
@@ -106,7 +128,13 @@ describe("guides, scenarios and the old addresses", () => {
   });
 
   it("the old demo pages lead to their guide", () => {
-    assert.deepEqual(LEGACY_PATHS, { "data-motion": "list-arrival", figures: "live-number", transitions: "page-transition", conversation: "streaming-answer", maps: "route-draw" });
+    assert.deepEqual(LEGACY_PATHS, {
+      "data-motion": "list-arrival",
+      figures: "live-number",
+      transitions: "page-transition",
+      conversation: "streaming-answer",
+      maps: "route-draw",
+    });
     assert.equal(resolvePage({ pathname: "/krizaka-lab/data-motion", search: "", hash: "" }), "list-arrival");
     assert.equal(resolvePage({ pathname: "/maps/", search: "", hash: "" }), "route-draw");
     assert.equal(resolvePage({ pathname: "/krizaka-lab/", search: "?/conversation", hash: "" }), "streaming-answer");

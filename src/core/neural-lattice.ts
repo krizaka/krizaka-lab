@@ -264,10 +264,20 @@ export class NeuralLatticeRenderer {
       n.x += n.vx * dt;
       n.y += n.vy * dt;
 
-      if (n.x < pad) { n.x = pad; n.vx *= -1; }
-      else if (n.x > this.width - pad) { n.x = this.width - pad; n.vx *= -1; }
-      if (n.y < pad) { n.y = pad; n.vy *= -1; }
-      else if (n.y > this.height - pad) { n.y = this.height - pad; n.vy *= -1; }
+      if (n.x < pad) {
+        n.x = pad;
+        n.vx *= -1;
+      } else if (n.x > this.width - pad) {
+        n.x = this.width - pad;
+        n.vx *= -1;
+      }
+      if (n.y < pad) {
+        n.y = pad;
+        n.vy *= -1;
+      } else if (n.y > this.height - pad) {
+        n.y = this.height - pad;
+        n.vy *= -1;
+      }
 
       if (cursor.x > 0 && cursor.y > 0) {
         const dx = cursor.x - n.x;
@@ -304,7 +314,8 @@ export class NeuralLatticeRenderer {
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
           ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = a.membranePotential > 0.4 || b.membranePotential > 0.4 ? colors.primary : "rgba(142, 146, 151, 0.2)";
+          ctx.strokeStyle =
+            a.membranePotential > 0.4 || b.membranePotential > 0.4 ? colors.primary : "rgba(142, 146, 151, 0.2)";
           ctx.lineWidth = neighbor.weight > 1.4 ? 1.6 : 0.8;
           ctx.globalAlpha = Math.min(1, alpha);
           ctx.stroke();

@@ -28,7 +28,7 @@ function wallStyle(motion: GuideId, values: Values): CSSProperties {
     const value = settings[key];
     if (value === undefined) continue;
     const knob = knobs.find((item) => item.key === key);
-    const unit = key === "amplitude" ? "deg" : knob?.kind === "range" ? knob.unit ?? "" : "";
+    const unit = key === "amplitude" ? "deg" : knob?.kind === "range" ? (knob.unit ?? "") : "";
     style[`--kz-wall-${name}`] = key === "easing" ? String(value) : `${value}${unit}`;
   }
   return style as CSSProperties;
@@ -105,7 +105,12 @@ export function WallMotionWall({ v = {}, motion = "pin-drop" }: { v?: Values; mo
             </Card.Root>
           ) : null}
 
-          <Badge className="lab-wall-sign" tone="accent" {...dataFor(motion, "neon-flicker")} data-kz-flickers={flickers}>
+          <Badge
+            className="lab-wall-sign"
+            tone="accent"
+            {...dataFor(motion, "neon-flicker")}
+            data-kz-flickers={flickers}
+          >
             {t.wall.sign}
           </Badge>
         </div>

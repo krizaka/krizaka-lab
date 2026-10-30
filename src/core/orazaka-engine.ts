@@ -168,7 +168,7 @@ export class OrazakaEngineRenderer {
         accent: brand.secondary,
         status: custom?.status ?? "streaming",
         enabled: custom?.enabled ?? true,
-        packetRate: custom?.packetRate ?? (1.0 + Math.sin(index) * 0.3),
+        packetRate: custom?.packetRate ?? 1.0 + Math.sin(index) * 0.3,
         activeRequests: 14 + index * 4,
       };
     });
@@ -349,11 +349,7 @@ export class OrazakaEngineRenderer {
       }
 
       ctx.lineWidth = isTargeted ? 2.6 : 1.2;
-      ctx.strokeStyle = isTargeted
-        ? src.color
-        : isDimmed
-        ? "rgba(255, 255, 255, 0.05)"
-        : "rgba(249, 115, 22, 0.2)";
+      ctx.strokeStyle = isTargeted ? src.color : isDimmed ? "rgba(255, 255, 255, 0.05)" : "rgba(249, 115, 22, 0.2)";
       ctx.setLineDash([4, 6]);
       ctx.lineDashOffset = -this.time * 26;
       ctx.stroke();
@@ -521,14 +517,7 @@ export class OrazakaEngineRenderer {
     this.shockwaves = aliveWaves;
 
     // Ambient radial bloom
-    const grad = ctx.createRadialGradient(
-      this.coreX,
-      this.coreY,
-      2,
-      this.coreX,
-      this.coreY,
-      currentRadius * 2.4
-    );
+    const grad = ctx.createRadialGradient(this.coreX, this.coreY, 2, this.coreX, this.coreY, currentRadius * 2.4);
     grad.addColorStop(0, "rgba(249, 115, 22, 0.45)");
     grad.addColorStop(0.5, "rgba(249, 115, 22, 0.14)");
     grad.addColorStop(1, "rgba(249, 115, 22, 0)");
@@ -671,7 +660,7 @@ export class OrazakaEngineRenderer {
     cy: number,
     type: IconType,
     primaryColor: string,
-    strokeColor: string
+    strokeColor: string,
   ): void {
     ctx.save();
     ctx.strokeStyle = strokeColor;
