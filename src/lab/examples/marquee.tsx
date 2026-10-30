@@ -1,6 +1,6 @@
 import { Marquee } from "@krizaka/ui/marquee";
 
-const names = ["Orazaka", "Orochia", "Yomizaka", "Kachizaka", "Akinaza", "Yasakia", "Yororis"];
+const names = ["Orazaka", "Yomizaka", "Akinaza"];
 
 export function Example() {
   return (

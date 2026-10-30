@@ -1,0 +1,28 @@
+{
+  "allow": [
+    {
+      "path": "index.html",
+      "why": "the Vite entry of the lab's demo (vite build --outDir dist-demo reads it from the root)"
+    },
+    {
+      "path": "vite.config.ts",
+      "why": "the Vite configuration of the lab's demo, read from the root by vite and by the tests that compile src/core"
+    },
+    {
+      "path": "messages",
+      "why": "the lab's English catalogue, checked by krizaka-i18n in scripts/ci-after-build.sh"
+    },
+    {
+      "path": "public",
+      "why": "Vite's static folder of the demo (favicon), copied as is into dist-demo"
+    },
+    {
+      "path": "src",
+      "why": "the lab's source: the cards, the experiments and the engine core the tests compile"
+    },
+    {
+      "path": "experiments",
+      "why": "the lab's experiments by area (motion, java, ai, ui, data), one README each: what it tests, its status; the ui/ area holds the parked entries of ADR-008"
+    }
+  ]
+}

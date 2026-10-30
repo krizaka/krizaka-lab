@@ -1,8 +1,12 @@
-# krizaka-motion — agent instructions
+# krizaka-lab — agent instructions
 
-The Krizaka **motion lab**: guides (one motion task each, played on a real app screen made of `@krizaka/ui`), the four
-scenarios (dashboard, chat, checkout, delivery) and the canvas experiments. Live at https://motion.krizaka.com/
-(moving to motion.krizaka.com, krizaka-motion#45). It is **a lab, not a package**: nothing here is published on npm.
+**Krizaka Lab**, the family's lab for UI, motion, Java, AI and data experiments (it was the motion lab;
+`motion.krizaka.com` answers 301 to `lab.krizaka.com`, krizaka-motion#69). Live at https://lab.krizaka.com/.
+Experiments are organised by area in `experiments/<area>/<name>/`, a README each (status `idea` · `prototype` · `promoted` ·
+`dropped`, and the issue or ADR it feeds). **Nothing outside the lab imports from the lab** (org rule `lab-isolation`): a
+piece that proves itself is promoted into a real package by an ADR. The site holds the motion area today: guides (one
+motion task each, played on a real app screen made of `@krizaka/ui`), the four scenarios (dashboard, chat, checkout,
+delivery) and the canvas experiments. It is **a lab, not a package or a product**: nothing here is published on npm.
 
 ## The rules
 

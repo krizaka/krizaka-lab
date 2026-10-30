@@ -2,7 +2,7 @@
  * @krizaka/motion — Orazaka Engine Canvas & Particle System (V2 Next-Level)
  * Supports multiple flow directions, bi-directional routing, customizable vector icons,
  * custom text labels, particle styles, and individual node inspection.
- * 100% self-contained in krizaka-motion.
+ * 100% self-contained in krizaka-lab.
  */
 
 import {
@@ -20,11 +20,7 @@ import { PRODUCT_BRANDS } from "./color-palettes";
 
 const DEFAULT_PRODUCTS: Array<{ id: ProductId; name: string; subtitle: string; icon: IconType }> = [
   { id: "yomizaka", name: "Yomizaka", subtitle: "Doc AI", icon: "doc" },
-  { id: "orochia", name: "Orochia", subtitle: "Video 4K", icon: "video" },
-  { id: "kachizaka", name: "Kachizaka", subtitle: "Points", icon: "chart" },
   { id: "akinaza", name: "Akinaza", subtitle: "Fiscal/Agenda", icon: "calendar" },
-  { id: "yasakia", name: "Yasakia", subtitle: "Chat/Social", icon: "chat" },
-  { id: "yororis", name: "Yororis", subtitle: "Espace Vocal", icon: "voice" },
 ];
 
 export interface OrazakaEngineOptions {

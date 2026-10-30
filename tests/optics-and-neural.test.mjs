@@ -41,10 +41,10 @@ describe("Hodgkin-Huxley Synaptic Potentials & Cognitive Clusters", () => {
   });
 
   it("verifies cognitive cluster brand alignment", () => {
-    const clusters = ["orazaka", "yororis", "jarvis"];
+    const clusters = ["orazaka", "voice", "jarvis"];
     assert.equal(clusters.length, 3);
     assert.ok(clusters.includes("orazaka"));
-    assert.ok(clusters.includes("yororis"));
+    assert.ok(clusters.includes("voice"));
     assert.ok(clusters.includes("jarvis"));
   });
 });

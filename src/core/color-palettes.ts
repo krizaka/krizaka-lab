@@ -31,22 +31,6 @@ export const PRODUCT_BRANDS: Record<ProductId, BrandColorConfig> = {
     glow: "rgba(99, 102, 241, 0.45)",
     rgb: [99, 102, 241],
   },
-  orochia: {
-    id: "orochia",
-    name: "Orochia",
-    primary: "#a855f7", // Violet
-    secondary: "#ec4899", // Magenta
-    glow: "rgba(168, 85, 247, 0.45)",
-    rgb: [168, 85, 247],
-  },
-  kachizaka: {
-    id: "kachizaka",
-    name: "Kachizaka",
-    primary: "#eab308", // Gold
-    secondary: "#3b82f6", // Cobalt
-    glow: "rgba(234, 179, 8, 0.45)",
-    rgb: [234, 179, 8],
-  },
   akinaza: {
     id: "akinaza",
     name: "Akinaza",
@@ -54,22 +38,6 @@ export const PRODUCT_BRANDS: Record<ProductId, BrandColorConfig> = {
     secondary: "#d97706", // Copper
     glow: "rgba(16, 185, 129, 0.45)",
     rgb: [16, 185, 129],
-  },
-  yasakia: {
-    id: "yasakia",
-    name: "Yasakia",
-    primary: "#14b8a6", // Turquoise
-    secondary: "#06b6d4",
-    glow: "rgba(20, 184, 166, 0.45)",
-    rgb: [20, 184, 166],
-  },
-  yororis: {
-    id: "yororis",
-    name: "Yororis",
-    primary: "#7c9082", // Sage
-    secondary: "#b8c5b9", // Sand
-    glow: "rgba(124, 144, 130, 0.45)",
-    rgb: [124, 144, 130],
   },
 };
 
@@ -100,7 +68,7 @@ export const JARVIS_THEMES: Record<
     bgGlow: "rgba(249, 115, 22, 0.09)",
     rgb: [249, 115, 22],
   },
-  yororis: {
+  sage: {
     primary: "#7c9082",
     secondary: "#9cb1a3",
     glow: "rgba(124, 144, 130, 0.5)",

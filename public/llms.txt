@@ -1,0 +1,15 @@
+# Krizaka Lab
+
+> Krizaka Lab (lab.krizaka.com) is the lab of the Krizaka family: experiments in UI, motion, Java, AI and data. Nothing here is a product and nothing is published as a package; an experiment that proves itself is promoted into a real package (Krizaka UI, Krizaka TypeScript, Krizaka Java) by a decision record.
+
+## The lab
+
+- [Home](https://lab.krizaka.com/): the motion guides, one task each, on a real app screen made of Krizaka UI
+- [Experiments](https://lab.krizaka.com/experiments/): canvas studies of the motion system
+- [Source and experiment index](https://github.com/krizaka/krizaka-lab/tree/main/experiments): by area (motion, java, ai, ui, data), with the status of each
+
+## The family
+
+- [Krizaka](https://www.krizaka.com/): the company
+- [Krizaka UI](https://ui.krizaka.com/): the components and the motion system the lab is built on
+- [Krizaka Java](https://java.krizaka.com/): the building blocks

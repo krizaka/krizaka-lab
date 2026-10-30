@@ -35,5 +35,5 @@ export const ITEMS: ItemData[] = [
 
 /** The code a card prints: its example's source, one import path aside (the lab's views are not on npm yet). */
 export function shownCode(source: string): string {
-  return source.replace(/from "\.\.\/\.\.\/react\/(\w+)";/g, 'from "@krizaka/motion/react"; // not on npm: krizaka/krizaka-motion src/react/$1').trimEnd();
+  return source.replace(/from "\.\.\/\.\.\/react\/(\w+)";/g, 'from "@krizaka/motion/react"; // not on npm: krizaka/krizaka-lab src/react/$1').trimEnd();
 }
