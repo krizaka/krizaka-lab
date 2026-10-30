@@ -13,6 +13,7 @@ import { PageHero } from "@krizaka/ui/page-hero";
 
 import { type LabPage, SCENARIO_PATHS, TAB_ORDER, type TabId } from "../core/router";
 import { useLab } from "./context";
+import { HomeLink } from "./home-link";
 import { DEMOS } from "./demos";
 import { GUIDES } from "./guides";
 import { SCENARIOS } from "./scenarios";
@@ -122,7 +123,7 @@ export function Experiments() {
         title="Experiments"
         lead="Canvas studies: what the motion system can draw before a piece of it moves into Krizaka UI as SVG and CSS. Krizaka sites use no canvas."
         back={{ href: href("home"), label: "Guides" }}
-        linkAs={(props: React.ComponentProps<"a">) => <a {...props} onClick={go("home")} />}
+        linkAs={HomeLink}
       />
       <Section id="studies" spacing="sm">
         <CardGrid as="ul" min={300} columns={3}>

@@ -104,66 +104,46 @@ export const TAB_ORDER: TabId[] = [
   "architecture",
 ];
 
+/** The tab a word names (its id, path or an alias), or `null`. */
+function tabNamed(word: string | undefined): TabId | null {
+  if (!word) return null;
+  for (const [id, def] of Object.entries(TAB_ROUTES)) {
+    if (id === word || def.path === word || def.aliases.includes(word)) return id as TabId;
+  }
+  return null;
+}
+
+/** The last segment of a path, lower-cased. */
+function lastSegment(path: string): string | undefined {
+  return path.split("/").filter(Boolean).at(-1)?.toLowerCase();
+}
+
+/** `?tab=voice`, or the GitHub Pages 404 SPA format `?/voice` and `?/krizaka-lab/voice`. */
+function tabFromSearch(search: string): TabId | null {
+  const params = new URLSearchParams(search.replace(/^\?/, ""));
+  const fromQuery = tabNamed(params.get("tab")?.toLowerCase().trim());
+  if (fromQuery) return fromQuery;
+  const firstKey = Array.from(params.keys())[0];
+  return firstKey?.startsWith("/") ? tabNamed(lastSegment(firstKey)) : null;
+}
+
+/** `#/voice` or `#voice`. */
+function tabFromHash(hash: string): TabId | null {
+  const raw = hash
+    .replace(/^#[/]?/, "")
+    .trim()
+    .toLowerCase();
+  return raw ? tabNamed(lastSegment(raw)) : null;
+}
+
 export function resolveTabFromLocation(loc: { pathname?: string; search?: string; hash?: string }): TabId {
-  // 1. Check query parameter: ?tab=voice
-  if (loc.search) {
-    const rawSearch = loc.search.replace(/^\?/, "");
-    const params = new URLSearchParams(rawSearch);
-    const queryTab = params.get("tab")?.toLowerCase().trim();
-    if (queryTab) {
-      for (const [id, def] of Object.entries(TAB_ROUTES)) {
-        if (id === queryTab || def.path === queryTab || def.aliases.includes(queryTab)) {
-          return id as TabId;
-        }
-      }
-    }
-
-    // 1b. Check GitHub Pages 404 SPA format: ?/voice or ?/krizaka-lab/voice
-    const firstKey = Array.from(params.keys())[0];
-    if (firstKey && firstKey.startsWith("/")) {
-      const parts = firstKey.split("/").filter(Boolean);
-      const candidate = parts[parts.length - 1]?.toLowerCase();
-      if (candidate) {
-        for (const [id, def] of Object.entries(TAB_ROUTES)) {
-          if (id === candidate || def.path === candidate || def.aliases.includes(candidate)) {
-            return id as TabId;
-          }
-        }
-      }
-    }
-  }
-
-  // 2. Check hash: #/voice or #voice
-  if (loc.hash) {
-    const rawHash = loc.hash
-      .replace(/^#[/]?/, "")
-      .trim()
-      .toLowerCase();
-    if (rawHash) {
-      const hashSegments = rawHash.split("/").filter(Boolean);
-      const candidate = hashSegments[hashSegments.length - 1];
-      for (const [id, def] of Object.entries(TAB_ROUTES)) {
-        if (id === candidate || def.path === candidate || def.aliases.includes(candidate)) {
-          return id as TabId;
-        }
-      }
-    }
-  }
-
-  // 3. Check pathname: /krizaka-lab/voice or /voice
-  if (loc.pathname) {
-    const segments = loc.pathname.split("/").filter(Boolean);
-    const candidate = segments[segments.length - 1]?.toLowerCase();
-    if (candidate) {
-      for (const [id, def] of Object.entries(TAB_ROUTES)) {
-        if (id === candidate || def.path === candidate || def.aliases.includes(candidate)) {
-          return id as TabId;
-        }
-      }
-    }
-  }
-
-  return "orazaka";
+  return (
+    (loc.search ? tabFromSearch(loc.search) : null) ??
+    (loc.hash ? tabFromHash(loc.hash) : null) ??
+    // /krizaka-lab/voice or /voice
+    (loc.pathname ? tabNamed(lastSegment(loc.pathname)) : null) ??
+    "orazaka"
+  );
 }
 
 export function getHrefForTab(
