@@ -1,0 +1,13 @@
+{
+  "project": "krizaka_krizaka-lab",
+  "counts": {
+    "bugs": 5,
+    "vulnerabilities": 0,
+    "hotspots": 0,
+    "smells_blocker": 0,
+    "smells_critical": 6,
+    "smells_major": 57,
+    "smells_minor": 90,
+    "smells_info": 0
+  }
+}
