@@ -37,6 +37,31 @@ import { i18n, LOCALE } from "./lab/messages";
 const REPO = "https://github.com/krizaka/krizaka-lab";
 const isGuide = (p: LabPage): p is GuideId => (GUIDE_PATHS as readonly string[]).includes(p);
 const isScenario = (p: LabPage): p is ScenarioId => (SCENARIO_PATHS as readonly string[]).includes(p);
+type Dictionary = ReturnType<typeof i18n.getDictionary>;
+
+function pageName(page: LabPage, t: Dictionary): string {
+  if (page === "home") return t.home.eyebrow;
+  if (page === "experiments") return "Experiments";
+  if (isGuide(page)) return guideById(page).title;
+  if (isScenario(page)) return SCENARIOS[page].title;
+  return t.demos[page].name;
+}
+
+/** The bar's section a page belongs to. */
+function sectionOf(page: LabPage): LabPage {
+  if (isGuide(page) || isScenario(page)) return "home";
+  if (page === "experiments" || ["orazaka", "jarvis", "caustics", "lattice"].includes(page)) return "experiments";
+  return page;
+}
+
+function PageView({ page }: Readonly<{ page: LabPage }>) {
+  if (page === "home") return <Home />;
+  if (page === "experiments") return <Experiments />;
+  if (isGuide(page)) return <GuidePage key={page} id={page} />;
+  if (isScenario(page)) return <ScenarioPage key={page} id={page} />;
+  return <DemoPage id={page as TabId} />;
+}
+
 function Shell() {
   const [page, setPage] = useState<LabPage>(() => resolvePage(window.location));
   const locale = LOCALE;
@@ -52,16 +77,7 @@ function Shell() {
 
   useEffect(() => {
     document.documentElement.lang = locale;
-    const name =
-      page === "home"
-        ? t.home.eyebrow
-        : page === "experiments"
-          ? "Experiments"
-          : isGuide(page)
-            ? guideById(page).title
-            : isScenario(page)
-              ? SCENARIOS[page].title
-              : t.demos[page].name;
+    const name = pageName(page, t);
     document.title = page === "home" ? `${t.bar.label} — ${name}` : `${name} — ${t.bar.label}`;
     const canonicalUrl = getCanonicalUrl(window.location.pathname);
     document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute("href", canonicalUrl);
@@ -87,12 +103,7 @@ function Shell() {
     { id: "kz-ui", label: t.bar.gallery },
     { id: "experiments", label: "Experiments" },
   ];
-  const section: LabPage =
-    isGuide(page) || isScenario(page)
-      ? "home"
-      : page === "experiments" || ["orazaka", "jarvis", "caustics", "lattice"].includes(page)
-        ? "experiments"
-        : page;
+  const section = sectionOf(page);
 
   return (
     <LabContext.Provider value={lab}>
@@ -139,17 +150,7 @@ function Shell() {
       </div>
 
       <main className="lab-main">
-        {page === "home" ? (
-          <Home />
-        ) : page === "experiments" ? (
-          <Experiments />
-        ) : isGuide(page) ? (
-          <GuidePage key={page} id={page} />
-        ) : isScenario(page) ? (
-          <ScenarioPage key={page} id={page} />
-        ) : (
-          <DemoPage id={page as TabId} />
-        )}
+        <PageView page={page} />
       </main>
 
       <SiteFooter current="github" labels={familyLabels[locale]}>

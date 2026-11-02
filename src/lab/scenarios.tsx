@@ -100,6 +100,19 @@ export const NUMBER_FORMATS: Record<string, Intl.NumberFormatOptions> = {
   compact: { notation: "compact", maximumFractionDigits: 1 },
 };
 
+const runIdCell = (r: Run) => <code data-kz-arrive={r.fresh ? "" : undefined}>{r.id}</code>;
+
+function runStateCell(r: Run) {
+  let tone: "success" | "accent" | "neutral" = "neutral";
+  if (r.state === "Done") tone = "success";
+  else if (r.state === "Running") tone = "accent";
+  return <Badge tone={tone}>{r.state}</Badge>;
+}
+
+const runTrendCell = (r: Run) => (
+  <Sparkline data={r.trend} width={84} height={24} variant="area" title={`${r.pack}, last hour`} />
+);
+
 export function Dashboard({ v = {} }: { v?: Values }) {
   const host = useRef<HTMLDivElement>(null);
   const visible = useInView(host);
@@ -165,7 +178,7 @@ export function Dashboard({ v = {} }: { v?: Values }) {
                 id: "id",
                 header: "Run",
                 value: (r: Run) => r.id,
-                cell: (r: Run) => <code data-kz-arrive={r.fresh ? "" : undefined}>{r.id}</code>,
+                cell: runIdCell,
               },
               { id: "pack", header: "Pack", sortable: true, value: (r: Run) => r.pack },
               {
@@ -173,11 +186,7 @@ export function Dashboard({ v = {} }: { v?: Values }) {
                 header: "State",
                 sortable: true,
                 value: (r: Run) => r.state,
-                cell: (r: Run) => (
-                  <Badge tone={r.state === "Done" ? "success" : r.state === "Running" ? "accent" : "neutral"}>
-                    {r.state}
-                  </Badge>
-                ),
+                cell: runStateCell,
               },
               {
                 id: "cost",
@@ -191,9 +200,7 @@ export function Dashboard({ v = {} }: { v?: Values }) {
                 id: "trend",
                 header: "Last hour",
                 value: (r: Run) => r.id,
-                cell: (r: Run) => (
-                  <Sparkline data={r.trend} width={84} height={24} variant="area" title={`${r.pack}, last hour`} />
-                ),
+                cell: runTrendCell,
               },
             ]}
           />
