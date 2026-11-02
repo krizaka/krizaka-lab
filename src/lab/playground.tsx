@@ -12,7 +12,7 @@ import { type Knob, type Values, defaults, propsSnippet, readValues, writeValues
 
 export type { Knob, Values } from "./playground-lib";
 
-function Control({
+export function Control({
   knob,
   value,
   onChange,
@@ -46,7 +46,7 @@ function Control({
   if (knob.kind === "range")
     return (
       <Slider
-        label={`${knob.label}${knob.unit ? ` (${knob.unit})` : ""}`}
+        label={knob.unit ? `${knob.label} (${knob.unit})` : knob.label}
         showLabel
         value={Number(value)}
         min={knob.min}

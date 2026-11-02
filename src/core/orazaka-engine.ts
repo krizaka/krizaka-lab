@@ -349,7 +349,10 @@ export class OrazakaEngineRenderer {
       }
 
       ctx.lineWidth = isTargeted ? 2.6 : 1.2;
-      ctx.strokeStyle = isTargeted ? src.color : isDimmed ? "rgba(255, 255, 255, 0.05)" : "rgba(249, 115, 22, 0.2)";
+      let stroke = "rgba(249, 115, 22, 0.2)";
+      if (isTargeted) stroke = src.color;
+      else if (isDimmed) stroke = "rgba(255, 255, 255, 0.05)";
+      ctx.strokeStyle = stroke;
       ctx.setLineDash([4, 6]);
       ctx.lineDashOffset = -this.time * 26;
       ctx.stroke();

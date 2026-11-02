@@ -155,6 +155,11 @@ export function CheckoutPageTransition({
   );
 }
 
+function announcementOf(phase: "idle" | "working" | "done", working: string, done: string): string | undefined {
+  if (phase === "working") return working;
+  return phase === "done" ? done : undefined;
+}
+
 export function CheckoutPayButton({
   phase,
   label,
@@ -178,7 +183,7 @@ export function CheckoutPayButton({
       className="lab-checkout-pay"
       loading={phase === "working"}
       status={phase === "done" ? "success" : null}
-      announce={phase === "working" ? working : phase === "done" ? done : undefined}
+      announce={announcementOf(phase, working, done)}
       disabled={disabled || phase !== "idle"}
       onClick={onClick}
       aria-describedby={errorId}

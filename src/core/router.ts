@@ -129,10 +129,7 @@ function tabFromSearch(search: string): TabId | null {
 
 /** `#/voice` or `#voice`. */
 function tabFromHash(hash: string): TabId | null {
-  const raw = hash
-    .replace(/^#[/]?/, "")
-    .trim()
-    .toLowerCase();
+  const raw = hash.replace(/^#\/?/, "").trim().toLowerCase();
   return raw ? tabNamed(lastSegment(raw)) : null;
 }
 
@@ -255,5 +252,6 @@ export function getCanonicalUrl(pathname: string): string {
   }
   if (routePath.toLowerCase().endsWith("/index.html")) routePath = routePath.slice(0, -"/index.html".length);
   const route = routePath.split("/").filter(Boolean).join("/");
-  return `https://lab.krizaka.com/${route ? `${route}/` : ""}`;
+  const suffix = route ? `${route}/` : "";
+  return `https://lab.krizaka.com/${suffix}`;
 }

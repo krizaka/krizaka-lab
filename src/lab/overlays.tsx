@@ -22,14 +22,17 @@ export const DIALOG_KNOBS: readonly Knob[] = [
   { kind: "choice", key: "size", label: "size", options: ["sm", "md", "lg"], value: "md" },
 ];
 
+function dialogNoun(placement: string | number | boolean): string {
+  if (placement === "bottom") return "sheet";
+  return placement === "center" ? "dialog" : "drawer";
+}
+
 function DialogDemo({ v }: { v: Record<string, string | number | boolean> }) {
   return (
     <div className="lab-overlay">
       <Dialog.Root>
         <Dialog.Trigger asChild>
-          <Button variant="primary">
-            Open the {v.placement === "bottom" ? "sheet" : v.placement === "center" ? "dialog" : "drawer"}
-          </Button>
+          <Button variant="primary">Open the {dialogNoun(v.placement)}</Button>
         </Dialog.Trigger>
         <Dialog.Content
           placement={v.placement as "center" | "bottom" | "right" | "left"}
