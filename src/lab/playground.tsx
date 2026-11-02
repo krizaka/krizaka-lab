@@ -12,7 +12,7 @@ import { type Knob, type Values, defaults, propsSnippet, readValues, writeValues
 
 export type { Knob, Values } from "./playground-lib";
 
-function Control({
+export function Control({
   knob,
   value,
   onChange,

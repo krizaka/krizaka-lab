@@ -3,13 +3,10 @@
    guides of the same screen. The settings live in the address, so a setup can be shared. */
 
 import { CodeBlock } from "@krizaka/ui/code-block";
-import { Chip } from "@krizaka/ui/chip";
 import { DataTable } from "@krizaka/ui/data-table";
 import { Caption } from "@krizaka/ui/footnote";
 import { Section } from "@krizaka/ui/page";
 import { PageHero } from "@krizaka/ui/page-hero";
-import { Slider } from "@krizaka/ui/slider";
-import { Switch } from "@krizaka/ui/switch";
 import { useEffect, useMemo, useState } from "react";
 
 import type { LabPage } from "../core/router";
@@ -17,59 +14,9 @@ import { useLab } from "./context";
 import { HomeLink } from "./home-link";
 import { type ConfigRow, type GuideId, guideById, guidesOf } from "./guides";
 import { type Knob, type Values, defaults, readValues, writeValues } from "./playground-lib";
+import { Control } from "./playground";
 import { SCENARIOS } from "./scenarios";
 import { i18n } from "./messages";
-
-function Setting({
-  knob,
-  value,
-  onChange,
-}: {
-  knob: Knob;
-  value: string | number | boolean;
-  onChange: (v: string | number | boolean) => void;
-}) {
-  if (knob.kind === "choice")
-    return (
-      <div className="lab-control">
-        <span className="lab-control-label" aria-hidden>
-          {knob.label}
-        </span>
-        <Chip.Group
-          type="single"
-          required
-          size="sm"
-          label={knob.label}
-          value={String(value)}
-          onValueChange={(v) => v && onChange(v)}
-        >
-          {knob.options.map((o) => (
-            <Chip key={o} value={o}>
-              {o}
-            </Chip>
-          ))}
-        </Chip.Group>
-      </div>
-    );
-  if (knob.kind === "range")
-    return (
-      <Slider
-        label={knob.unit ? `${knob.label} (${knob.unit})` : knob.label}
-        showLabel
-        value={Number(value)}
-        min={knob.min}
-        max={knob.max}
-        step={knob.step}
-        onValueChange={(v) => onChange(v as number)}
-      />
-    );
-  return (
-    <label className="lab-switch">
-      <Switch checked={Boolean(value)} onCheckedChange={onChange} label={knob.label} />
-      <span aria-hidden>{knob.label}</span>
-    </label>
-  );
-}
 
 export function GuidePage({ id }: { id: GuideId }) {
   const { t, href, go } = useLab();
@@ -121,7 +68,7 @@ export function GuidePage({ id }: { id: GuideId }) {
             </div>
             <div className="lab-controls">
               {g.knobs.map((k) => (
-                <Setting
+                <Control
                   key={k.key}
                   knob={k}
                   value={values[k.key] ?? initial[k.key]!}

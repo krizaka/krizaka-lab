@@ -32,9 +32,7 @@ function DialogDemo({ v }: { v: Record<string, string | number | boolean> }) {
     <div className="lab-overlay">
       <Dialog.Root>
         <Dialog.Trigger asChild>
-          <Button variant="primary">
-            Open the {dialogNoun(v.placement)}
-          </Button>
+          <Button variant="primary">Open the {dialogNoun(v.placement)}</Button>
         </Dialog.Trigger>
         <Dialog.Content
           placement={v.placement as "center" | "bottom" | "right" | "left"}

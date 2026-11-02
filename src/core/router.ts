@@ -129,10 +129,7 @@ function tabFromSearch(search: string): TabId | null {
 
 /** `#/voice` or `#voice`. */
 function tabFromHash(hash: string): TabId | null {
-  const raw = hash
-    .replace(/^#\/?/, "")
-    .trim()
-    .toLowerCase();
+  const raw = hash.replace(/^#\/?/, "").trim().toLowerCase();
   return raw ? tabNamed(lastSegment(raw)) : null;
 }
 
