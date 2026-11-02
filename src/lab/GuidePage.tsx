@@ -54,7 +54,7 @@ function Setting({
   if (knob.kind === "range")
     return (
       <Slider
-        label={`${knob.label}${knob.unit ? ` (${knob.unit})` : ""}`}
+        label={knob.unit ? `${knob.label} (${knob.unit})` : knob.label}
         showLabel
         value={Number(value)}
         min={knob.min}
