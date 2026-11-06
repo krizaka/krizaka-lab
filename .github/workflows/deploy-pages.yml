@@ -32,7 +32,7 @@ jobs:
       - run: pnpm exec playwright install --with-deps chromium
       - run: |
           pnpm exec vite preview --outDir dist-demo --port 4173 --strictPort &
-          for i in $(seq 1 30); do curl -fsS http://localhost:4173/ >/dev/null && break; sleep 1; done
+          for _ in $(seq 1 30); do curl -fsS http://localhost:4173/ >/dev/null && break; sleep 1; done
           node scripts/check-overflow.mjs --base http://localhost:4173
           # The engine flow's dots travel and the engine breathes (reduced motion OFF; still when ON).
           node scripts/check-motion.mjs --base http://localhost:4173
