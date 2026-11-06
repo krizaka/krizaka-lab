@@ -6,7 +6,7 @@ const { PRODUCT_BRANDS, JARVIS_THEMES, CAUSTIC_PALETTES } = core;
 
 describe("Brand Color Palettes & Tokens", () => {
   it("defines the Krizaka product brands", () => {
-    const requiredBrands = ["orazaka", "yomizaka", "akinaza"];
+    const requiredBrands = ["sovkora", "verikora", "folioviv"];
 
     for (const id of requiredBrands) {
       const brand = PRODUCT_BRANDS[id];
@@ -20,13 +20,13 @@ describe("Brand Color Palettes & Tokens", () => {
     }
   });
 
-  it("verifies Orazaka uses brand orange and the sage theme uses sage", () => {
-    assert.equal(PRODUCT_BRANDS.orazaka.primary.toLowerCase(), "#f97316");
+  it("verifies Sovkora uses brand orange and the sage theme uses sage", () => {
+    assert.equal(PRODUCT_BRANDS.sovkora.primary.toLowerCase(), "#f97316");
     assert.equal(JARVIS_THEMES.sage.primary.toLowerCase(), "#7c9082");
   });
 
   it("defines all Jarvis HUD themes with valid contrasts", () => {
-    const themes = ["cyan", "orazaka", "sage", "crimson", "gold"];
+    const themes = ["cyan", "sovkora", "sage", "crimson", "gold"];
     for (const t of themes) {
       const theme = JARVIS_THEMES[t];
       assert.ok(theme, `Theme ${t} must exist`);

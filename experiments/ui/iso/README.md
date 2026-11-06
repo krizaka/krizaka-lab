@@ -8,7 +8,7 @@
 ## What it tests
 
 Whether an isometric hero (`IsoHub`: a luminous object with satellites and flows, static SVG animated by CSS) earns a place
-in `@krizaka/ui` again. It was the hero of the product pages on dev.orazaka.com, which no longer use it.
+in `@krizaka/ui` again. It was the hero of the product pages on dev.sovkora.com, which no longer use it.
 
 ## Result
 

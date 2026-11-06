@@ -6,7 +6,7 @@ export * from "./types";
 export * from "./color-palettes";
 export * from "./motion-controller";
 export * from "./spring-physics";
-export * from "./orazaka-engine";
+export * from "./sovkora-engine";
 export * from "./jarvis-hud";
 export * from "./liquid-caustics";
 export * from "./neural-lattice";

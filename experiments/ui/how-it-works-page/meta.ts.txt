@@ -22,7 +22,7 @@ export const meta = {
   web: {
     imports: ["HowItWorksPage"],
     examples: [
-      { name: "orazaka", title: "Orazaka's journey", description: "Install, guard, answer — each with its command.", template: true, purpose: "explain", why: "A reader grasps a process as a few steps, each with the command that does it." },
+      { name: "sovkora", title: "Sovkora's journey", description: "Install, guard, answer — each with its command.", template: true, purpose: "explain", why: "A reader grasps a process as a few steps, each with the command that does it." },
     ],
   },
 } satisfies ComponentMeta;

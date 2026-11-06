@@ -118,11 +118,11 @@
     },
     "hint": "Point at a product to see what it runs on the engine.",
     "flowLabel": "An engine and the products it powers",
-    "engine": "Orazaka",
+    "engine": "Sovkora",
     "engineCaption": "the engine",
     "uses": {
-      "yomizaka": "Document checks, each a traced run.",
-      "akinaza": "The tax assistant (planned)."
+      "verikora": "Document checks, each a traced run.",
+      "folioviv": "The tax assistant (planned)."
     },
     "planned": "planned",
     "canvasTitle": "The canvas experiment",
@@ -142,7 +142,7 @@
     "hudTheme": "Colour",
     "hudThemes": {
       "cyan": "Cyan",
-      "orazaka": "Orange",
+      "sovkora": "Orange",
       "sage": "Sage",
       "crimson": "Crimson",
       "gold": "Gold"
@@ -192,9 +192,9 @@
     "testsText": "Springs, Bézier lengths, optics, routes and palettes are unit-tested; the shell's pages are checked at 360 to 1440 px for horizontal overflow."
   },
   "demos": {
-    "orazaka": {
+    "sovkora": {
       "name": "Engine flow",
-      "eyebrow": "Orazaka",
+      "eyebrow": "Sovkora",
       "title": "One engine, the products it powers.",
       "lead": "Requests flow in, results come back — the flow krizaka.com's home draws, with its settings.",
       "card": "Radial, top to bottom or left to right; in, out or both."
@@ -262,7 +262,7 @@
     "source": "Source"
   },
   "wall": {
-    "app": "Akinaza",
+    "app": "Folioviv",
     "title": "Shop wall",
     "demo": "demo display",
     "note": "Pinned note",
@@ -273,7 +273,7 @@
     "captionNote": "Sample content · demo",
     "display": "Old display",
     "open": "Open today · demo",
-    "sign": "Akinaza",
+    "sign": "Folioviv",
     "replay": "Replay motion",
     "previewNote": "Lab prototype: the wall-motion CSS is not yet part of @krizaka/ui/motion.css. Copy the stylesheet with the example."
   },

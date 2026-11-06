@@ -1,8 +1,8 @@
 import { IsoHub } from "@krizaka/ui/iso";
 
 // Sovereign servers under a dome: three stages, a lit core, requests and documents flowing in, answers flowing out.
-// Wrap it in `.brand-orazaka` (or any brand) and the light follows the brand's accent.
-export default function IsoOrazakaHero() {
+// Wrap it in `.brand-sovkora` (or any brand) and the light follows the brand's accent.
+export default function IsoSovkoraHero() {
   return (
     <IsoHub
       label="Your AI runs on your own servers"

@@ -3,7 +3,7 @@
 - **Area:** motion
 - **Status:** promoted
 - **Feeds:** https://ui.krizaka.com/components/engine-flow
-- **Where it lives:** `src/core/orazaka-engine.ts`, route `/orazaka`
+- **Where it lives:** `src/core/sovkora-engine.ts`, route `/sovkora`
 
 ## What it tests
 

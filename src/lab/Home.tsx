@@ -115,7 +115,7 @@ export function Home() {
 /** The canvas studies: the lab's drawings, kept apart from what an app ships. */
 export function Experiments() {
   const { t, href, go } = useLab();
-  const ids = TAB_ORDER.filter((id): id is TabId => ["orazaka", "jarvis", "caustics", "lattice"].includes(id));
+  const ids = TAB_ORDER.filter((id): id is TabId => ["sovkora", "jarvis", "caustics", "lattice"].includes(id));
   return (
     <>
       <PageHero
@@ -145,7 +145,7 @@ export function Experiments() {
                     </div>
                     <Facts
                       items={[
-                        id === "orazaka"
+                        id === "sovkora"
                           ? { label: t.home.shipped, tone: "ok" }
                           : { label: t.home.experimental, tone: "wip" },
                       ]}

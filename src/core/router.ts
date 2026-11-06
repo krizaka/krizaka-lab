@@ -3,7 +3,7 @@
  */
 
 export type TabId =
-  "orazaka" | "jarvis" | "caustics" | "lattice" | "journey" | "overlays" | "people" | "kz-ui" | "architecture";
+  "sovkora" | "jarvis" | "caustics" | "lattice" | "journey" | "overlays" | "people" | "kz-ui" | "architecture";
 
 export interface TabRouteDefinition {
   id: TabId;
@@ -15,13 +15,13 @@ export interface TabRouteDefinition {
 }
 
 export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
-  orazaka: {
-    id: "orazaka",
-    path: "orazaka",
-    label: "Orazaka Engine",
-    title: "Orazaka Neural Flow — Krizaka Lab",
+  sovkora: {
+    id: "sovkora",
+    path: "sovkora",
+    label: "Sovkora Engine",
+    title: "Sovkora Neural Flow — Krizaka Lab",
     description: "Multi-direction packet convergence & foundational neural pipeline",
-    aliases: ["orazaka", "flow", "engine", "neural-flow"],
+    aliases: ["sovkora", "flow", "engine", "neural-flow"],
   },
   jarvis: {
     id: "jarvis",
@@ -93,7 +93,7 @@ export const TAB_ROUTES: Record<TabId, TabRouteDefinition> = {
 };
 
 export const TAB_ORDER: TabId[] = [
-  "orazaka",
+  "sovkora",
   "jarvis",
   "caustics",
   "lattice",
@@ -139,7 +139,7 @@ export function resolveTabFromLocation(loc: { pathname?: string; search?: string
     (loc.hash ? tabFromHash(loc.hash) : null) ??
     // /krizaka-lab/voice or /voice
     (loc.pathname ? tabNamed(lastSegment(loc.pathname)) : null) ??
-    "orazaka"
+    "sovkora"
   );
 }
 
@@ -228,14 +228,14 @@ export function resolvePage(loc: { pathname?: string; search?: string; hash?: st
     Boolean((loc.hash ?? "").replace(/^#\/?/, ""));
   if (!named) return "home";
   const tab = resolveTabFromLocation(loc);
-  // resolveTabFromLocation falls back to "orazaka": only trust it when something really named it.
-  if (tab !== "orazaka") return tab;
+  // resolveTabFromLocation falls back to "sovkora": only trust it when something really named it.
+  if (tab !== "sovkora") return tab;
   const words = [
     ...segments,
     (loc.search ?? "").replace(/^\?(tab=|\/)?/, ""),
     (loc.hash ?? "").replace(/^#\/?/, ""),
   ].map((w) => w.toLowerCase());
-  return words.some((w) => TAB_ROUTES.orazaka.aliases.includes(w) || w === "orazaka") ? "orazaka" : "home";
+  return words.some((w) => TAB_ROUTES.sovkora.aliases.includes(w) || w === "sovkora") ? "sovkora" : "home";
 }
 
 /** The lab's home under the current base (`/krizaka-lab/` on GitHub Pages, `/` locally). */

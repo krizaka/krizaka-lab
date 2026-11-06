@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { OrazakaEngineRenderer, type OrazakaEngineOptions } from "../core/orazaka-engine";
+import { SovkoraEngineRenderer } from "../core/sovkora-engine";
 import { MotionController } from "../core/motion-controller";
 import {
   type ProductId,
@@ -12,7 +12,7 @@ import {
   type ProductSourceNode,
 } from "../core/types";
 
-export interface OrazakaEngineFlowProps {
+export interface SovkoraEngineFlowProps {
   playing?: boolean;
   direction?: FlowDirection;
   flowMode?: FlowMode;
@@ -31,7 +31,7 @@ export interface OrazakaEngineFlowProps {
   style?: CSSProperties;
 }
 
-export function OrazakaEngineFlow({
+export function SovkoraEngineFlow({
   playing = true,
   direction = "left-to-right",
   flowMode = "inbound",
@@ -48,9 +48,9 @@ export function OrazakaEngineFlow({
   onNodeClick,
   className = "",
   style,
-}: OrazakaEngineFlowProps) {
+}: SovkoraEngineFlowProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const rendererRef = useRef<OrazakaEngineRenderer | null>(null);
+  const rendererRef = useRef<SovkoraEngineRenderer | null>(null);
   const controllerRef = useRef<MotionController | null>(null);
   const [selectedSource, setSelectedSource] = useState<ProductId | null>(highlightedSource);
 
@@ -58,7 +58,7 @@ export function OrazakaEngineFlow({
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const renderer = new OrazakaEngineRenderer(canvas, {
+    const renderer = new SovkoraEngineRenderer(canvas, {
       direction,
       flowMode,
       particleStyle,
@@ -145,12 +145,8 @@ export function OrazakaEngineFlow({
       data-play={playing ? "" : undefined}
       style={style}
     >
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full block cursor-crosshair touch-none"
-        aria-label="Orazaka neural pipeline convergence flow"
-        role="img"
-      />
+      <canvas ref={canvasRef} className="w-full h-full block cursor-crosshair touch-none" />
+      <span className="sr-only">Sovkora neural pipeline convergence flow</span>
     </div>
   );
 }

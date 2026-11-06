@@ -7,7 +7,7 @@ tests, its status and the issue or ADR it feeds.
 | :--- | :--- | :--- |
 | [`motion/`](motion/) | motion, canvas, springs, transitions on the one motion system | the first experiments, guides and scenarios (they moved in as they were) |
 | [`java/`](java/) | Krizaka Java ideas: a building block, a Spring slice, a build trick | none yet |
-| [`ai/`](ai/) | AI behaviour: prompts, evaluations, agent flows on Orazaka | none yet |
+| [`ai/`](ai/) | AI behaviour: prompts, evaluations, agent flows on Sovkora | none yet |
 | [`ui/`](ui/) | components and compositions not yet in `@krizaka/ui` | none yet |
 | [`data/`](data/) | data shapes, charts, maps, generated figures | none yet |
 

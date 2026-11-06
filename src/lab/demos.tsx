@@ -25,7 +25,7 @@ import type { FlowDirection, FlowMode as CanvasMode, JarvisTheme } from "../core
 import { JarvisHUD } from "../react/JarvisHUD";
 import { LiquidCausticsView } from "../react/LiquidCausticsView";
 import { NeuralLatticeView, type NeuralLatticeViewHandle } from "../react/NeuralLatticeView";
-import { OrazakaEngineFlow } from "../react/OrazakaEngineFlow";
+import { SovkoraEngineFlow } from "../react/SovkoraEngineFlow";
 import { useLab } from "./context";
 import { Gallery } from "./gallery";
 import { JourneyStage } from "./journey";
@@ -34,11 +34,12 @@ import { PeopleStage } from "./people";
 import { type Knob, Playground } from "./playground";
 
 type FlowMode = "in" | "out" | "both";
+// `brand` is the id @krizaka/ui still knows (ProductLogo, `.brand-<id>`) until its commercial-id major (krizaka-internal#2659).
 const PRODUCTS = [
-  { id: "yomizaka", live: true },
-  { id: "akinaza", live: false },
+  { id: "verikora", brand: "yomizaka", live: true },
+  { id: "folioviv", brand: "akinaza", live: false },
 ] as const;
-const NAMES: Record<string, string> = { yomizaka: "Yomizaka", akinaza: "Akinaza" };
+const NAMES: Record<string, string> = { verikora: "Verikora", folioviv: "Folioviv" };
 
 /** The demo's settings, folded into a side panel (Dialog placement="right"): the animation stays large and centred. */
 function Settings({ children }: { children: ReactNode }) {
@@ -143,8 +144,8 @@ export function Flow({
       nodes={PRODUCTS.map((p) => ({
         id: p.id,
         label: NAMES[p.id]!,
-        className: `brand-${p.id}`,
-        mark: <ProductLogo id={p.id} size={26} animated={false} />,
+        className: `brand-${p.brand}`,
+        mark: <ProductLogo id={p.brand} size={26} animated={false} />,
         flow: p.live ? mode : "in",
         planned: !p.live,
         status: p.live ? undefined : c.planned,
@@ -182,7 +183,7 @@ const FLOW_KNOBS: readonly Knob[] = [
   { kind: "toggle", key: "breathe", label: "the engine breathes", value: true },
 ];
 
-function OrazakaStage() {
+function SovkoraStage() {
   const { t } = useLab();
   const c = t.controls;
   const [direction, setDirection] = useState<FlowDirection>("left-to-right");
@@ -215,13 +216,13 @@ function OrazakaStage() {
           </div>
         )}
       >
-        {'  label="Orazaka and the products it powers"\n  hub={{ label: "Orazaka" }}\n  nodes={nodes}'}
+        {'  label="Sovkora and the products it powers"\n  hub={{ label: "Sovkora" }}\n  nodes={nodes}'}
       </Playground>
       <h3 className="lab-subtitle">{c.canvasTitle}</h3>
       <p className="lab-sublead">{c.canvasLead}</p>
       <div className="lab-stage">
         <Box>
-          <OrazakaEngineFlow direction={direction} flowMode={canvasMode} showTelemetry={false} />
+          <SovkoraEngineFlow direction={direction} flowMode={canvasMode} showTelemetry={false} />
         </Box>
         <Settings>
           <Choice
@@ -258,7 +259,7 @@ function HudStage() {
         <Choice
           label={c.hudTheme}
           value={theme}
-          options={["cyan", "orazaka", "sage", "crimson", "gold"] as const}
+          options={["cyan", "sovkora", "sage", "crimson", "gold"] as const}
           names={c.hudThemes}
           onChange={setTheme}
         />
@@ -378,11 +379,11 @@ import { EngineFlow } from "@krizaka/ui/engine-flow";
 
 <EngineFlow
   className="brand-orazaka"
-  label="Orazaka and the products it powers"
-  hub={{ label: "Orazaka", mark: <ProductLogo id="orazaka" size={56} /> }}
+  label="Sovkora and the products it powers"
+  hub={{ label: "Sovkora", mark: <ProductLogo id="orazaka" size={56} /> }}
   nodes={[
-    { id: "yomizaka", label: "Yomizaka", flow: "both", className: "brand-yomizaka",
-      description: "Document checks.", href: "https://dev.yomizaka.com" },
+    { id: "verikora", label: "Verikora", flow: "both", className: "brand-yomizaka",
+      description: "Document checks.", href: "https://dev.verikora.com" },
   ]}
   layout="radial"
   compactLayout="top-to-bottom"
@@ -410,9 +411,9 @@ export interface Demo {
 }
 
 export const DEMOS: Record<TabId, Demo> = {
-  orazaka: {
+  sovkora: {
     Preview: () => <Flow compact={false} />,
-    Stage: OrazakaStage,
+    Stage: SovkoraStage,
     usage: { code: ENGINE_FLOW_USAGE, file: "EngineFlow.tsx" },
     lab: false,
   },

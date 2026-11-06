@@ -5,7 +5,7 @@ one Vite app) and each README below says where. Nothing here is imported by anot
 
 | Experiment | Status | Where |
 | :--- | :--- | :--- |
-| [The engine flow](orazaka-engine-flow/) | promoted | `src/core/orazaka-engine.ts` |
+| [The engine flow](sovkora-engine-flow/) | promoted | `src/core/sovkora-engine.ts` |
 | [Holographic HUD](jarvis-hud/) | prototype | `src/core/jarvis-hud.ts` |
 | [Liquid glass caustics](liquid-glass/) | prototype | `src/core/liquid-caustics.ts` |
 | [Neural synapse lattice](neural-lattice/) | prototype | `src/core/neural-lattice.ts` |

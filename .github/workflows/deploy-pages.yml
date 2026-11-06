@@ -27,12 +27,12 @@ jobs:
       - run: pnpm install --frozen-lockfile
       # The demo: relative asset paths (vite base "./"), one folder per REST route, 404.html for any other deep link.
       - run: pnpm run build
-      - run: test -f dist-demo/index.html && test -f dist-demo/404.html && test -f dist-demo/orazaka/index.html
+      - run: test -f dist-demo/index.html && test -f dist-demo/404.html && test -f dist-demo/sovkora/index.html
       # 360–1440 px, dark and light: no page of the lab scrolls sideways.
       - run: pnpm exec playwright install --with-deps chromium
       - run: |
           pnpm exec vite preview --outDir dist-demo --port 4173 --strictPort &
-          for i in $(seq 1 30); do curl -fsS http://localhost:4173/ >/dev/null && break; sleep 1; done
+          for _ in $(seq 1 30); do curl -fsS http://localhost:4173/ >/dev/null && break; sleep 1; done
           node scripts/check-overflow.mjs --base http://localhost:4173
           # The engine flow's dots travel and the engine breathes (reduced motion OFF; still when ON).
           node scripts/check-motion.mjs --base http://localhost:4173

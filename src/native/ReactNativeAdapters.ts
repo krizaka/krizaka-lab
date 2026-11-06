@@ -2,7 +2,7 @@
  * @krizaka/motion — React Native Integration Adapters
  *
  * Provides drop-in adapters and bridge guidelines for:
- * - orazaka-mobile
+ * - sovkora-mobile
  *
  * Supported React Native Rendering Backends:
  * 1. React Native Skia (@shopify/react-native-skia) — Native C++ 120 FPS
@@ -99,7 +99,7 @@ export function generateNativeWebViewHTML(
  * import { WebView } from 'react-native-webview';
  * import { generateNativeWebViewHTML } from '@krizaka/motion/native';
  *
- * export function MobileOrazakaEngine() {
+ * export function MobileSovkoraEngine() {
  *   const html = generateNativeWebViewHTML('engine', { playing: true });
  *   return (
  *     <View style={styles.container}>

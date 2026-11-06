@@ -1,5 +1,5 @@
 /**
- * @krizaka/motion — Orazaka Engine Canvas & Particle System (V2 Next-Level)
+ * @krizaka/motion — Sovkora Engine Canvas & Particle System (V2 Next-Level)
  * Supports multiple flow directions, bi-directional routing, customizable vector icons,
  * custom text labels, particle styles, and individual node inspection.
  * 100% self-contained in krizaka-lab.
@@ -19,11 +19,11 @@ import {
 import { PRODUCT_BRANDS } from "./color-palettes";
 
 const DEFAULT_PRODUCTS: Array<{ id: ProductId; name: string; subtitle: string; icon: IconType }> = [
-  { id: "yomizaka", name: "Yomizaka", subtitle: "Doc AI", icon: "doc" },
-  { id: "akinaza", name: "Akinaza", subtitle: "Fiscal/Agenda", icon: "calendar" },
+  { id: "verikora", name: "Verikora", subtitle: "Doc AI", icon: "doc" },
+  { id: "folioviv", name: "Folioviv", subtitle: "Fiscal/Agenda", icon: "calendar" },
 ];
 
-export interface OrazakaEngineOptions {
+export interface SovkoraEngineOptions {
   direction?: FlowDirection;
   flowMode?: FlowMode;
   particleStyle?: ParticleStyle;
@@ -39,10 +39,16 @@ export interface OrazakaEngineOptions {
   onNodeClick?: (node: ProductSourceNode) => void;
 }
 
-export class OrazakaEngineRenderer {
-  private canvas: HTMLCanvasElement;
-  private ctx: CanvasRenderingContext2D;
-  private options: OrazakaEngineOptions;
+/** The opacity of an element: dimmed when another one is focused, full when it is the focused one, else at rest. */
+function focusAlpha(activeTarget: ProductId | null, isTargeted: boolean, dimmed: number, rest: number): number {
+  if (isTargeted) return 1.0;
+  return activeTarget === null ? rest : dimmed;
+}
+
+export class SovkoraEngineRenderer {
+  private readonly canvas: HTMLCanvasElement;
+  private readonly ctx: CanvasRenderingContext2D;
+  private options: SovkoraEngineOptions;
   private width = 600;
   private height = 350;
   private dpr = 1;
@@ -64,7 +70,7 @@ export class OrazakaEngineRenderer {
   private time = 0;
   private totalRequests = 1420;
 
-  constructor(canvas: HTMLCanvasElement, options: OrazakaEngineOptions = {}) {
+  constructor(canvas: HTMLCanvasElement, options: SovkoraEngineOptions = {}) {
     this.canvas = canvas;
     const context = canvas.getContext("2d", { alpha: true });
     if (!context) throw new Error("Could not get 2d context");
@@ -87,7 +93,7 @@ export class OrazakaEngineRenderer {
     this.setupEvents();
   }
 
-  public setOptions(options: Partial<OrazakaEngineOptions>): void {
+  public setOptions(options: Partial<SovkoraEngineOptions>): void {
     const directionChanged = options.direction && options.direction !== this.options.direction;
     this.options = { ...this.options, ...options };
 
@@ -231,7 +237,7 @@ export class OrazakaEngineRenderer {
 
   public emitPacket(sourceIndex: number, isOutbound = false): void {
     const src = this.sources[sourceIndex];
-    if (!src || !src.enabled) return;
+    if (!src?.enabled) return;
 
     const brand = PRODUCT_BRANDS[src.id];
     const speed = (0.3 + Math.random() * 0.2) * (this.options.speedMultiplier || 1);
@@ -277,7 +283,7 @@ export class OrazakaEngineRenderer {
     // 3. Draw particles
     this.drawParticles(ctx);
 
-    // 4. Update and draw Orazaka Core reactor
+    // 4. Update and draw Sovkora Core reactor
     this.drawCore(ctx, deltaTime);
 
     // 5. Draw Product Source Nodes & Icons
@@ -299,11 +305,7 @@ export class OrazakaEngineRenderer {
     let p1: Point2D;
     let p2: Point2D;
 
-    if (dir === "left-to-right") {
-      const dx = p3.x - p0.x;
-      p1 = { x: p0.x + dx * 0.45, y: p0.y };
-      p2 = { x: p0.x + dx * 0.75, y: p3.y + (src.y - this.coreY) * 0.15 };
-    } else if (dir === "right-to-left") {
+    if (dir === "left-to-right" || dir === "right-to-left") {
       const dx = p3.x - p0.x;
       p1 = { x: p0.x + dx * 0.45, y: p0.y };
       p2 = { x: p0.x + dx * 0.75, y: p3.y + (src.y - this.coreY) * 0.15 };
@@ -369,75 +371,72 @@ export class OrazakaEngineRenderer {
   }
 
   private updateParticles(deltaTime: number): void {
-    const density = this.options.particleDensity || 1.0;
-    const spawnChance = 0.4 * density;
-    const flowMode = this.options.flowMode || "inbound";
-
-    if (Math.random() < spawnChance) {
-      const activeSources = this.sources.filter((s) => s.enabled);
-      if (activeSources.length > 0) {
-        const randomSource = Math.floor(Math.random() * this.sources.length);
-        if (flowMode === "inbound" || (flowMode === "bidirectional" && Math.random() < 0.6)) {
-          this.emitPacket(randomSource, false);
-        } else {
-          this.emitPacket(randomSource, true);
-        }
-      }
-    }
-
+    this.maybeSpawnPacket();
     const kept: Particle[] = [];
     for (const p of this.particles) {
       p.progress += p.speed * deltaTime;
-
       if (p.progress >= 1) {
-        if (!p.isOutbound) {
-          this.corePulse = Math.min(this.corePulse + 0.18, 1.2);
-          this.totalRequests++;
-
-          if (this.shockwaves.length < 6 && Math.random() < 0.4) {
-            this.shockwaves.push({
-              radius: this.coreRadius * 0.7,
-              maxRadius: this.coreRadius * 2.6,
-              alpha: 0.7,
-              color: p.color,
-            });
-          }
-        }
+        this.onArrival(p);
         continue;
       }
-
       const src = this.sources.find((s) => s.id === p.sourceId);
       if (src) {
-        const { p0, p1, p2, p3 } = this.getConduitPoints(src);
-
-        // If outbound: start from core (p3) to source (p0)
-        const t = p.isOutbound ? 1 - p.progress : p.progress;
-        const mt = 1 - t;
-
-        if (this.options.conduitStyle === "straight" || this.options.direction === "radial") {
-          p.x = p0.x + (p3.x - p0.x) * t;
-          p.y = p0.y + (p3.y - p0.y) * t;
-        } else {
-          p.x = mt * mt * mt * p0.x + 3 * mt * mt * t * p1.x + 3 * mt * t * t * p2.x + t * t * t * p3.x;
-          p.y = mt * mt * mt * p0.y + 3 * mt * mt * t * p1.y + 3 * mt * t * t * p2.y + t * t * t * p3.y;
-        }
-
-        // Magnetic attraction to cursor
-        if (this.isHovered) {
-          const dx = this.mouseX - p.x;
-          const dy = this.mouseY - p.y;
-          const distSq = dx * dx + dy * dy;
-          if (distSq < 70 * 70 && distSq > 1) {
-            const force = (1 - Math.sqrt(distSq) / 70) * 8;
-            p.x += (dx / Math.sqrt(distSq)) * force;
-            p.y += (dy / Math.sqrt(distSq)) * force;
-          }
-        }
+        this.moveAlongConduit(p, src);
+        if (this.isHovered) this.attractToCursor(p);
       }
-
       kept.push(p);
     }
     this.particles = kept;
+  }
+
+  private maybeSpawnPacket(): void {
+    const density = this.options.particleDensity || 1.0;
+    const flowMode = this.options.flowMode || "inbound";
+    if (Math.random() >= 0.4 * density || !this.sources.some((s) => s.enabled)) return;
+    const randomSource = Math.floor(Math.random() * this.sources.length);
+    const inbound = flowMode === "inbound" || (flowMode === "bidirectional" && Math.random() < 0.6);
+    this.emitPacket(randomSource, !inbound);
+  }
+
+  /** An inbound packet reaching the core makes it pulse, and sometimes sends a shockwave. */
+  private onArrival(p: Particle): void {
+    if (p.isOutbound) return;
+    this.corePulse = Math.min(this.corePulse + 0.18, 1.2);
+    this.totalRequests++;
+    if (this.shockwaves.length < 6 && Math.random() < 0.4) {
+      this.shockwaves.push({
+        radius: this.coreRadius * 0.7,
+        maxRadius: this.coreRadius * 2.6,
+        alpha: 0.7,
+        color: p.color,
+      });
+    }
+  }
+
+  private moveAlongConduit(p: Particle, src: ProductSourceNode): void {
+    const { p0, p1, p2, p3 } = this.getConduitPoints(src);
+    // If outbound: start from core (p3) to source (p0)
+    const t = p.isOutbound ? 1 - p.progress : p.progress;
+    const mt = 1 - t;
+    if (this.options.conduitStyle === "straight" || this.options.direction === "radial") {
+      p.x = p0.x + (p3.x - p0.x) * t;
+      p.y = p0.y + (p3.y - p0.y) * t;
+    } else {
+      p.x = mt * mt * mt * p0.x + 3 * mt * mt * t * p1.x + 3 * mt * t * t * p2.x + t * t * t * p3.x;
+      p.y = mt * mt * mt * p0.y + 3 * mt * mt * t * p1.y + 3 * mt * t * t * p2.y + t * t * t * p3.y;
+    }
+  }
+
+  /** Magnetic attraction to the cursor. */
+  private attractToCursor(p: Particle): void {
+    const dx = this.mouseX - p.x;
+    const dy = this.mouseY - p.y;
+    const distSq = dx * dx + dy * dy;
+    if (distSq >= 70 * 70 || distSq <= 1) return;
+    const dist = Math.sqrt(distSq);
+    const force = (1 - dist / 70) * 8;
+    p.x += (dx / dist) * force;
+    p.y += (dy / dist) * force;
   }
 
   private drawParticles(ctx: CanvasRenderingContext2D): void {
@@ -446,54 +445,58 @@ export class OrazakaEngineRenderer {
 
     for (const p of this.particles) {
       const isTargeted = activeTarget === p.sourceId;
-      const isDimmed = activeTarget !== null && !isTargeted;
-      const alpha = isDimmed ? 0.15 : isTargeted ? 1.0 : 0.85;
-
+      const alpha = focusAlpha(activeTarget, isTargeted, 0.15, 0.85);
       ctx.save();
-
-      if (style === "data-blocks") {
-        // Hex byte data packet
-        ctx.fillStyle = isTargeted ? "#ffffff" : p.color;
-        ctx.font = "8px SF Mono, monospace";
-        ctx.globalAlpha = alpha;
-        ctx.fillText(p.dataPayload?.requestId || "0x9F", p.x - 10, p.y - 4);
-        ctx.fillRect(p.x - 2, p.y - 2, 5, 5);
-      } else if (style === "beams") {
-        // Elongated laser segment
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * 1.8, 0, Math.PI * 2);
-        ctx.fillStyle = p.glowColor;
-        ctx.globalAlpha = alpha * 0.4;
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.moveTo(p.x - 8, p.y);
-        ctx.lineTo(p.x + 8, p.y);
-        ctx.strokeStyle = p.color;
-        ctx.lineWidth = p.size;
-        ctx.globalAlpha = alpha;
-        ctx.stroke();
-      } else {
-        // Default glowing photons
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * 2.2, 0, Math.PI * 2);
-        ctx.fillStyle = p.glowColor;
-        ctx.globalAlpha = alpha * 0.55;
-        ctx.fill();
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = isTargeted ? "#ffffff" : p.color;
-        ctx.globalAlpha = alpha;
-        ctx.fill();
-      }
-
+      if (style === "data-blocks") this.drawDataBlock(ctx, p, isTargeted, alpha);
+      else if (style === "beams") this.drawBeam(ctx, p, alpha);
+      else this.drawPhoton(ctx, p, isTargeted, alpha);
       ctx.restore();
     }
   }
 
+  /** Hex byte data packet. */
+  private drawDataBlock(ctx: CanvasRenderingContext2D, p: Particle, isTargeted: boolean, alpha: number): void {
+    ctx.fillStyle = isTargeted ? "#ffffff" : p.color;
+    ctx.font = "8px SF Mono, monospace";
+    ctx.globalAlpha = alpha;
+    ctx.fillText(p.dataPayload?.requestId || "0x9F", p.x - 10, p.y - 4);
+    ctx.fillRect(p.x - 2, p.y - 2, 5, 5);
+  }
+
+  /** Elongated laser segment. */
+  private drawBeam(ctx: CanvasRenderingContext2D, p: Particle, alpha: number): void {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size * 1.8, 0, Math.PI * 2);
+    ctx.fillStyle = p.glowColor;
+    ctx.globalAlpha = alpha * 0.4;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(p.x - 8, p.y);
+    ctx.lineTo(p.x + 8, p.y);
+    ctx.strokeStyle = p.color;
+    ctx.lineWidth = p.size;
+    ctx.globalAlpha = alpha;
+    ctx.stroke();
+  }
+
+  /** Default glowing photon. */
+  private drawPhoton(ctx: CanvasRenderingContext2D, p: Particle, isTargeted: boolean, alpha: number): void {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size * 2.2, 0, Math.PI * 2);
+    ctx.fillStyle = p.glowColor;
+    ctx.globalAlpha = alpha * 0.55;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = isTargeted ? "#ffffff" : p.color;
+    ctx.globalAlpha = alpha;
+    ctx.fill();
+  }
+
   private drawCore(ctx: CanvasRenderingContext2D, deltaTime: number): void {
-    const brand = PRODUCT_BRANDS.orazaka;
+    const brand = PRODUCT_BRANDS.sovkora;
 
     this.corePulse = Math.max(0, this.corePulse - deltaTime * 1.5);
     const pulseScale = 1 + this.corePulse * 0.15 + Math.sin(this.time * 3) * 0.04;
@@ -556,13 +559,13 @@ export class OrazakaEngineRenderer {
     ctx.shadowBlur = 0;
 
     // Center Mark (converging nodes)
-    this.drawOrazakaMark(ctx, this.coreX, this.coreY, currentRadius * 0.55);
+    this.drawSovkoraMark(ctx, this.coreX, this.coreY, currentRadius * 0.55);
 
     ctx.restore();
   }
 
-  private drawOrazakaMark(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number): void {
-    const brand = PRODUCT_BRANDS.orazaka;
+  private drawSovkoraMark(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number): void {
+    const brand = PRODUCT_BRANDS.sovkora;
     const r = size * 0.42;
 
     for (let i = 0; i < 3; i++) {
@@ -595,66 +598,72 @@ export class OrazakaEngineRenderer {
 
     for (const src of this.sources) {
       if (!src.enabled) continue;
-
       const isTargeted = activeTarget === src.id;
-      const isDimmed = activeTarget !== null && !isTargeted;
-      const alpha = isDimmed ? 0.35 : 1.0;
-      const nodeR = 14;
-
+      const alpha = focusAlpha(activeTarget, isTargeted, 0.35, 1.0);
       ctx.save();
-
-      // Outer interactive halo
-      if (isTargeted) {
-        ctx.beginPath();
-        ctx.arc(src.x, src.y, nodeR + 6, 0, Math.PI * 2);
-        ctx.fillStyle = src.color;
-        ctx.globalAlpha = 0.25;
-        ctx.fill();
-      }
-
-      // Solid Node Body
-      ctx.beginPath();
-      ctx.arc(src.x, src.y, nodeR, 0, Math.PI * 2);
-      ctx.fillStyle = "#0c0d0f";
-      ctx.strokeStyle = isTargeted ? "#ffffff" : src.color;
-      ctx.lineWidth = isTargeted ? 2.2 : 1.4;
-      ctx.globalAlpha = alpha;
-      ctx.shadowColor = src.color;
-      ctx.shadowBlur = isTargeted ? 12 : 4;
-      ctx.fill();
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-
-      // Draw vector icon inside node
-      this.drawVectorIcon(ctx, src.x, src.y, src.iconType, src.color, isTargeted ? "#ffffff" : src.color);
-
-      // Draw custom text labels & subtitle
-      if (showLabels) {
-        ctx.font = "bold 11px Inter, system-ui, sans-serif";
-        ctx.fillStyle = isTargeted ? "#ffffff" : "#f0f2f5";
-        ctx.globalAlpha = alpha;
-
-        const dir = this.options.direction || "left-to-right";
-        if (dir === "left-to-right") {
-          ctx.textAlign = "right";
-          ctx.fillText(src.name, src.x - 20, src.y - 1);
-          ctx.font = "9px SF Mono, monospace";
-          ctx.fillStyle = src.color;
-          ctx.fillText(src.subtitle, src.x - 20, src.y + 11);
-        } else if (dir === "right-to-left") {
-          ctx.textAlign = "left";
-          ctx.fillText(src.name, src.x + 20, src.y - 1);
-          ctx.font = "9px SF Mono, monospace";
-          ctx.fillStyle = src.color;
-          ctx.fillText(src.subtitle, src.x + 20, src.y + 11);
-        } else {
-          ctx.textAlign = "center";
-          ctx.fillText(src.name, src.x, src.y - 18);
-        }
-      }
-
+      this.drawSourceNode(ctx, src, isTargeted, alpha);
+      if (showLabels) this.drawSourceLabel(ctx, src, isTargeted, alpha);
       ctx.restore();
     }
+  }
+
+  private drawSourceNode(
+    ctx: CanvasRenderingContext2D,
+    src: ProductSourceNode,
+    isTargeted: boolean,
+    alpha: number,
+  ): void {
+    const nodeR = 14;
+    // Outer interactive halo
+    if (isTargeted) {
+      ctx.beginPath();
+      ctx.arc(src.x, src.y, nodeR + 6, 0, Math.PI * 2);
+      ctx.fillStyle = src.color;
+      ctx.globalAlpha = 0.25;
+      ctx.fill();
+    }
+
+    // Solid Node Body
+    ctx.beginPath();
+    ctx.arc(src.x, src.y, nodeR, 0, Math.PI * 2);
+    ctx.fillStyle = "#0c0d0f";
+    ctx.strokeStyle = isTargeted ? "#ffffff" : src.color;
+    ctx.lineWidth = isTargeted ? 2.2 : 1.4;
+    ctx.globalAlpha = alpha;
+    ctx.shadowColor = src.color;
+    ctx.shadowBlur = isTargeted ? 12 : 4;
+    ctx.fill();
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Draw vector icon inside node
+    this.drawVectorIcon(ctx, src.x, src.y, src.iconType, src.color, isTargeted ? "#ffffff" : src.color);
+  }
+
+  /** The name (and, beside a horizontal flow, the subtitle) of a source. */
+  private drawSourceLabel(
+    ctx: CanvasRenderingContext2D,
+    src: ProductSourceNode,
+    isTargeted: boolean,
+    alpha: number,
+  ): void {
+    ctx.font = "bold 11px Inter, system-ui, sans-serif";
+    ctx.fillStyle = isTargeted ? "#ffffff" : "#f0f2f5";
+    ctx.globalAlpha = alpha;
+
+    const dir = this.options.direction || "left-to-right";
+    if (dir !== "left-to-right" && dir !== "right-to-left") {
+      ctx.textAlign = "center";
+      ctx.fillText(src.name, src.x, src.y - 18);
+      return;
+    }
+    const left = dir === "left-to-right";
+    const x = left ? src.x - 20 : src.x + 20;
+    ctx.textAlign = left ? "right" : "left";
+    ctx.fillText(src.name, x, src.y - 1);
+    ctx.font = "9px SF Mono, monospace";
+    ctx.fillStyle = src.color;
+    ctx.fillText(src.subtitle, x, src.y + 11);
   }
 
   private drawVectorIcon(
@@ -790,7 +799,7 @@ export class OrazakaEngineRenderer {
       }
     } else {
       ctx.fillStyle = "rgba(249, 115, 22, 0.65)";
-      const stats = `ORAZAKA NEURAL ENGINE · ${this.totalRequests} REQ · 6 PIPELINES`;
+      const stats = `SOVKORA NEURAL ENGINE · ${this.totalRequests} REQ · 6 PIPELINES`;
       ctx.fillText(stats, 12, this.height - 12);
     }
 
