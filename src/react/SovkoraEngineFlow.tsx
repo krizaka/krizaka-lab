@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { SovkoraEngineRenderer, type SovkoraEngineOptions } from "../core/sovkora-engine";
+import { SovkoraEngineRenderer } from "../core/sovkora-engine";
 import { MotionController } from "../core/motion-controller";
 import {
   type ProductId,
@@ -145,12 +145,8 @@ export function SovkoraEngineFlow({
       data-play={playing ? "" : undefined}
       style={style}
     >
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full block cursor-crosshair touch-none"
-        aria-label="Sovkora neural pipeline convergence flow"
-        role="img"
-      />
+      <canvas ref={canvasRef} className="w-full h-full block cursor-crosshair touch-none" aria-hidden="true" />
+      <span className="sr-only">Sovkora neural pipeline convergence flow</span>
     </div>
   );
 }
