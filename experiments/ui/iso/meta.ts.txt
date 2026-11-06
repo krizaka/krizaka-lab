@@ -40,8 +40,8 @@ export const meta = {
     imports: ["IsoHub", "IsoScene", "IsoPrism", "IsoStack", "IsoDome", "IsoTile", "IsoLink", "IsoNode", "IsoLabel"],
     examples: [
       {
-        name: "orazaka-hero",
-        title: "Sovereign servers (Orazaka)",
+        name: "sovkora-hero",
+        title: "Sovereign servers (Sovkora)",
         description: "Three named stages under a dome, a lit core; chats and documents flow in, answers flow out. Hover or tab to explore.",
       },
       {

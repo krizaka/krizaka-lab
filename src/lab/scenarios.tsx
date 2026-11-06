@@ -61,7 +61,7 @@ export function Screen({
   );
 }
 
-/* ── Dashboard: Orazaka's runs of the day — figures that climb, rows that arrive ─────────────────────────────────── */
+/* ── Dashboard: Sovkora's runs of the day — figures that climb, rows that arrive ─────────────────────────────────── */
 
 interface Run {
   id: string;
@@ -140,7 +140,7 @@ export function Dashboard({ v = {} }: { v?: Values }) {
   const style = { "--kz-arrive-duration": `${v.arrivalDuration ?? 420}ms` } as CSSProperties;
   return (
     <div ref={host} data-motion-scope="">
-      <Screen product="orazaka" app="Orazaka" title="Runs today" actions={<Badge tone="neutral">demo data</Badge>}>
+      <Screen product="orazaka" app="Sovkora" title="Runs today" actions={<Badge tone="neutral">demo data</Badge>}>
         <div className="lab-dash-figures">
           <Stat
             label="Runs"
@@ -236,7 +236,7 @@ export function Chat({ v = {} }: { v?: Values }) {
     <div ref={host} data-motion-scope="">
       <Screen
         product="orazaka"
-        app="Orazaka"
+        app="Sovkora"
         title="Chez Lina · assistant"
         actions={
           <Button
@@ -278,7 +278,7 @@ export function Chat({ v = {} }: { v?: Values }) {
   );
 }
 
-/* ── Checkout: Akinaza's booking — steps that change through a view transition, a button that confirms ──────────── */
+/* ── Checkout: Folioviv's booking — steps that change through a view transition, a button that confirms ──────────── */
 
 const SLOTS = ["9:00", "10:30", "13:00", "15:30"];
 const PRICE = 45;
@@ -379,7 +379,7 @@ export function Checkout({ v = {} }: { v?: Values }) {
       style={checkoutMotionStyle(String(settings.duration), String(settings.easing))}
     >
       <Toaster label={words.notifications} closeLabel={words.close} position="bottom-right" />
-      <Screen product="akinaza" app="Akinaza" title={words.title} actions={<Badge tone="neutral">{words.demo}</Badge>}>
+      <Screen product="akinaza" app="Folioviv" title={words.title} actions={<Badge tone="neutral">{words.demo}</Badge>}>
         <StepProgress step={step + 1} total={3} label={(s, t) => format(words.step, { step: s, total: t })} />
         <CheckoutPageTransition ref={transition} reduced={reduce} duration={timing.duration} easing={timing.easing}>
           <div className="lab-checkout">
@@ -582,19 +582,19 @@ export const SCENARIOS: Record<
 > = {
   dashboard: {
     title: "An operations dashboard",
-    product: "Orazaka",
+    product: "Sovkora",
     lead: "The runs of the day: figures that climb as runs land, new rows that arrive on top.",
     View: Dashboard,
   },
   chat: {
     title: "A support chat",
-    product: "Orazaka",
+    product: "Sovkora",
     lead: "A restaurant's assistant answers: the typing indicator, then the answer streaming in.",
     View: Chat,
   },
   checkout: {
     title: "A booking checkout",
-    product: "Akinaza",
+    product: "Folioviv",
     lead: "Pick a time, review, pay: each step crosses to the next, the button says it is working.",
     View: Checkout,
   },
@@ -605,8 +605,8 @@ export const SCENARIOS: Record<
     View: Delivery,
   },
   wall: {
-    title: "Akinaza's shop wall",
-    product: "Akinaza",
+    title: "Folioviv's shop wall",
+    product: "Folioviv",
     lead: "A pinned photograph, a taped note, a small sign and a screen; each motion is tuned separately.",
     View: WallMotionWall,
   },

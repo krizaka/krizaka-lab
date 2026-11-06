@@ -7,11 +7,11 @@ export function Example() {
       className="brand-orazaka lab-g-flow"
       label="An engine and the apps it serves"
       compactLayout={false}
-      hub={{ label: "Orazaka", mark: <ProductLogo id="orazaka" size={40} animated={false} /> }}
+      hub={{ label: "Sovkora", mark: <ProductLogo id="orazaka" size={40} animated={false} /> }}
       nodes={[
         {
-          id: "yomizaka",
-          label: "Yomizaka",
+          id: "verikora",
+          label: "Verikora",
           className: "brand-yomizaka",
           mark: <ProductLogo id="yomizaka" size={22} animated={false} />,
           flow: "both",

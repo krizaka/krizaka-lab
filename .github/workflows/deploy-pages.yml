@@ -27,7 +27,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       # The demo: relative asset paths (vite base "./"), one folder per REST route, 404.html for any other deep link.
       - run: pnpm run build
-      - run: test -f dist-demo/index.html && test -f dist-demo/404.html && test -f dist-demo/orazaka/index.html
+      - run: test -f dist-demo/index.html && test -f dist-demo/404.html && test -f dist-demo/sovkora/index.html
       # 360–1440 px, dark and light: no page of the lab scrolls sideways.
       - run: pnpm exec playwright install --with-deps chromium
       - run: |

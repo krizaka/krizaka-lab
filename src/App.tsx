@@ -50,7 +50,7 @@ function pageName(page: LabPage, t: Dictionary): string {
 /** The bar's section a page belongs to. */
 function sectionOf(page: LabPage): LabPage {
   if (isGuide(page) || isScenario(page)) return "home";
-  if (page === "experiments" || ["orazaka", "jarvis", "caustics", "lattice"].includes(page)) return "experiments";
+  if (page === "experiments" || ["sovkora", "jarvis", "caustics", "lattice"].includes(page)) return "experiments";
   return page;
 }
 

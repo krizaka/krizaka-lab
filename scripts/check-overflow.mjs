@@ -6,7 +6,7 @@ import { chromium } from "playwright";
 
 export const PATHS = [
   "/",
-  "/orazaka/",
+  "/sovkora/",
   "/jarvis/",
   "/liquid-glass/",
   "/neural-lattice/",

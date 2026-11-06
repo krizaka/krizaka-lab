@@ -4,13 +4,13 @@ import assert from "node:assert/strict";
 const { TAB_ROUTES, resolveTabFromLocation, getHrefForTab } = core;
 
 describe("RESTful Routing & URL Resolution", () => {
-  it("resolves default tab (orazaka) when path is root or empty", () => {
-    assert.equal(resolveTabFromLocation({ pathname: "/" }), "orazaka");
-    assert.equal(resolveTabFromLocation({ pathname: "" }), "orazaka");
+  it("resolves default tab (sovkora) when path is root or empty", () => {
+    assert.equal(resolveTabFromLocation({ pathname: "/" }), "sovkora");
+    assert.equal(resolveTabFromLocation({ pathname: "" }), "sovkora");
   });
 
   it("resolves tabs from clean pathname", () => {
-    assert.equal(resolveTabFromLocation({ pathname: "/orazaka" }), "orazaka");
+    assert.equal(resolveTabFromLocation({ pathname: "/sovkora" }), "sovkora");
     assert.equal(resolveTabFromLocation({ pathname: "/jarvis" }), "jarvis");
     assert.equal(resolveTabFromLocation({ pathname: "/liquid-glass" }), "caustics");
     assert.equal(resolveTabFromLocation({ pathname: "/neural-lattice" }), "lattice");
@@ -53,10 +53,10 @@ describe("RESTful Routing & URL Resolution", () => {
   });
 
   it("generates correct href paths with and without subpath prefix", () => {
-    assert.equal(getHrefForTab("orazaka", "/"), "/orazaka");
+    assert.equal(getHrefForTab("sovkora", "/"), "/sovkora");
     assert.equal(getHrefForTab("jarvis", "/"), "/jarvis");
     assert.equal(getHrefForTab("jarvis", "/krizaka-lab/"), "/krizaka-lab/jarvis");
-    assert.equal(getHrefForTab("caustics", "/krizaka-lab/orazaka"), "/krizaka-lab/liquid-glass");
+    assert.equal(getHrefForTab("caustics", "/krizaka-lab/sovkora"), "/krizaka-lab/liquid-glass");
   });
 });
 
@@ -74,7 +74,7 @@ describe("GitHub Pages 404 fallback", () => {
   });
 
   it("leaves a normal address alone", () => {
-    assert.equal(cleanSpaRedirect({ pathname: "/krizaka-lab/orazaka", search: "", hash: "" }), null);
+    assert.equal(cleanSpaRedirect({ pathname: "/krizaka-lab/sovkora", search: "", hash: "" }), null);
     assert.equal(cleanSpaRedirect({ pathname: "/krizaka-lab/", search: "?tab=jarvis", hash: "" }), null);
   });
 });

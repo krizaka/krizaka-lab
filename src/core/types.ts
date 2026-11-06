@@ -3,7 +3,7 @@
  * Shared types for generative physics, canvas rendering, and synthesis engines.
  */
 
-export type ProductId = "orazaka" | "yomizaka" | "akinaza";
+export type ProductId = "sovkora" | "verikora" | "folioviv";
 
 export type IconType = "doc" | "video" | "chart" | "calendar" | "chat" | "voice" | "brain" | "cpu" | "shield" | "zap";
 
@@ -74,7 +74,7 @@ export interface VoiceConfig {
   glowIntensity: number;
 }
 
-export type JarvisTheme = "cyan" | "orazaka" | "sage" | "crimson" | "gold";
+export type JarvisTheme = "cyan" | "sovkora" | "sage" | "crimson" | "gold";
 
 export interface JarvisConfig {
   theme: JarvisTheme;

@@ -15,25 +15,25 @@ export interface BrandColorConfig {
 }
 
 export const PRODUCT_BRANDS: Record<ProductId, BrandColorConfig> = {
-  orazaka: {
-    id: "orazaka",
-    name: "Orazaka",
+  sovkora: {
+    id: "sovkora",
+    name: "Sovkora",
     primary: "#f97316", // Orange
     secondary: "#fdba74",
     glow: "rgba(249, 115, 22, 0.45)",
     rgb: [249, 115, 22],
   },
-  yomizaka: {
-    id: "yomizaka",
-    name: "Yomizaka",
+  verikora: {
+    id: "verikora",
+    name: "Verikora",
     primary: "#6366f1", // Indigo
     secondary: "#a5b4fc",
     glow: "rgba(99, 102, 241, 0.45)",
     rgb: [99, 102, 241],
   },
-  akinaza: {
-    id: "akinaza",
-    name: "Akinaza",
+  folioviv: {
+    id: "folioviv",
+    name: "Folioviv",
     primary: "#10b981", // Emerald
     secondary: "#d97706", // Copper
     glow: "rgba(16, 185, 129, 0.45)",
@@ -60,7 +60,7 @@ export const JARVIS_THEMES: Record<
     bgGlow: "rgba(0, 240, 255, 0.08)",
     rgb: [0, 240, 255],
   },
-  orazaka: {
+  sovkora: {
     primary: "#f97316",
     secondary: "#fb923c",
     glow: "rgba(249, 115, 22, 0.55)",

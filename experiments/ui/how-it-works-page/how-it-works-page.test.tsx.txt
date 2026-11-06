@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 
-import Example from "../../registry/examples/how-it-works-page/orazaka";
+import Example from "../../registry/examples/how-it-works-page/sovkora";
 import { axeViolations } from "../test/axe";
 import { HowItWorksPage } from "./index";
 

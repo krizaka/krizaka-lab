@@ -1,5 +1,5 @@
 /**
- * @krizaka/motion — Orazaka Engine Canvas & Particle System (V2 Next-Level)
+ * @krizaka/motion — Sovkora Engine Canvas & Particle System (V2 Next-Level)
  * Supports multiple flow directions, bi-directional routing, customizable vector icons,
  * custom text labels, particle styles, and individual node inspection.
  * 100% self-contained in krizaka-lab.
@@ -19,11 +19,11 @@ import {
 import { PRODUCT_BRANDS } from "./color-palettes";
 
 const DEFAULT_PRODUCTS: Array<{ id: ProductId; name: string; subtitle: string; icon: IconType }> = [
-  { id: "yomizaka", name: "Yomizaka", subtitle: "Doc AI", icon: "doc" },
-  { id: "akinaza", name: "Akinaza", subtitle: "Fiscal/Agenda", icon: "calendar" },
+  { id: "verikora", name: "Verikora", subtitle: "Doc AI", icon: "doc" },
+  { id: "folioviv", name: "Folioviv", subtitle: "Fiscal/Agenda", icon: "calendar" },
 ];
 
-export interface OrazakaEngineOptions {
+export interface SovkoraEngineOptions {
   direction?: FlowDirection;
   flowMode?: FlowMode;
   particleStyle?: ParticleStyle;
@@ -39,10 +39,10 @@ export interface OrazakaEngineOptions {
   onNodeClick?: (node: ProductSourceNode) => void;
 }
 
-export class OrazakaEngineRenderer {
+export class SovkoraEngineRenderer {
   private canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
-  private options: OrazakaEngineOptions;
+  private options: SovkoraEngineOptions;
   private width = 600;
   private height = 350;
   private dpr = 1;
@@ -64,7 +64,7 @@ export class OrazakaEngineRenderer {
   private time = 0;
   private totalRequests = 1420;
 
-  constructor(canvas: HTMLCanvasElement, options: OrazakaEngineOptions = {}) {
+  constructor(canvas: HTMLCanvasElement, options: SovkoraEngineOptions = {}) {
     this.canvas = canvas;
     const context = canvas.getContext("2d", { alpha: true });
     if (!context) throw new Error("Could not get 2d context");
@@ -87,7 +87,7 @@ export class OrazakaEngineRenderer {
     this.setupEvents();
   }
 
-  public setOptions(options: Partial<OrazakaEngineOptions>): void {
+  public setOptions(options: Partial<SovkoraEngineOptions>): void {
     const directionChanged = options.direction && options.direction !== this.options.direction;
     this.options = { ...this.options, ...options };
 
@@ -277,7 +277,7 @@ export class OrazakaEngineRenderer {
     // 3. Draw particles
     this.drawParticles(ctx);
 
-    // 4. Update and draw Orazaka Core reactor
+    // 4. Update and draw Sovkora Core reactor
     this.drawCore(ctx, deltaTime);
 
     // 5. Draw Product Source Nodes & Icons
@@ -493,7 +493,7 @@ export class OrazakaEngineRenderer {
   }
 
   private drawCore(ctx: CanvasRenderingContext2D, deltaTime: number): void {
-    const brand = PRODUCT_BRANDS.orazaka;
+    const brand = PRODUCT_BRANDS.sovkora;
 
     this.corePulse = Math.max(0, this.corePulse - deltaTime * 1.5);
     const pulseScale = 1 + this.corePulse * 0.15 + Math.sin(this.time * 3) * 0.04;
@@ -556,13 +556,13 @@ export class OrazakaEngineRenderer {
     ctx.shadowBlur = 0;
 
     // Center Mark (converging nodes)
-    this.drawOrazakaMark(ctx, this.coreX, this.coreY, currentRadius * 0.55);
+    this.drawSovkoraMark(ctx, this.coreX, this.coreY, currentRadius * 0.55);
 
     ctx.restore();
   }
 
-  private drawOrazakaMark(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number): void {
-    const brand = PRODUCT_BRANDS.orazaka;
+  private drawSovkoraMark(ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number): void {
+    const brand = PRODUCT_BRANDS.sovkora;
     const r = size * 0.42;
 
     for (let i = 0; i < 3; i++) {
@@ -790,7 +790,7 @@ export class OrazakaEngineRenderer {
       }
     } else {
       ctx.fillStyle = "rgba(249, 115, 22, 0.65)";
-      const stats = `ORAZAKA NEURAL ENGINE · ${this.totalRequests} REQ · 6 PIPELINES`;
+      const stats = `SOVKORA NEURAL ENGINE · ${this.totalRequests} REQ · 6 PIPELINES`;
       ctx.fillText(stats, 12, this.height - 12);
     }
 

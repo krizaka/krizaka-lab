@@ -16,7 +16,7 @@ const rootHtml = fs.readFileSync(path.join(DIST_DEMO, "index.html"), "utf8");
 const SITE = "https://lab.krizaka.com";
 
 const ROUTES = [
-  "orazaka",
+  "sovkora",
   "jarvis",
   "liquid-glass",
   "neural-lattice",

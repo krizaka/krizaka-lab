@@ -8,7 +8,7 @@
 import { Point2D } from "./types";
 import { SpringVector2D } from "./spring-physics";
 
-export type CognitiveCluster = "orazaka" | "voice" | "jarvis";
+export type CognitiveCluster = "sovkora" | "voice" | "jarvis";
 
 export interface SynapseNode {
   id: number;
@@ -43,7 +43,7 @@ export interface NeuralLatticeOptions {
 }
 
 const CLUSTER_COLORS: Record<CognitiveCluster, { primary: string; secondary: string; glow: string }> = {
-  orazaka: { primary: "#f97316", secondary: "#fdba74", glow: "rgba(249, 115, 22, 0.45)" },
+  sovkora: { primary: "#f97316", secondary: "#fdba74", glow: "rgba(249, 115, 22, 0.45)" },
   voice: { primary: "#7c9082", secondary: "#b8c5b9", glow: "rgba(124, 144, 130, 0.45)" },
   jarvis: { primary: "#00f0ff", secondary: "#38bdf8", glow: "rgba(0, 240, 255, 0.45)" },
 };
@@ -113,7 +113,7 @@ export class NeuralLatticeRenderer {
     const padding = 28;
     const innerW = this.width - padding * 2;
     const innerH = this.height - padding * 2;
-    const clusters: CognitiveCluster[] = ["orazaka", "voice", "jarvis"];
+    const clusters: CognitiveCluster[] = ["sovkora", "voice", "jarvis"];
 
     for (let i = 0; i < count; i++) {
       const cluster = clusters[i % 3];
@@ -392,7 +392,7 @@ export class NeuralLatticeRenderer {
     ctx.textBaseline = "middle";
 
     const legends: Array<{ cluster: CognitiveCluster; label: string }> = [
-      { cluster: "orazaka", label: "ENGINE" },
+      { cluster: "sovkora", label: "ENGINE" },
       { cluster: "voice", label: "VOICE" },
       { cluster: "jarvis", label: "REASONING" },
     ];

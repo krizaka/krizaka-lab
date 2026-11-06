@@ -7,7 +7,7 @@
 
 # krizaka-lab
 
-**Krizaka Lab: the family's lab for UI, motion, Java, AI and data experiments.** Nothing here is a product. It started as the motion lab: experimental generative visuals — the Orazaka neural flow, a holographic
+**Krizaka Lab: the family's lab for UI, motion, Java, AI and data experiments.** Nothing here is a product. It started as the motion lab: experimental generative visuals — the Sovkora neural flow, a holographic
 HUD, liquid glass, a neural lattice — played live, each one a shareable address.
 
 **A lab, not a package**: nothing here is published on npm. What proves itself moves into
@@ -72,7 +72,7 @@ canvas studies (engine flow, HUD, liquid glass, neural lattice).
 
 ```text
 src/core/      the renderers (canvas) and their maths — springs, Bézier lengths, optics, routes
-src/react/     the React views over them (OrazakaEngineFlow, JarvisHUD, LiquidCausticsView, NeuralLatticeView)
+src/react/     the React views over them (SovkoraEngineFlow, JarvisHUD, LiquidCausticsView, NeuralLatticeView)
 src/lab/       the shell on @krizaka/ui: home, demo pages (demos.tsx), the gallery (gallery.tsx), English-only i18n binding
 messages/      en.json (the reference) and fr.json
 scripts/       generate-routes.mjs (a folder per route + 404.html for Pages), check-overflow.mjs (360–1440 px)
