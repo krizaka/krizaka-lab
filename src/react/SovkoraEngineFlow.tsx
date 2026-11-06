@@ -145,7 +145,7 @@ export function SovkoraEngineFlow({
       data-play={playing ? "" : undefined}
       style={style}
     >
-      <canvas ref={canvasRef} className="w-full h-full block cursor-crosshair touch-none" aria-hidden="true" />
+      <canvas ref={canvasRef} className="w-full h-full block cursor-crosshair touch-none" />
       <span className="sr-only">Sovkora neural pipeline convergence flow</span>
     </div>
   );
