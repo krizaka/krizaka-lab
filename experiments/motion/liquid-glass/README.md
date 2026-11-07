@@ -2,7 +2,7 @@
 
 - **Area:** motion
 - **Status:** prototype
-- **Feeds:** https://github.com/krizaka/krizaka-lab/blob/main/docs/adr/ADR-001-reference-motion-library.md
+- **Feeds:** ADR-001 (internal)
 - **Where it lives:** `src/core/liquid-caustics.ts`, route `/liquid-glass`
 
 ## What it tests
