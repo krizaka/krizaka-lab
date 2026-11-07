@@ -22,7 +22,6 @@ HUD, liquid glass, a neural lattice — played live, each one a shareable addres
 
 </div>
 
-
 ## The lab
 
 Experiments are organised by area (`experiments/motion`, `java`, `ai`, `ui`, `data`), each with a README that says what it tests, its status (`idea`, `prototype`, `promoted`, `dropped`) and the issue or ADR it feeds: see [experiments/README.md](experiments/README.md). `motion.krizaka.com` answers 301 to the same path here.
@@ -32,21 +31,21 @@ Experiments are organised by area (`experiments/motion`, `java`, `ai`, `ui`, `da
 **Guides** — one task each, played on a real app screen made of `@krizaka/ui`, with its settings, the code to copy
 (it follows the settings), every option in a table and what happens under reduced motion:
 
-| Guide | Address | Screen |
-| :-- | :-- | :-- |
-| Animate a list arriving | [`/list-arrival`](https://lab.krizaka.com/list-arrival/) | dashboard |
-| Show a live number | [`/live-number`](https://lab.krizaka.com/live-number/) | dashboard |
-| Stream an answer into a chat | [`/streaming-answer`](https://lab.krizaka.com/streaming-answer/) | chat |
-| Cross from one step to the next | [`/page-transition`](https://lab.krizaka.com/page-transition/) | checkout |
-| Say an action is working, then done | [`/button-feedback`](https://lab.krizaka.com/button-feedback/) | checkout |
-| Draw a route and follow a courier | [`/route-draw`](https://lab.krizaka.com/route-draw/) | delivery |
-| Drop a pin onto a shop wall | [`/pin-drop`](https://lab.krizaka.com/pin-drop/) | wall |
-| Press tape onto a note | [`/tape-stick`](https://lab.krizaka.com/tape-stick/) | wall |
-| Let pinned paper sway | [`/paper-sway`](https://lab.krizaka.com/paper-sway/) | wall |
-| Develop a pinned photograph | [`/develop`](https://lab.krizaka.com/develop/) | wall |
-| Power on a wall display | [`/crt-power-on`](https://lab.krizaka.com/crt-power-on/) | wall |
-| Power off a wall display | [`/crt-power-off`](https://lab.krizaka.com/crt-power-off/) | wall |
-| Settle a neon sign | [`/neon-flicker`](https://lab.krizaka.com/neon-flicker/) | wall |
+| Guide                               | Address                                                          | Screen    |
+| :---------------------------------- | :--------------------------------------------------------------- | :-------- |
+| Animate a list arriving             | [`/list-arrival`](https://lab.krizaka.com/list-arrival/)         | dashboard |
+| Show a live number                  | [`/live-number`](https://lab.krizaka.com/live-number/)           | dashboard |
+| Stream an answer into a chat        | [`/streaming-answer`](https://lab.krizaka.com/streaming-answer/) | chat      |
+| Cross from one step to the next     | [`/page-transition`](https://lab.krizaka.com/page-transition/)   | checkout  |
+| Say an action is working, then done | [`/button-feedback`](https://lab.krizaka.com/button-feedback/)   | checkout  |
+| Draw a route and follow a courier   | [`/route-draw`](https://lab.krizaka.com/route-draw/)             | delivery  |
+| Drop a pin onto a shop wall         | [`/pin-drop`](https://lab.krizaka.com/pin-drop/)                 | wall      |
+| Press tape onto a note              | [`/tape-stick`](https://lab.krizaka.com/tape-stick/)             | wall      |
+| Let pinned paper sway               | [`/paper-sway`](https://lab.krizaka.com/paper-sway/)             | wall      |
+| Develop a pinned photograph         | [`/develop`](https://lab.krizaka.com/develop/)                   | wall      |
+| Power on a wall display             | [`/crt-power-on`](https://lab.krizaka.com/crt-power-on/)         | wall      |
+| Power off a wall display            | [`/crt-power-off`](https://lab.krizaka.com/crt-power-off/)       | wall      |
+| Settle a neon sign                  | [`/neon-flicker`](https://lab.krizaka.com/neon-flicker/)         | wall      |
 
 **Scenarios** — the screens, whole, with every motion they use: [`/dashboard`](https://lab.krizaka.com/dashboard/),
 [`/chat`](https://lab.krizaka.com/chat/), [`/checkout`](https://lab.krizaka.com/checkout/),
@@ -98,6 +97,7 @@ CI runs the type check, the catalogues check, the build and the tests on every p
 the demo, checks it for horizontal overflow at 360/768/1024/1440 px in both themes, then deploys.
 
 <!-- krizaka:workflows:start -->
+
 ## Workflows
 
 What runs in the Actions tab of this repository.
@@ -109,6 +109,7 @@ What runs in the Actions tab of this repository.
 - **Merge resolution** (`merge-resolution.yml`): Fails a PR that drops what main added without a deletion-explained line. Runs on every pull request.
 - **Scorecard** (`scorecard.yml`): OpenSSF Scorecard of the repository. Runs when branch rules change, on a schedule, on demand.
 - **Security scan** (`security.yml`): Secret scan (gitleaks) and workflow scan (zizmor); both are required checks. Runs on every pull request, in the merge queue, on push.
+
 <!-- krizaka:workflows:end -->
 
 ## License
