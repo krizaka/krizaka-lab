@@ -97,6 +97,20 @@ node scripts/check-overflow.mjs --base http://localhost:4173   # after `pnpm exe
 CI runs the type check, the catalogues check, the build and the tests on every pull request; the Pages workflow builds
 the demo, checks it for horizontal overflow at 360/768/1024/1440 px in both themes, then deploys.
 
+<!-- krizaka:workflows:start -->
+## Workflows
+
+What runs in the Actions tab of this repository.
+
+- **Bump @krizaka packages** (`bump-krizaka.yml`): Opens one auto-merged PR that bumps the @krizaka packages after a release. Runs when another repository triggers it, on demand.
+- **CI** (`ci.yml`): Lint, tests and build of the repository. Runs on push, on every pull request.
+- **Dependabot auto-merge** (`dependabot-automerge.yml`): Auto-merges safe Dependabot updates. Runs on every pull request.
+- **Deploy the lab to GitHub Pages** (`deploy-pages.yml`): Deploys the lab to GitHub Pages. Runs on push, on demand.
+- **Merge resolution** (`merge-resolution.yml`): Fails a PR that drops what main added without a deletion-explained line. Runs on every pull request.
+- **Scorecard** (`scorecard.yml`): OpenSSF Scorecard of the repository. Runs when branch rules change, on a schedule, on demand.
+- **Security scan** (`security.yml`): Secret scan (gitleaks) and workflow scan (zizmor); both are required checks. Runs on every pull request, in the merge queue, on push.
+<!-- krizaka:workflows:end -->
+
 ## License
 
 [Apache-2.0](LICENSE) — see [NOTICE](NOTICE).
