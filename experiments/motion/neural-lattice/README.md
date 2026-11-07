@@ -2,7 +2,7 @@
 
 - **Area:** motion
 - **Status:** prototype
-- **Feeds:** https://github.com/krizaka/krizaka-lab/blob/main/docs/adr/ADR-001-reference-motion-library.md
+- **Feeds:** ADR-001 (internal)
 - **Where it lives:** `src/core/neural-lattice.ts`, route `/neural-lattice`
 
 ## What it tests
