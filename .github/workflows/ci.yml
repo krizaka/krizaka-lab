@@ -17,7 +17,7 @@ concurrency:
 jobs:
   ci:
     # The shared Node CI (krizaka/.github, rule shared-ci); what only the lab checks is scripts/ci-after-build.sh.
-    uses: krizaka/.github/.github/workflows/node-ci.yml@79f6ff6292edefebc59fc968dbc2c203da81c3ea # main
+    uses: krizaka/.github/.github/workflows/node-ci.yml@c8426ee46246cbdd3fbfc7c9f1c6ca4b447aa368 # main
     permissions:
       contents: read
     with:
