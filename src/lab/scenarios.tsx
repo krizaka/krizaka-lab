@@ -576,6 +576,10 @@ export function Delivery({ v = {} }: { v?: Values }) {
   );
 }
 
+/** The scenario cards' narrowest column: the content width of the lab (1200 px) fits three, so the five cards read 3 + 2
+    from 1200 px up and never 4 + 1 (a lone last card). */
+export const SCENARIO_GRID_MIN = 360;
+
 export const SCENARIOS: Record<
   ScenarioId,
   { title: string; product: string; lead: string; View: (p: { v?: Values; motion?: string }) => ReactNode }

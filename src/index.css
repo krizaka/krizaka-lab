@@ -842,6 +842,19 @@ html[data-checkout-direction="back"]::view-transition-new(booking-step) {
   font-size: 14px;
   color: var(--kz-text-secondary);
 }
+/* Index rows are at least 32 px tall for a thumb (the block's own rows are 32 px only while their label fits one line). */
+@media (pointer: coarse), (max-width: 640px) {
+  .kz-index-entry {
+    min-height: 32px;
+    padding-block: 6px;
+  }
+}
+.lab-start {
+  display: grid;
+  justify-items: start;
+  gap: 24px;
+  max-width: 100%;
+}
 .lab-guide-more {
   margin: 0;
   padding-left: 1.2em;
