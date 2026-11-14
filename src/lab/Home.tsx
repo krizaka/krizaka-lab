@@ -4,6 +4,7 @@
    their own page (Experiments): they are the lab's drawings, not what an app ships. */
 
 import { Studies } from "./studies";
+import { Button } from "@krizaka/ui/button";
 import { CardGrid } from "@krizaka/ui/card-grid";
 import { CodeBlock } from "@krizaka/ui/code-block";
 import { LinkCard } from "@krizaka/ui/link-card";
@@ -16,7 +17,7 @@ import { useLab } from "./context";
 import { HomeLink } from "./home-link";
 import { DEMOS } from "./demos";
 import { GUIDES } from "./guides";
-import { SCENARIOS } from "./scenarios";
+import { SCENARIOS, SCENARIO_GRID_MIN } from "./scenarios";
 
 const SETUP =
   'pnpm add @krizaka/ui\n\n// once, at the root of the app\nimport { MotionObserver } from "@krizaka/ui/motion";\nimport "@krizaka/ui/motion.css";\n\n<MotionObserver />';
@@ -34,12 +35,15 @@ export function Home() {
   }));
   return (
     <>
-      <PageHero
-        eyebrow="Krizaka Lab"
-        title="Motion for Krizaka UI, by task."
-        lead="Each guide answers one thing you want to animate, on a real app screen made of @krizaka/ui: the screen plays it, the settings change it, the code follows, every option is in the table. Krizaka Lab is where the family tries things (UI, motion, Java, AI, data): an entry is an experiment with a status, and nothing here is a product."
-      >
-        <CodeBlock code={SETUP} language="tsx" file="App.tsx" copyLabel={t.demo.copy} copiedLabel={t.demo.copied} />
+      <PageHero eyebrow="Krizaka Lab" title="Motion for Krizaka UI, by task." lead={t.home.heroLead}>
+        <div className="lab-start">
+          <Button asChild size="lg">
+            <a href={href(GUIDES[0]!.id)} onClick={go(GUIDES[0]!.id)}>
+              {t.home.heroAction}
+            </a>
+          </Button>
+          <CodeBlock code={SETUP} language="tsx" file="App.tsx" copyLabel={t.demo.copy} copiedLabel={t.demo.copied} />
+        </div>
       </PageHero>
 
       <Section id="guides" number="§ 1" title="Guides" lead="Pick the task; each opens on its screen.">
@@ -57,10 +61,10 @@ export function Home() {
         id="scenarios"
         number="§ 2"
         title="Scenarios"
-        lead="Four app screens built only from @krizaka/ui components, with every motion they use."
+        lead="Five app screens built only from @krizaka/ui components, with every motion they use."
         divider
       >
-        <CardGrid as="ul" min={260} columns={2}>
+        <CardGrid as="ul" min={SCENARIO_GRID_MIN} fit="fit" columns={3}>
           {SCENARIO_PATHS.map((id) => {
             const s = SCENARIOS[id];
             const View = s.View;
@@ -84,7 +88,7 @@ export function Home() {
         </CardGrid>
       </Section>
 
-      <Section id="more" number="§ 3" title="Also here" divider>
+      <Section id="more" number="§ 3" title="Also here" lead={t.home.moreLead} divider>
         <ul className="lab-guide-more">
           <li>
             <a href={href("kz-ui")} onClick={go("kz-ui")}>

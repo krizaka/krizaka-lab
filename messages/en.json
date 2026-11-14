@@ -75,7 +75,10 @@
     "shippedCta": "Read its page on ui.krizaka.com",
     "experimental": "Experimental — canvas, for the lab only",
     "shipped": "In Krizaka UI",
-    "galleryCta": "See Krizaka UI in motion"
+    "galleryCta": "See Krizaka UI in motion",
+    "heroLead": "Each guide answers one thing you want to animate, on a real app screen made of @krizaka/ui.",
+    "heroAction": "Open the first guide",
+    "moreLead": "Krizaka Lab is where the family tries things (UI, motion, Java, AI, data): an entry is an experiment with a status, and nothing here is a product."
   },
   "demo": {
     "back": "All demos",
