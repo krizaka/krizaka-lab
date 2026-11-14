@@ -3,9 +3,10 @@
    part serves dist-demo (pnpm build) and is skipped only when there is no build or no browser. */
 import { after, before, describe, test } from "node:test";
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
-import { createServer } from "node:http";
-import { extname, join } from "node:path";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { createServer, get } from "node:http";
+import { tmpdir } from "node:os";
+import { extname, join, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { GUIDES } from "../src/lab/guides.ts";
@@ -38,17 +39,66 @@ const MIME = {
   ".json": "application/json",
 };
 
+/** A static server over `dist`: a file is read only when it sits inside `dist`; everything else is the app shell. */
+function staticServer(dist) {
+  const root = resolve(dist);
+  return createServer((req, res) => {
+    let path = "/";
+    try {
+      path = decodeURIComponent((req.url ?? "/").split("?")[0]);
+    } catch {}
+    const candidate = resolve(root, `.${path}`);
+    const file =
+      candidate.startsWith(root + sep) && existsSync(candidate) && extname(candidate)
+        ? candidate
+        : join(root, "index.html");
+    res.setHeader("content-type", MIME[extname(file)] ?? "text/html");
+    res.setHeader("connection", "close");
+    res.end(readFileSync(file));
+  });
+}
+
+describe("the test's static server stays inside its folder", () => {
+  let server, base, tmp;
+  before(async () => {
+    tmp = mkdtempSync(join(tmpdir(), "home-static-"));
+    mkdirSync(join(tmp, "dist"));
+    writeFileSync(join(tmp, "dist", "index.html"), "SHELL");
+    writeFileSync(join(tmp, "dist", "app.js"), "ASSET");
+    writeFileSync(join(tmp, "package.json"), "SECRET");
+    writeFileSync(join(tmp, "dist-evil.json"), "SECRET");
+    server = staticServer(join(tmp, "dist"));
+    await new Promise((r) => server.listen(0, "127.0.0.1", r));
+    base = { host: "127.0.0.1", port: server.address().port };
+  });
+  after(async () => {
+    server?.closeAllConnections();
+    await new Promise((r) => server?.close(r));
+    rmSync(tmp, { recursive: true, force: true });
+  });
+  // http.get sends the path as written, unlike fetch, which would normalise `/../`
+  const body = (path) =>
+    new Promise((ok, fail) =>
+      get({ ...base, path, agent: false }, (res) => {
+        let text = "";
+        res.on("data", (c) => (text += c));
+        res.on("end", () => ok(text));
+      }).on("error", fail),
+    );
+
+  test("a file inside the folder is served", async () => {
+    assert.equal(await body("/app.js"), "ASSET");
+  });
+  for (const path of ["/../package.json", "/%2e%2e/package.json", "/../dist-evil.json", "/%2e%2e%2fpackage.json"])
+    test(`${path} gets the app shell, not the file`, async () => {
+      assert.equal(await body(path), "SHELL");
+    });
+});
+
 describe("the scenario grid in a real browser", { skip: !existsSync(dist) && "no dist-demo: run pnpm build" }, () => {
   let server, browser, base;
   before(async () => {
-    server = createServer((req, res) => {
-      const path = decodeURIComponent((req.url ?? "/").split("?")[0]);
-      let file = join(dist, path);
-      if (!file.startsWith(dist) || !existsSync(file) || !extname(file)) file = join(dist, "index.html");
-      res.setHeader("content-type", MIME[extname(file)] ?? "text/html");
-      res.setHeader("connection", "close");
-      res.end(readFileSync(file));
-    });
+    server = staticServer(dist);
     await new Promise((r) => server.listen(0, "127.0.0.1", r));
     base = `http://127.0.0.1:${server.address().port}`;
     const { chromium } = await import("playwright");
