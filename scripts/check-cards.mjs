@@ -180,21 +180,6 @@ const CARDS = {
     const n = (await names(r)).filter((x) => !x.startsWith("transition:")).length;
     ok(rm ? n === 0 : n > 0, rm ? "the three dots stay still under reduced motion" : "the three dots move");
   },
-  async marquee(p, r, rm, ok) {
-    const n = (await names(r)).filter((x) => /marquee|scroll/i.test(x)).length;
-    ok(rm ? n === 0 : n > 0, rm ? "the row is still under reduced motion" : "the band slides");
-    if (!rm) {
-      await r.getByRole("button", { name: "Pause" }).click();
-      await p.waitForTimeout(80);
-      const state = await r
-        .locator("ul")
-        .first()
-        .evaluate(
-          (el) => getComputedStyle(el.parentElement).animationPlayState + getComputedStyle(el).animationPlayState,
-        );
-      ok(/paused/.test(state), "Pause stops the band");
-    }
-  },
   async navbar(p, r, rm, ok) {
     const items = r.locator("button[data-nav-item]");
     await items.nth(2).click();

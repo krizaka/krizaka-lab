@@ -48,7 +48,6 @@ export const ITEMS: ItemData[] = [
   { id: "lattice-card", group: "data", declared: ["NeuralLatticeView"], props: ["nodeCount", "theme", "interactive"] },
   { id: "waveform", group: "ambient", declared: ["waveform"], props: ["playing", "bars", "size", "label"] },
   { id: "chat", group: "ambient", declared: ["chat"], props: ["text", "mine", "time", "label", "showLabel"] },
-  { id: "marquee", group: "ambient", declared: ["marquee"], props: ["label", "pauseLabel", "playLabel", "speed"] },
   { id: "navbar", group: "ambient", declared: ["nav-bar"], props: ["label", "NavBar.Link active", "asChild"] },
   {
     id: "glass-card",

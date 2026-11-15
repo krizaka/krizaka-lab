@@ -366,11 +366,6 @@
         "what": "A conversation that is alive: someone is typing.",
         "reduced": "The three dots stay still."
       },
-      "marquee": {
-        "title": "Marquee",
-        "what": "A band of names that slides, paused by the pointer, the focus or its button.",
-        "reduced": "A still row you scroll by hand."
-      },
       "navbar": {
         "title": "NavBar",
         "what": "The family's bar: one light gliding between the items, resting on the current page.",
