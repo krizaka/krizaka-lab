@@ -36,8 +36,8 @@ import { type Knob, Playground } from "./playground";
 type FlowMode = "in" | "out" | "both";
 // `brand` is the id @krizaka/ui still knows (ProductLogo, `.brand-<id>`) until its commercial-id major (krizaka-internal#2659).
 const PRODUCTS = [
-  { id: "verikora", brand: "yomizaka", live: true },
-  { id: "folioviv", brand: "akinaza", live: false },
+  { id: "verikora", brand: "verikora", live: true },
+  { id: "folioviv", brand: "folioviv", live: false },
 ] as const;
 const NAMES: Record<string, string> = { verikora: "Verikora", folioviv: "Folioviv" };
 
@@ -132,7 +132,7 @@ export function Flow({
   const c = t.controls;
   return (
     <EngineFlow
-      className="brand-orazaka"
+      className="brand-sovkora"
       label={c.flowLabel}
       layout={layout}
       compactLayout={compact ? "top-to-bottom" : false}
@@ -140,7 +140,7 @@ export function Flow({
       conduit={conduit}
       {...config}
       hint={c.hint}
-      hub={{ label: c.engine, caption: c.engineCaption, mark: <ProductLogo id="orazaka" size={52} animated={false} /> }}
+      hub={{ label: c.engine, caption: c.engineCaption, mark: <ProductLogo id="sovkora" size={52} animated={false} /> }}
       nodes={PRODUCTS.map((p) => ({
         id: p.id,
         label: NAMES[p.id]!,
@@ -378,11 +378,11 @@ import { ProductLogo } from "@krizaka/ui";
 import { EngineFlow } from "@krizaka/ui/engine-flow";
 
 <EngineFlow
-  className="brand-orazaka"
+  className="brand-sovkora"
   label="Sovkora and the products it powers"
-  hub={{ label: "Sovkora", mark: <ProductLogo id="orazaka" size={56} /> }}
+  hub={{ label: "Sovkora", mark: <ProductLogo id="sovkora" size={56} /> }}
   nodes={[
-    { id: "verikora", label: "Verikora", flow: "both", className: "brand-yomizaka",
+    { id: "verikora", label: "Verikora", flow: "both", className: "brand-verikora",
       description: "Document checks.", href: "https://dev.verikora.com" },
   ]}
   layout="radial"

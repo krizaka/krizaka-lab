@@ -42,7 +42,7 @@ export function Screen({
   children,
   actions,
 }: {
-  product?: "orazaka" | "akinaza";
+  product?: "sovkora" | "folioviv";
   app: string;
   title: string;
   children: ReactNode;
@@ -140,7 +140,7 @@ export function Dashboard({ v = {} }: { v?: Values }) {
   const style = { "--kz-arrive-duration": `${v.arrivalDuration ?? 420}ms` } as CSSProperties;
   return (
     <div ref={host} data-motion-scope="">
-      <Screen product="orazaka" app="Sovkora" title="Runs today" actions={<Badge tone="neutral">demo data</Badge>}>
+      <Screen product="sovkora" app="Sovkora" title="Runs today" actions={<Badge tone="neutral">demo data</Badge>}>
         <div className="lab-dash-figures">
           <Stat
             label="Runs"
@@ -235,7 +235,7 @@ export function Chat({ v = {} }: { v?: Values }) {
   return (
     <div ref={host} data-motion-scope="">
       <Screen
-        product="orazaka"
+        product="sovkora"
         app="Sovkora"
         title="Chez Lina · assistant"
         actions={
@@ -379,7 +379,12 @@ export function Checkout({ v = {} }: { v?: Values }) {
       style={checkoutMotionStyle(String(settings.duration), String(settings.easing))}
     >
       <Toaster label={words.notifications} closeLabel={words.close} position="bottom-right" />
-      <Screen product="akinaza" app="Folioviv" title={words.title} actions={<Badge tone="neutral">{words.demo}</Badge>}>
+      <Screen
+        product="folioviv"
+        app="Folioviv"
+        title={words.title}
+        actions={<Badge tone="neutral">{words.demo}</Badge>}
+      >
         <StepProgress step={step + 1} total={3} label={(s, t) => format(words.step, { step: s, total: t })} />
         <CheckoutPageTransition ref={transition} reduced={reduce} duration={timing.duration} easing={timing.easing}>
           <div className="lab-checkout">

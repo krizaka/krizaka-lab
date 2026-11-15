@@ -49,7 +49,7 @@ export function WallMotionWall({ v = {}, motion = "pin-drop" }: { v?: Values; mo
   return (
     <div className="lab-wall-scope" data-motion-scope="">
       <Screen
-        product="akinaza"
+        product="folioviv"
         app={t.wall.app}
         title={t.wall.title}
         actions={
