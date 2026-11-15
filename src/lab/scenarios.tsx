@@ -379,7 +379,12 @@ export function Checkout({ v = {} }: { v?: Values }) {
       style={checkoutMotionStyle(String(settings.duration), String(settings.easing))}
     >
       <Toaster label={words.notifications} closeLabel={words.close} position="bottom-right" />
-      <Screen product="folioviv" app="Folioviv" title={words.title} actions={<Badge tone="neutral">{words.demo}</Badge>}>
+      <Screen
+        product="folioviv"
+        app="Folioviv"
+        title={words.title}
+        actions={<Badge tone="neutral">{words.demo}</Badge>}
+      >
         <StepProgress step={step + 1} total={3} label={(s, t) => format(words.step, { step: s, total: t })} />
         <CheckoutPageTransition ref={transition} reduced={reduce} duration={timing.duration} easing={timing.easing}>
           <div className="lab-checkout">
