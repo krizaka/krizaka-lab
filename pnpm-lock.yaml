@@ -21,8 +21,8 @@ importers:
         specifier: ^0.2.9
         version: 0.2.9(react@19.3.1)(typescript@5.9.3)
       '@krizaka/icons':
-        specifier: ^0.10.1
-        version: 0.10.1(react@19.3.1)
+        specifier: ^0.11.0
+        version: 0.11.0(react@19.3.1)
       '@krizaka/query':
         specifier: ^0.3.1
         version: 0.3.1(@types/react@19.3.0)(csstype@3.2.3)(react@19.3.1)
