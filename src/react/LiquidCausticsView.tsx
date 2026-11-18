@@ -1,11 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useImperativeHandle, forwardRef, type CSSProperties } from "react";
-import {
-  LiquidCausticsRenderer,
-  type CausticPalette,
-  type FluidMedium,
-} from "../core/liquid-caustics";
+import { LiquidCausticsRenderer, type CausticPalette, type FluidMedium } from "../core/liquid-caustics";
 import { MotionController } from "../core/motion-controller";
 
 export interface LiquidCausticsViewHandle {
