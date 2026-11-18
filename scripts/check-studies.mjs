@@ -98,16 +98,16 @@ const CHECKS = {
   },
   async "page-turn"(p, r, rm, ok) {
     await p.evaluate(() => {
-      window.__vt = false;
+      globalThis.__vt = false;
       new MutationObserver(() => {
-        if (document.documentElement.dataset.turn) window.__vt = document.documentElement.dataset.turn;
+        if (document.documentElement.dataset.turn) globalThis.__vt = document.documentElement.dataset.turn;
       }).observe(document.documentElement, { attributes: true });
     });
     ok((await r.locator(".st-page h4").innerText()) === "Page one", "starts on page one");
     await r.getByRole("button", { name: "Next page" }).click();
     await p.waitForTimeout(rm ? 100 : 900);
     ok((await r.locator(".st-page h4").innerText()) === "Page two", "Next page shows page two");
-    const turned = await p.evaluate(() => window.__vt);
+    const turned = await p.evaluate(() => globalThis.__vt);
     ok(
       rm ? turned === false : turned === "next",
       rm ? "no view transition under reduced motion" : "a view transition ran (the fold)",
