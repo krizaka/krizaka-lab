@@ -27,7 +27,7 @@ function dialogNoun(placement: string | number | boolean): string {
   return placement === "center" ? "dialog" : "drawer";
 }
 
-function DialogDemo({ v }: { v: Record<string, string | number | boolean> }) {
+function DialogDemo({ v }: Readonly<{ v: Record<string, string | number | boolean> }>) {
   return (
     <div className="lab-overlay">
       <Dialog.Root>
@@ -67,7 +67,7 @@ export const INDICATOR_KNOBS: readonly Knob[] = [
 
 const ITEMS = ["Overview", "Runs", "Packs", "Settings"] as const;
 
-function IndicatorDemo({ v }: { v: Record<string, string | number | boolean> }) {
+function IndicatorDemo({ v }: Readonly<{ v: Record<string, string | number | boolean> }>) {
   const host = useRef<HTMLDivElement>(null);
   const visible = useInView(host);
   const reduce = useReducedMotion();

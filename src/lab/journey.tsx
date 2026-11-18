@@ -23,7 +23,7 @@ const LABELS = { done: "Done", current: "In progress", upcoming: "Upcoming", err
 const NAMES = ["Uploaded", "Checked", "Transcoding", "Published"] as const;
 const DETAIL = ["1.2 GB in 48 s", "Format, rights, safety", "4K, 1080p, 720p", "Visible to your supporters"];
 
-function Job({ v }: { v: Record<string, string | number | boolean> }) {
+function Job({ v }: Readonly<{ v: Record<string, string | number | boolean> }>) {
   const host = useRef<HTMLDivElement>(null);
   const visible = useInView(host);
   const reduce = useReducedMotion();

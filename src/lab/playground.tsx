@@ -16,11 +16,11 @@ export function Control({
   knob,
   value,
   onChange,
-}: {
+}: Readonly<{
   knob: Knob;
   value: string | number | boolean;
   onChange: (v: string | number | boolean) => void;
-}) {
+}>) {
   if (knob.kind === "choice")
     return (
       <div className="lab-control">
@@ -72,7 +72,7 @@ export function Playground({
   children,
   skip,
   note,
-}: {
+}: Readonly<{
   knobs: readonly Knob[];
   render: (values: Values) => ReactNode;
   /** The component's name, in the snippet (`EngineFlow`). */
@@ -84,7 +84,7 @@ export function Playground({
   /** Knob keys that are not props of the component (they only change the example's data). */
   skip?: readonly string[];
   note?: ReactNode;
-}) {
+}>) {
   const [values, setValues] = useState<Values>(() =>
     readValues(knobs, globalThis.window === undefined ? "" : globalThis.location.search),
   );
