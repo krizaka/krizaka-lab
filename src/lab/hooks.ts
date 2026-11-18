@@ -18,7 +18,7 @@ export function useInView(ref: RefObject<Element | null>, threshold = 0.2): bool
 
 export function useReducedMotion(): boolean {
   const [reduce, setReduce] = useState(
-    () => typeof globalThis.window !== "undefined" && globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    () => globalThis.window !== undefined && globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
   useEffect(() => {
     const q = globalThis.matchMedia("(prefers-reduced-motion: reduce)");

@@ -44,7 +44,7 @@ export function toSearch(knobs: readonly Knob[], values: Values): string {
 
 /** Puts the configuration in the address without a navigation (the page's other query parameters stay). */
 export function writeValues(knobs: readonly Knob[], values: Values): void {
-  if (typeof globalThis.window === "undefined") return;
+  if (globalThis.window === undefined) return;
   const url = new URL(globalThis.location.href);
   for (const k of knobs) url.searchParams.delete(k.key);
   for (const [key, value] of new URLSearchParams(toSearch(knobs, values))) url.searchParams.set(key, value);
