@@ -118,7 +118,7 @@ export function Home() {
 
 /** The canvas studies: the lab's drawings, kept apart from what an app ships. */
 export function Experiments() {
-  const { t, href, go } = useLab();
+  const { t, href } = useLab();
   const ids = TAB_ORDER.filter((id): id is TabId => ["sovkora", "jarvis", "caustics", "lattice"].includes(id));
   return (
     <>
