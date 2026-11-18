@@ -16,7 +16,10 @@ export function Example() {
     const reduced = globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced || !document.startViewTransition) return swap(); // no API, or no motion: the page just changes
     document.documentElement.dataset.turn = to > at ? "next" : "back";
-    document.startViewTransition(swap).finished.finally(() => delete document.documentElement.dataset.turn);
+    void document
+      .startViewTransition(swap)
+      .finished.finally(() => delete document.documentElement.dataset.turn)
+      .catch(() => undefined); // an interrupted transition is not an error
   }
   const page = pages[at]!;
   return (

@@ -20,3 +20,8 @@ test("no nested template literal in the lab views (S4624)", () => {
   const nested = sources.filter(([, s]) => /\$\{`/.test(s)).map(([f]) => f);
   assert.deepEqual(nested, []);
 });
+
+test("an anchor with a click handler spells its href in the same element (S1082)", () => {
+  const spread = sources.filter(([, s]) => /<a \{\.\.\.props\} onClick=/.test(s)).map(([f]) => f);
+  assert.deepEqual(spread, []);
+});
