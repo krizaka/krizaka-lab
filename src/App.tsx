@@ -67,7 +67,8 @@ function Shell() {
   const locale = LOCALE;
   const t = i18n.getDictionary(locale);
   const { mode, setMode } = useTheme();
-  const dark = mode === "dark" || (mode === "system" && !globalThis.matchMedia("(prefers-color-scheme: light)").matches);
+  const dark =
+    mode === "dark" || (mode === "system" && !globalThis.matchMedia("(prefers-color-scheme: light)").matches);
 
   useEffect(() => {
     const onPop = () => setPage(resolvePage(globalThis.location));
