@@ -113,6 +113,15 @@ const runTrendCell = (r: Run) => (
   <Sparkline data={r.trend} width={84} height={24} variant="area" title={`${r.pack}, last hour`} />
 );
 
+/** What every looping scenario needs: its host node, whether it is on screen, reduced motion and the replay counter. */
+function useScenarioRun() {
+  const host = useRef<HTMLDivElement>(null);
+  const visible = useInView(host);
+  const reduce = useReducedMotion();
+  const [run, setRun] = useState(0);
+  return { host, visible, reduce, run, setRun };
+}
+
 /** The knobs of a scenario, as its settings table gives them. */
 type ScenarioProps = Readonly<{ v?: Values }>;
 
@@ -219,10 +228,7 @@ const ANSWER =
   "Your table for four is booked for Friday at 7:30 pm. I added a note about the high chair. You will get a reminder on Thursday evening, and you can change the time from that message.";
 
 export function Chat({ v = {} }: ScenarioProps) {
-  const host = useRef<HTMLDivElement>(null);
-  const visible = useInView(host);
-  const reduce = useReducedMotion();
-  const [run, setRun] = useState(0);
+  const { host, visible, reduce, run, setRun } = useScenarioRun();
   const [elapsed, setElapsed] = useState(0);
   const rate = Number(v.rate ?? 24);
   const unit = String(v.unit ?? "word") as "word" | "char";
@@ -510,10 +516,7 @@ const HOME = [-73.5695, 45.5268] as const;
 const PATH = [STUDIO, [-73.5935, 45.5232], [-73.5862, 45.5159], [-73.5753, 45.5171], HOME] as const;
 
 export function Delivery({ v = {} }: ScenarioProps) {
-  const host = useRef<HTMLDivElement>(null);
-  const visible = useInView(host);
-  const reduce = useReducedMotion();
-  const [run, setRun] = useState(0);
+  const { host, visible, reduce, run, setRun } = useScenarioRun();
   const [eta, setEta] = useState(12);
   const trip = Number(v.tripDuration ?? 6000);
   useEffect(() => {
