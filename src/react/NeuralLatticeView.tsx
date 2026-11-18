@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useImperativeHandle, forwardRef, type CSSProperties } from "react";
-import { NeuralLatticeRenderer, type NeuralLatticeOptions } from "../core/neural-lattice";
+import { NeuralLatticeRenderer } from "../core/neural-lattice";
 import { MotionController } from "../core/motion-controller";
 
 export interface NeuralLatticeViewHandle {

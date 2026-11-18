@@ -13,19 +13,19 @@ import type { LabPage } from "../core/router";
 import { useLab } from "./context";
 import { HomeLink } from "./home-link";
 import { type ConfigRow, type GuideId, guideById, guidesOf } from "./guides";
-import { type Knob, type Values, defaults, readValues, writeValues } from "./playground-lib";
+import { type Values, defaults, readValues, writeValues } from "./playground-lib";
 import { Control } from "./playground";
 import { SCENARIOS } from "./scenarios";
 import { i18n } from "./messages";
 
-export function GuidePage({ id }: { id: GuideId }) {
+export function GuidePage({ id }: Readonly<{ id: GuideId }>) {
   const { t, href, go } = useLab();
   const g = guideById(id);
   const scenario = SCENARIOS[g.scenario];
   const View = scenario.View;
   const initial = useMemo(() => defaults(g.knobs), [g]);
   const [values, setValues] = useState<Values>(() =>
-    readValues(g.knobs, typeof window === "undefined" ? "" : window.location.search),
+    readValues(g.knobs, globalThis.window === undefined ? "" : globalThis.location.search),
   );
   useEffect(() => writeValues(g.knobs, values), [g, values]);
   const others = guidesOf(g.scenario).filter((o) => o.id !== id);
@@ -135,7 +135,7 @@ export function GuidePage({ id }: { id: GuideId }) {
   );
 }
 
-export function ScenarioPage({ id }: { id: keyof typeof SCENARIOS }) {
+export function ScenarioPage({ id }: Readonly<{ id: keyof typeof SCENARIOS }>) {
   const { href, go } = useLab();
   const s = SCENARIOS[id];
   const View = s.View;

@@ -7,9 +7,10 @@ import { PageHero } from "@krizaka/ui/page-hero";
 import type { TabId } from "../core/router";
 import { useLab } from "./context";
 import { DEMOS } from "./demos";
+import { HomeLink } from "./home-link";
 
-export function DemoPage({ id }: { id: TabId }) {
-  const { t, href, go } = useLab();
+export function DemoPage({ id }: Readonly<{ id: TabId }>) {
+  const { t, href } = useLab();
   const d = t.demos[id];
   const demo = DEMOS[id];
   const Stage = demo.Stage;
@@ -20,7 +21,7 @@ export function DemoPage({ id }: { id: TabId }) {
         title={d.title}
         lead={d.lead}
         back={{ href: href("home"), label: t.demo.back }}
-        linkAs={(props: React.ComponentProps<"a">) => <a {...props} onClick={go("home")} />}
+        linkAs={HomeLink}
       >
         <p className="lab-whatfor">
           <strong>{t.demo.whatFor} · </strong>

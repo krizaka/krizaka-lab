@@ -3,14 +3,9 @@
    shipped primitives of @krizaka/ui. Words come from the messages (useLab). */
 
 import { SettingsIcon } from "@krizaka/icons";
-import { Sparkline } from "@krizaka/charts/sparkline";
 import { ProductLogo } from "@krizaka/ui";
-import { StaticMap } from "@krizaka/ui/map";
 import { Button } from "@krizaka/ui/button";
-import { TypingIndicator } from "@krizaka/ui/chat";
-import { NumberTicker } from "@krizaka/ui/number-ticker";
 import { Progress } from "@krizaka/ui/progress";
-import { Stat } from "@krizaka/ui/stat";
 import { Chip } from "@krizaka/ui/chip";
 import { EngineFlow, type FlowDensity, type FlowLayout, type FlowTrigger } from "@krizaka/ui/engine-flow";
 import { Dialog } from "@krizaka/ui/dialog";
@@ -42,7 +37,7 @@ const PRODUCTS = [
 const NAMES: Record<string, string> = { verikora: "Verikora", folioviv: "Folioviv" };
 
 /** The demo's settings, folded into a side panel (Dialog placement="right"): the animation stays large and centred. */
-function Settings({ children }: { children: ReactNode }) {
+function Settings({ children }: Readonly<{ children: ReactNode }>) {
   const { t } = useLab();
   return (
     <div className="lab-settings">
@@ -73,13 +68,13 @@ function Choice<T extends string>({
   options,
   names,
   onChange,
-}: {
+}: Readonly<{
   label: string;
   value: T;
   options: readonly T[];
   names: Record<T, string>;
   onChange: (v: T) => void;
-}) {
+}>) {
   return (
     <div className="lab-control">
       <span className="lab-control-label" aria-hidden>
@@ -104,7 +99,7 @@ function Choice<T extends string>({
 }
 
 /** The box a canvas view plays in: a fixed aspect ratio (no layout shift), a scope MotionObserver pauses off screen. */
-function Box({ children, tall = false }: { children: ReactNode; tall?: boolean }) {
+function Box({ children, tall = false }: Readonly<{ children: ReactNode; tall?: boolean }>) {
   return (
     <div className="lab-box" data-tall={tall ? "" : undefined} data-motion-scope="">
       {children}
@@ -120,14 +115,14 @@ export function Flow({
   conduit = "bezier",
   compact = true,
   config,
-}: {
+}: Readonly<{
   layout?: FlowLayout;
   mode?: FlowMode;
   particles?: "photons" | "none";
   conduit?: "bezier" | "straight";
   compact?: boolean;
   config?: Partial<React.ComponentProps<typeof EngineFlow>>;
-}) {
+}>) {
   const { t } = useLab();
   const c = t.controls;
   return (

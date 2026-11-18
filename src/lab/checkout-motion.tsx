@@ -15,7 +15,7 @@ import {
 
 export type CheckoutTransition = { change: (update: () => void, direction: "forward" | "back") => Promise<void> };
 
-export function AnimatedCheckoutHeight({ children, reduced }: { children: ReactNode; reduced: boolean }) {
+export function AnimatedCheckoutHeight({ children, reduced }: Readonly<{ children: ReactNode; reduced: boolean }>) {
   const host = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -42,13 +42,13 @@ export function CheckoutPageTransition({
   reduced,
   duration,
   easing,
-}: {
+}: Readonly<{
   ref: Ref<CheckoutTransition>;
   children: ReactNode;
   reduced: boolean;
   duration: number;
   easing: string;
-}) {
+}>) {
   const stage = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement>(null);
   const animations = useRef<Animation[]>([]);
@@ -168,7 +168,7 @@ export function CheckoutPayButton({
   onClick,
   disabled,
   errorId,
-}: {
+}: Readonly<{
   phase: "idle" | "working" | "done";
   label: string;
   working: string;
@@ -176,7 +176,7 @@ export function CheckoutPayButton({
   onClick: () => void;
   disabled: boolean;
   errorId?: string;
-}) {
+}>) {
   return (
     <Button
       variant="primary"

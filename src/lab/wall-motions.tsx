@@ -37,7 +37,7 @@ function wallStyle(motion: GuideId, values: Values): CSSProperties {
 const dataFor = (motion: string, name: string) =>
   motion === "all" || motion === name ? { "data-wall-animation": "", [`data-kz-${name}`]: "" } : {};
 
-export function WallMotionWall({ v = {}, motion = "pin-drop" }: { v?: Values; motion?: string }) {
+export function WallMotionWall({ v = {}, motion = "pin-drop" }: Readonly<{ v?: Values; motion?: string }>) {
   const { t } = useLab();
   const [replay, setReplay] = useState(0);
   const overview = motion === "all";

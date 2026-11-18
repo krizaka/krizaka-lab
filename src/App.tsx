@@ -63,37 +63,38 @@ function PageView({ page }: Readonly<{ page: LabPage }>) {
 }
 
 function Shell() {
-  const [page, setPage] = useState<LabPage>(() => resolvePage(window.location));
+  const [page, setPage] = useState<LabPage>(() => resolvePage(globalThis.location));
   const locale = LOCALE;
   const t = i18n.getDictionary(locale);
   const { mode, setMode } = useTheme();
-  const dark = mode === "dark" || (mode === "system" && !window.matchMedia("(prefers-color-scheme: light)").matches);
+  const dark =
+    mode === "dark" || (mode === "system" && !globalThis.matchMedia("(prefers-color-scheme: light)").matches);
 
   useEffect(() => {
-    const onPop = () => setPage(resolvePage(window.location));
-    window.addEventListener("popstate", onPop);
-    return () => window.removeEventListener("popstate", onPop);
+    const onPop = () => setPage(resolvePage(globalThis.location));
+    globalThis.addEventListener("popstate", onPop);
+    return () => globalThis.removeEventListener("popstate", onPop);
   }, []);
 
   useEffect(() => {
     document.documentElement.lang = locale;
     const name = pageName(page, t);
     document.title = page === "home" ? `${t.bar.label} — ${name}` : `${name} — ${t.bar.label}`;
-    const canonicalUrl = getCanonicalUrl(window.location.pathname);
+    const canonicalUrl = getCanonicalUrl(globalThis.location.pathname);
     document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.setAttribute("href", canonicalUrl);
     document.querySelector<HTMLMetaElement>('meta[property="og:url"]')?.setAttribute("content", canonicalUrl);
   }, [page, locale, t]);
 
   const lab = useMemo(() => {
     const href = (to: LabPage) =>
-      to === "home" ? homeHref(window.location.pathname) : getHrefForTab(to, window.location.pathname);
+      to === "home" ? homeHref(globalThis.location.pathname) : getHrefForTab(to, globalThis.location.pathname);
     /** An internal link: the history API, the page's top, no reload. */
     const go = (to: LabPage) => (e: MouseEvent<HTMLAnchorElement>) => {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
       e.preventDefault();
-      window.history.pushState(null, "", href(to));
+      globalThis.history.pushState(null, "", href(to));
       setPage(to);
-      window.scrollTo({ top: 0 });
+      globalThis.scrollTo({ top: 0 });
     };
     return { t, locale, href, go };
   }, [t, locale]);

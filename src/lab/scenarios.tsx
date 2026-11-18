@@ -41,13 +41,13 @@ export function Screen({
   title,
   children,
   actions,
-}: {
+}: Readonly<{
   product?: "sovkora" | "folioviv";
   app: string;
   title: string;
   children: ReactNode;
   actions?: ReactNode;
-}) {
+}>) {
   return (
     <div className={product ? `lab-screen brand-${product}` : "lab-screen"}>
       <div className="lab-screen-bar">
@@ -113,7 +113,19 @@ const runTrendCell = (r: Run) => (
   <Sparkline data={r.trend} width={84} height={24} variant="area" title={`${r.pack}, last hour`} />
 );
 
-export function Dashboard({ v = {} }: { v?: Values }) {
+/** What every looping scenario needs: its host node, whether it is on screen, reduced motion and the replay counter. */
+function useScenarioRun() {
+  const host = useRef<HTMLDivElement>(null);
+  const visible = useInView(host);
+  const reduce = useReducedMotion();
+  const [run, setRun] = useState(0);
+  return { host, visible, reduce, run, setRun };
+}
+
+/** The knobs of a scenario, as its settings table gives them. */
+type ScenarioProps = Readonly<{ v?: Values }>;
+
+export function Dashboard({ v = {} }: ScenarioProps) {
   const host = useRef<HTMLDivElement>(null);
   const visible = useInView(host);
   const reduce = useReducedMotion();
@@ -124,12 +136,12 @@ export function Dashboard({ v = {} }: { v?: Values }) {
   const interval = Number(v.interval ?? 2200);
   useEffect(() => {
     if (!stream || !visible || reduce) return;
-    const timer = window.setInterval(() => {
+    const timer = globalThis.setInterval(() => {
       const n = counter.current++;
       setRuns((prev) => [runOf(n, true), ...prev.map((r) => ({ ...r, fresh: false }))].slice(0, 6));
       setTotal((t) => t + 1 + (n % 4));
     }, interval);
-    return () => window.clearInterval(timer);
+    return () => globalThis.clearInterval(timer);
   }, [stream, interval, visible, reduce]);
   const spend = runs.reduce((s, r) => s + r.cost, 0) * 120;
   const ticker = {
@@ -215,11 +227,8 @@ export function Dashboard({ v = {} }: { v?: Values }) {
 const ANSWER =
   "Your table for four is booked for Friday at 7:30 pm. I added a note about the high chair. You will get a reminder on Thursday evening, and you can change the time from that message.";
 
-export function Chat({ v = {} }: { v?: Values }) {
-  const host = useRef<HTMLDivElement>(null);
-  const visible = useInView(host);
-  const reduce = useReducedMotion();
-  const [run, setRun] = useState(0);
+export function Chat({ v = {} }: ScenarioProps) {
+  const { host, visible, reduce, run, setRun } = useScenarioRun();
   const [elapsed, setElapsed] = useState(0);
   const rate = Number(v.rate ?? 24);
   const unit = String(v.unit ?? "word") as "word" | "char";
@@ -228,8 +237,8 @@ export function Chat({ v = {} }: { v?: Values }) {
   useEffect(() => {
     if (!visible || reduce) return;
     const began = performance.now();
-    const timer = window.setInterval(() => setElapsed(performance.now() - began), 50);
-    return () => window.clearInterval(timer);
+    const timer = globalThis.setInterval(() => setElapsed(performance.now() - began), 50);
+    return () => globalThis.clearInterval(timer);
   }, [visible, reduce, run, rate, unit, delay]);
   const shown = reduce ? { text: ANSWER, phase: "done" as const } : shownAt(all, elapsed, rate, delay);
   return (
@@ -285,7 +294,7 @@ const PRICE = 45;
 const GST = 0.05;
 const QST = 0.09975;
 
-export function Checkout({ v = {} }: { v?: Values }) {
+export function Checkout({ v = {} }: ScenarioProps) {
   const reduce = useReducedMotion();
   const words = i18n.getDictionary("en").checkout;
   const settings = { ...defaults(CHECKOUT_KNOBS), ...v };
@@ -506,18 +515,15 @@ const STUDIO = [-73.6005, 45.5229] as const;
 const HOME = [-73.5695, 45.5268] as const;
 const PATH = [STUDIO, [-73.5935, 45.5232], [-73.5862, 45.5159], [-73.5753, 45.5171], HOME] as const;
 
-export function Delivery({ v = {} }: { v?: Values }) {
-  const host = useRef<HTMLDivElement>(null);
-  const visible = useInView(host);
-  const reduce = useReducedMotion();
-  const [run, setRun] = useState(0);
+export function Delivery({ v = {} }: ScenarioProps) {
+  const { host, visible, reduce, run, setRun } = useScenarioRun();
   const [eta, setEta] = useState(12);
   const trip = Number(v.tripDuration ?? 6000);
   useEffect(() => {
     setEta(12);
     if (!visible || reduce) return;
-    const timer = window.setInterval(() => setEta((m) => Math.max(1, m - 1)), trip / 11);
-    return () => window.clearInterval(timer);
+    const timer = globalThis.setInterval(() => setEta((m) => Math.max(1, m - 1)), trip / 11);
+    return () => globalThis.clearInterval(timer);
   }, [visible, reduce, run, trip]);
   const label = "An order from the bakery on Saint-Viateur to Parc La Fontaine";
   return (

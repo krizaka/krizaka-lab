@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useImperativeHandle, forwardRef, type CSSProperties } from "react";
-import { JarvisHUDRenderer, type JarvisHUDOptions, type JarvisTacticalMode, type TargetLock } from "../core/jarvis-hud";
+import { JarvisHUDRenderer, type JarvisTacticalMode, type TargetLock } from "../core/jarvis-hud";
 import { MotionController } from "../core/motion-controller";
 import { type JarvisTheme } from "../core/types";
 

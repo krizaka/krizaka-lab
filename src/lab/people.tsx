@@ -44,7 +44,7 @@ const MILESTONES = [
   { eyebrow: "Milestone 03", title: "Your first auction", replaced: "Guessing what a clip is worth" },
 ] as const;
 
-function Scene({ v }: { v: Record<string, string | number | boolean> }) {
+function Scene({ v }: Readonly<{ v: Record<string, string | number | boolean> }>) {
   const host = useRef<HTMLDivElement>(null);
   const visible = useInView(host);
   const reduce = useReducedMotion();
