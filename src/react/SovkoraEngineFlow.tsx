@@ -48,7 +48,7 @@ export function SovkoraEngineFlow({
   onNodeClick,
   className = "",
   style,
-}: SovkoraEngineFlowProps) {
+}: Readonly<SovkoraEngineFlowProps>) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const rendererRef = useRef<SovkoraEngineRenderer | null>(null);
   const controllerRef = useRef<MotionController | null>(null);

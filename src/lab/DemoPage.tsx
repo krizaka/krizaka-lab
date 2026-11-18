@@ -9,7 +9,7 @@ import { useLab } from "./context";
 import { DEMOS } from "./demos";
 import { HomeLink } from "./home-link";
 
-export function DemoPage({ id }: { id: TabId }) {
+export function DemoPage({ id }: Readonly<{ id: TabId }>) {
   const { t, href } = useLab();
   const d = t.demos[id];
   const demo = DEMOS[id];

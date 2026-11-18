@@ -3,7 +3,6 @@
 import { useEffect, useRef, useImperativeHandle, forwardRef, type CSSProperties } from "react";
 import {
   LiquidCausticsRenderer,
-  type CausticsOptions,
   type CausticPalette,
   type FluidMedium,
 } from "../core/liquid-caustics";
