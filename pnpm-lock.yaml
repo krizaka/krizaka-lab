@@ -13,7 +13,7 @@ importers:
     dependencies:
       '@krizaka/charts':
         specifier: ^1.0.2
-        version: 1.0.2(@krizaka/ui@4.16.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: 1.0.2(@krizaka/ui@4.17.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@krizaka/fonts':
         specifier: ^0.5.4
         version: 0.5.4
@@ -27,14 +27,14 @@ importers:
         specifier: ^0.3.1
         version: 0.3.1(@types/react@19.3.0)(csstype@3.2.3)(react@19.3.1)
       '@krizaka/tailwind':
-        specifier: ^4.16.0
-        version: 4.16.0(@krizaka/tokens@4.16.0)(@krizaka/ui@4.16.0)(tailwindcss@4.3.3)
+        specifier: ^4.17.0
+        version: 4.17.0(@krizaka/tokens@4.17.0)(@krizaka/ui@4.17.0)(tailwindcss@4.3.3)
       '@krizaka/tokens':
-        specifier: ^4.16.0
-        version: 4.16.0
+        specifier: ^4.17.0
+        version: 4.17.0
       '@krizaka/ui':
-        specifier: ^4.16.0
-        version: 4.16.0(@krizaka/query@0.3.1(@types/react@19.3.0)(csstype@3.2.3)(react@19.3.1))(@krizaka/tailwind@4.16.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(maplibre-gl@6.11.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.3)
+        specifier: ^4.17.0
+        version: 4.17.0(@krizaka/query@0.3.1(@types/react@19.3.0)(csstype@3.2.3)(react@19.3.1))(@krizaka/tailwind@4.17.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(maplibre-gl@6.11.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.3)
       maplibre-gl:
         specifier: 6.11.2
         version: 6.11.2
@@ -495,16 +495,6 @@ packages:
       typescript:
         optional: true
 
-  '@krizaka/icons@0.10.1':
-    resolution: {integrity: sha512-zFQXM/BiT3BWnaPoDDze1aJ/VBhqfkVnLwDeQomF91FOErG2kBASTPK2MxhyRQMXDOtM5tJ7QVEEwXYUjl+2rQ==}
-    engines: {node: '>=22'}
-    peerDependencies:
-      react: '>=18'
-      react-native-svg: '>=15'
-    peerDependenciesMeta:
-      react-native-svg:
-        optional: true
-
   '@krizaka/icons@0.11.0':
     resolution: {integrity: sha512-Og3mB9C1x20ikSHVnAsNcwOWGb/ieRMRNVTHM6ZqIoVYPzzidl2UALEiXx0Yd5/A2jKJvVAUPLC0K2plCLs3yg==}
     engines: {node: '>=22'}
@@ -559,26 +549,26 @@ packages:
       pg:
         optional: true
 
-  '@krizaka/tailwind@4.16.0':
-    resolution: {integrity: sha512-4xlaOJ2Q0rb25Kz53Y7EC1p7LNUB2HRh6sZqHRKYdYiI2nqGPtEw1NdvDxKUj6Bn8DLGgAAJn71eKI6PuSmSrg==}
+  '@krizaka/tailwind@4.17.0':
+    resolution: {integrity: sha512-xYTBdhVtjaEB43Cdt1MOoOzA9FfXu8krIYyma6paa0sJGtyEyQadbf2tszZBv1qOYq7oQ6Xku/bTp3jZReYAiw==}
     engines: {node: '>=22'}
     peerDependencies:
-      '@krizaka/tokens': ^4.16.0
-      '@krizaka/ui': ^4.16.0
+      '@krizaka/tokens': ^4.17.0
+      '@krizaka/ui': ^4.17.0
       tailwindcss: ^4.1
 
-  '@krizaka/tokens@4.16.0':
-    resolution: {integrity: sha512-PY0OxSsobxa7/kG64zxQFYeG+KET1CfAYfslYuu5adUVF90ASsGxpxFGasJs1Nh2qK8setavjD6dYLcJixcn+A==}
+  '@krizaka/tokens@4.17.0':
+    resolution: {integrity: sha512-H2jyRAax5Ss91kRrA/wUoi7MT0z7biOSfl5Y5bp5Jmi42HlgHeQcXC/n//qDVV1lCz694vZC8htaIGyRGfiF+w==}
     engines: {node: '>=22'}
 
-  '@krizaka/ui@4.16.0':
-    resolution: {integrity: sha512-vQpYHji1b8zwjHBYxuXqlXr9bwdqTcJBXVJrVlKw40htIuNY7FYXKsDlooTW2Dd1vGbxlDLfyVtslo4vrOD7pA==}
+  '@krizaka/ui@4.17.0':
+    resolution: {integrity: sha512-k2YrOHdgXAD1nepZQ7PduhvNEeBpVLBVIQ7GAUP2I+JK6DurPyLB2NfJmtnBoWkxAgknylWD9pXGXGvt6kkMXQ==}
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
       '@krizaka/architecture': '>=0.3.0'
       '@krizaka/query': '>=0.3.1'
-      '@krizaka/tailwind': '>=4.16.0'
+      '@krizaka/tailwind': '>=4.17.0'
       '@maplibre/maplibre-react-native': '>=11'
       '@shopify/flash-list': '>=2'
       expo-camera: '>=16'
@@ -3215,10 +3205,10 @@ snapshots:
       '@solid-primitives/utils': 6.4.1(solid-js@1.9.19)
       solid-js: 1.9.19
 
-  '@krizaka/charts@1.0.2(@krizaka/ui@4.16.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@krizaka/charts@1.0.2(@krizaka/ui@4.17.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@krizaka/intl': 0.4.1
-      '@krizaka/ui': 4.16.0(@krizaka/query@0.3.1(@types/react@19.3.0)(csstype@3.2.3)(react@19.3.1))(@krizaka/tailwind@4.16.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(maplibre-gl@6.11.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.3)
+      '@krizaka/ui': 4.17.0(@krizaka/query@0.3.1(@types/react@19.3.0)(csstype@3.2.3)(react@19.3.1))(@krizaka/tailwind@4.17.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(maplibre-gl@6.11.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.3)
       d3-geo: 3.1.1
       echarts: 6.1.0
       react: 19.3.1
@@ -3251,10 +3241,6 @@ snapshots:
     optionalDependencies:
       react: 19.3.1
       typescript: 5.9.3
-
-  '@krizaka/icons@0.10.1(react@19.3.1)':
-    dependencies:
-      react: 19.3.1
 
   '@krizaka/icons@0.11.0(react@19.3.1)':
     dependencies:
@@ -3291,21 +3277,21 @@ snapshots:
 
   '@krizaka/realtime@0.2.1': {}
 
-  '@krizaka/tailwind@4.16.0(@krizaka/tokens@4.16.0)(@krizaka/ui@4.16.0)(tailwindcss@4.3.3)':
+  '@krizaka/tailwind@4.17.0(@krizaka/tokens@4.17.0)(@krizaka/ui@4.17.0)(tailwindcss@4.3.3)':
     dependencies:
-      '@krizaka/tokens': 4.16.0
-      '@krizaka/ui': 4.16.0(@krizaka/query@0.3.1(@types/react@19.3.0)(csstype@3.2.3)(react@19.3.1))(@krizaka/tailwind@4.16.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(maplibre-gl@6.11.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.3)
+      '@krizaka/tokens': 4.17.0
+      '@krizaka/ui': 4.17.0(@krizaka/query@0.3.1(@types/react@19.3.0)(csstype@3.2.3)(react@19.3.1))(@krizaka/tailwind@4.17.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(maplibre-gl@6.11.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.3)
       tailwindcss: 4.3.3
 
-  '@krizaka/tokens@4.16.0': {}
+  '@krizaka/tokens@4.17.0': {}
 
-  '@krizaka/ui@4.16.0(@krizaka/query@0.3.1(@types/react@19.3.0)(csstype@3.2.3)(react@19.3.1))(@krizaka/tailwind@4.16.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(maplibre-gl@6.11.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.3)':
+  '@krizaka/ui@4.17.0(@krizaka/query@0.3.1(@types/react@19.3.0)(csstype@3.2.3)(react@19.3.1))(@krizaka/tailwind@4.17.0)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(maplibre-gl@6.11.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.3)':
     dependencies:
       '@krizaka/icons': 0.11.0(react@19.3.1)
       '@krizaka/intl': 0.4.1
       '@krizaka/organize': 0.4.0
       '@krizaka/pacer': 0.2.1(react@19.3.1)
-      '@krizaka/tokens': 4.16.0
+      '@krizaka/tokens': 4.17.0
       '@protomaps/basemaps': 5.7.2
       '@tanstack/highlight': 1.1.0
       '@tanstack/markdown': 1.0.0(react@19.3.1)
@@ -3323,7 +3309,7 @@ snapshots:
       zod: 4.6.7
     optionalDependencies:
       '@krizaka/query': 0.3.1(@types/react@19.3.0)(csstype@3.2.3)(react@19.3.1)
-      '@krizaka/tailwind': 4.16.0(@krizaka/tokens@4.16.0)(@krizaka/ui@4.16.0)(tailwindcss@4.3.3)
+      '@krizaka/tailwind': 4.17.0(@krizaka/tokens@4.17.0)(@krizaka/ui@4.17.0)(tailwindcss@4.3.3)
       maplibre-gl: 6.11.2
       react-dom: 19.3.1(react@19.3.1)
       tailwindcss: 4.3.3
