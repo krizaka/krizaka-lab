@@ -21,8 +21,8 @@ importers:
         specifier: ^0.2.9
         version: 0.2.9(react@19.3.1)(typescript@5.9.3)
       '@krizaka/icons':
-        specifier: ^0.10.1
-        version: 0.10.1(react@19.3.1)
+        specifier: ^0.11.0
+        version: 0.11.0(react@19.3.1)
       '@krizaka/query':
         specifier: ^0.3.1
         version: 0.3.1(@types/react@19.3.0)(csstype@3.2.3)(react@19.3.1)
@@ -497,6 +497,16 @@ packages:
 
   '@krizaka/icons@0.10.1':
     resolution: {integrity: sha512-zFQXM/BiT3BWnaPoDDze1aJ/VBhqfkVnLwDeQomF91FOErG2kBASTPK2MxhyRQMXDOtM5tJ7QVEEwXYUjl+2rQ==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      react: '>=18'
+      react-native-svg: '>=15'
+    peerDependenciesMeta:
+      react-native-svg:
+        optional: true
+
+  '@krizaka/icons@0.11.0':
+    resolution: {integrity: sha512-Og3mB9C1x20ikSHVnAsNcwOWGb/ieRMRNVTHM6ZqIoVYPzzidl2UALEiXx0Yd5/A2jKJvVAUPLC0K2plCLs3yg==}
     engines: {node: '>=22'}
     peerDependencies:
       react: '>=18'
@@ -3243,6 +3253,10 @@ snapshots:
       typescript: 5.9.3
 
   '@krizaka/icons@0.10.1(react@19.3.1)':
+    dependencies:
+      react: 19.3.1
+
+  '@krizaka/icons@0.11.0(react@19.3.1)':
     dependencies:
       react: 19.3.1
 
