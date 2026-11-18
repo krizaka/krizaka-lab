@@ -14,7 +14,7 @@ import { PageHero } from "@krizaka/ui/page-hero";
 
 import { type LabPage, SCENARIO_PATHS, TAB_ORDER, type TabId } from "../core/router";
 import { useLab } from "./context";
-import { HomeLink } from "./home-link";
+import { HomeLink, PageLink } from "./home-link";
 import { DEMOS } from "./demos";
 import { GUIDES } from "./guides";
 import { SCENARIOS, SCENARIO_GRID_MIN } from "./scenarios";
@@ -24,7 +24,7 @@ const SETUP =
 
 export function Home() {
   const { t, href, go } = useLab();
-  const as = (to: LabPage) => (props: React.ComponentProps<"a">) => <a {...props} onClick={go(to)} />;
+  const as = (to: LabPage) => (props: React.ComponentProps<"a">) => <PageLink {...props} to={to} />;
   const byScenario = SCENARIO_PATHS.map((id) => ({
     title: SCENARIOS[id].title,
     entries: GUIDES.filter((g) => g.scenario === id).map((g) => ({
@@ -52,7 +52,7 @@ export function Home() {
           groups={byScenario}
           linkAs={(props: React.ComponentProps<"a">) => {
             const to = GUIDES.find((g) => href(g.id) === props.href)?.id;
-            return <a {...props} onClick={to ? go(to) : undefined} />;
+            return to ? <PageLink {...props} to={to} /> : <a {...props} href={props.href} />;
           }}
         />
       </Section>
@@ -118,7 +118,7 @@ export function Home() {
 
 /** The canvas studies: the lab's drawings, kept apart from what an app ships. */
 export function Experiments() {
-  const { t, href, go } = useLab();
+  const { t, href } = useLab();
   const ids = TAB_ORDER.filter((id): id is TabId => ["sovkora", "jarvis", "caustics", "lattice"].includes(id));
   return (
     <>
@@ -156,7 +156,7 @@ export function Experiments() {
                     />
                   </>
                 }
-                linkAs={(props: React.ComponentProps<"a">) => <a {...props} onClick={go(id)} />}
+                linkAs={(props: React.ComponentProps<"a">) => <PageLink {...props} to={id} />}
               />
             );
           })}
