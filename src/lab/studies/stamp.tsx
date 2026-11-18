@@ -12,7 +12,7 @@ export function Example() {
     const el = stamp.current;
     if (!el) return;
     el.dataset.stamped = "";
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return; // it just lands
+    if (globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches) return; // it just lands
     el.animate(
       [
         { transform: "rotate(-6deg) scale(2.2, 2.2)", opacity: 0 },

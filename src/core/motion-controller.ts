@@ -68,8 +68,8 @@ export class MotionController {
   }
 
   public isReducedMotion(): boolean {
-    if (typeof window === "undefined" || !window.matchMedia) return false;
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (globalThis.window === undefined || !globalThis.matchMedia) return false;
+    return globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
 
   public isOffscreen(): boolean {
@@ -84,7 +84,7 @@ export class MotionController {
   }
 
   public syncSize(): { width: number; height: number; dpr: number } {
-    const dpr = Math.min(typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1, 2.5);
+    const dpr = Math.min(globalThis.window !== undefined ? globalThis.devicePixelRatio || 1 : 1, 2.5);
     const rect = this.canvas.getBoundingClientRect();
     const width = Math.max(rect.width, 10);
     const height = Math.max(rect.height, 10);

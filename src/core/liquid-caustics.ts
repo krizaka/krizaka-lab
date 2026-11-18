@@ -119,7 +119,7 @@ export class LiquidCausticsRenderer {
     };
 
     this.cursorSpring = new SpringVector2D(2.4, 0.65, 0.2);
-    this.initLayout(canvas.clientWidth || 500, canvas.clientHeight || 350, window.devicePixelRatio || 1);
+    this.initLayout(canvas.clientWidth || 500, canvas.clientHeight || 350, globalThis.devicePixelRatio || 1);
     this.setupEvents();
   }
 
@@ -170,7 +170,7 @@ export class LiquidCausticsRenderer {
       this.addRipple(e.clientX - rect.left, e.clientY - rect.top, 1.8);
     });
 
-    window.addEventListener("mouseup", () => {
+    globalThis.addEventListener("mouseup", () => {
       this.isPointerDown = false;
     });
 

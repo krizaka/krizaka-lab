@@ -10,7 +10,7 @@ export function Example() {
       loading={saving}
       onClick={() => {
         setSaving(true);
-        window.setTimeout(() => setSaving(false), 1600);
+        globalThis.setTimeout(() => setSaving(false), 1600);
       }}
     >
       {saving ? "Saving" : "Save"}

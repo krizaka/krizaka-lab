@@ -86,7 +86,7 @@ export function Playground({
   note?: ReactNode;
 }) {
   const [values, setValues] = useState<Values>(() =>
-    readValues(knobs, typeof window === "undefined" ? "" : window.location.search),
+    readValues(knobs, globalThis.window === undefined ? "" : globalThis.location.search),
   );
   useEffect(() => writeValues(knobs, values), [knobs, values]);
   const set = (key: string) => (v: string | number | boolean) => setValues((prev) => ({ ...prev, [key]: v }));
