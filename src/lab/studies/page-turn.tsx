@@ -13,7 +13,7 @@ export function Example() {
   const [at, setAt] = useState(0);
   function turn(to: number) {
     const swap = () => flushSync(() => setAt(to));
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced || !document.startViewTransition) return swap(); // no API, or no motion: the page just changes
     document.documentElement.dataset.turn = to > at ? "next" : "back";
     document.startViewTransition(swap).finished.finally(() => delete document.documentElement.dataset.turn);

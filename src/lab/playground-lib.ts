@@ -44,11 +44,11 @@ export function toSearch(knobs: readonly Knob[], values: Values): string {
 
 /** Puts the configuration in the address without a navigation (the page's other query parameters stay). */
 export function writeValues(knobs: readonly Knob[], values: Values): void {
-  if (typeof window === "undefined") return;
-  const url = new URL(window.location.href);
+  if (typeof globalThis.window === "undefined") return;
+  const url = new URL(globalThis.location.href);
   for (const k of knobs) url.searchParams.delete(k.key);
   for (const [key, value] of new URLSearchParams(toSearch(knobs, values))) url.searchParams.set(key, value);
-  window.history.replaceState(window.history.state, "", url);
+  globalThis.history.replaceState(globalThis.history.state, "", url);
 }
 
 /** The knobs that differ from the defaults, as the component's props, one per line (what the snippet adds). */

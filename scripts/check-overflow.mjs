@@ -44,7 +44,7 @@ for (const theme of ["dark", "light"])
       await context.addInitScript((t) => localStorage.setItem("kz-theme", t), theme);
       const page = await context.newPage();
       await page.goto(base + path, { waitUntil: "networkidle" });
-      const over = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      const over = await page.evaluate(() => document.documentElement.scrollWidth - globalThis.innerWidth);
       if (over > 0) problems.push(`${path} at ${width}px (${theme}): ${over}px of horizontal overflow`);
       await context.close();
     }

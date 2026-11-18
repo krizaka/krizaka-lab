@@ -25,7 +25,7 @@ export function GuidePage({ id }: { id: GuideId }) {
   const View = scenario.View;
   const initial = useMemo(() => defaults(g.knobs), [g]);
   const [values, setValues] = useState<Values>(() =>
-    readValues(g.knobs, typeof window === "undefined" ? "" : window.location.search),
+    readValues(g.knobs, typeof globalThis.window === "undefined" ? "" : globalThis.location.search),
   );
   useEffect(() => writeValues(g.knobs, values), [g, values]);
   const others = guidesOf(g.scenario).filter((o) => o.id !== id);

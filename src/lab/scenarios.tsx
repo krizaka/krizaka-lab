@@ -124,12 +124,12 @@ export function Dashboard({ v = {} }: { v?: Values }) {
   const interval = Number(v.interval ?? 2200);
   useEffect(() => {
     if (!stream || !visible || reduce) return;
-    const timer = window.setInterval(() => {
+    const timer = globalThis.setInterval(() => {
       const n = counter.current++;
       setRuns((prev) => [runOf(n, true), ...prev.map((r) => ({ ...r, fresh: false }))].slice(0, 6));
       setTotal((t) => t + 1 + (n % 4));
     }, interval);
-    return () => window.clearInterval(timer);
+    return () => globalThis.clearInterval(timer);
   }, [stream, interval, visible, reduce]);
   const spend = runs.reduce((s, r) => s + r.cost, 0) * 120;
   const ticker = {
@@ -228,8 +228,8 @@ export function Chat({ v = {} }: { v?: Values }) {
   useEffect(() => {
     if (!visible || reduce) return;
     const began = performance.now();
-    const timer = window.setInterval(() => setElapsed(performance.now() - began), 50);
-    return () => window.clearInterval(timer);
+    const timer = globalThis.setInterval(() => setElapsed(performance.now() - began), 50);
+    return () => globalThis.clearInterval(timer);
   }, [visible, reduce, run, rate, unit, delay]);
   const shown = reduce ? { text: ANSWER, phase: "done" as const } : shownAt(all, elapsed, rate, delay);
   return (
@@ -516,8 +516,8 @@ export function Delivery({ v = {} }: { v?: Values }) {
   useEffect(() => {
     setEta(12);
     if (!visible || reduce) return;
-    const timer = window.setInterval(() => setEta((m) => Math.max(1, m - 1)), trip / 11);
-    return () => window.clearInterval(timer);
+    const timer = globalThis.setInterval(() => setEta((m) => Math.max(1, m - 1)), trip / 11);
+    return () => globalThis.clearInterval(timer);
   }, [visible, reduce, run, trip]);
   const label = "An order from the bakery on Saint-Viateur to Parc La Fontaine";
   return (

@@ -46,9 +46,9 @@ for (const reducedMotion of ["no-preference", "reduce"]) {
     page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
     page.on("pageerror", (e) => errors.push(e.message));
     await page.addInitScript(() => {
-      window.__long = [];
+      globalThis.__long = [];
       new PerformanceObserver((l) => {
-        for (const e of l.getEntries()) window.__long.push([performance.now(), e.duration]);
+        for (const e of l.getEntries()) globalThis.__long.push([performance.now(), e.duration]);
       }).observe({ entryTypes: ["longtask"] });
     });
     await page.goto(base + path, { waitUntil: "load" });
@@ -66,7 +66,7 @@ for (const reducedMotion of ["no-preference", "reduce"]) {
     } else if (rm ? m.a > 0 : m.a === 0)
       problems.push(`${label}: ${rm ? "animations run under reduced motion" : "nothing moves"}`);
     await page.waitForTimeout(2500);
-    const long = await page.evaluate((s) => window.__long.filter(([t, d]) => t > s && d > 50), settled);
+    const long = await page.evaluate((s) => globalThis.__long.filter(([t, d]) => t > s && d > 50), settled);
     if (long.length)
       problems.push(
         `${label}: ${long.length} long task(s) > 50 ms in steady state (max ${Math.round(Math.max(...long.map((l) => l[1])))} ms)`,
@@ -79,7 +79,7 @@ for (const reducedMotion of ["no-preference", "reduce"]) {
         sp.style.height = "4000px";
         document.body.append(sp);
         c.closest("section, div")?.setAttribute("data-probe", "");
-        window.scrollTo(0, document.body.scrollHeight);
+        globalThis.scrollTo(0, document.body.scrollHeight);
       });
       await page.waitForTimeout(900);
       const x = await sig(page);

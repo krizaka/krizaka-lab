@@ -7,8 +7,8 @@ import App from "./App";
 import { cleanSpaRedirect } from "./core/router";
 
 // A deep link that went through GitHub Pages' 404.html comes back as ?/<route>: show the REST path again.
-const restored = cleanSpaRedirect(window.location);
-if (restored) window.history.replaceState(null, "", restored);
+const restored = cleanSpaRedirect(globalThis.location);
+if (restored) globalThis.history.replaceState(null, "", restored);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
