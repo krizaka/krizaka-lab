@@ -12,8 +12,8 @@ importers:
   .:
     dependencies:
       '@krizaka/charts':
-        specifier: ^1.0.2
-        version: 1.0.2(@krizaka/ui@4.17.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: ^1.0.3
+        version: 1.0.3(@krizaka/ui@4.17.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@krizaka/fonts':
         specifier: ^0.5.4
         version: 0.5.4
@@ -446,11 +446,11 @@ packages:
     peerDependencies:
       solid-js: ^1.8.8
 
-  '@krizaka/charts@1.0.2':
-    resolution: {integrity: sha512-B/e52uV32ZR0Cbag/TIQO5LGJwNF8P4/oiV86rC/sMq+0kBaQ4MmPIRkGhpAOMW6rZ3UJHOXVkiPwa9/r0L1vw==}
+  '@krizaka/charts@1.0.3':
+    resolution: {integrity: sha512-B9cEvSz1BHXXGWeMoH3hTdp1FohtqL+4LnCxEdyv498S1NmglKOctnYgj/jbmTMX1W4hkVWpIXTYgZ2s74Lyug==}
     engines: {node: '>=22'}
     peerDependencies:
-      '@krizaka/ui': ^4.14.0
+      '@krizaka/ui': ^5.0.0
       react: '>=19'
       react-dom: '>=19'
       react-native: '>=0.76'
@@ -3205,7 +3205,7 @@ snapshots:
       '@solid-primitives/utils': 6.4.1(solid-js@1.9.19)
       solid-js: 1.9.19
 
-  '@krizaka/charts@1.0.2(@krizaka/ui@4.17.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@krizaka/charts@1.0.3(@krizaka/ui@4.17.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@krizaka/intl': 0.4.1
       '@krizaka/ui': 4.17.1(@krizaka/query@0.3.1(@types/react@19.3.0)(csstype@3.2.3)(react@19.3.1))(@krizaka/tailwind@4.17.1)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(maplibre-gl@6.11.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwindcss@4.3.3)
