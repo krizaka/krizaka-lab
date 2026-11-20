@@ -1,87 +1,75 @@
-# krizaka-lab — agent instructions
+# krizaka-lab — agent contract
 
-**Krizaka Lab**, the family's lab for UI, motion, Java, AI and data experiments (it was the motion lab;
-`motion.krizaka.com` answers 301 to `lab.krizaka.com`, krizaka-motion#69). Live at https://lab.krizaka.com/.
-Experiments are organised by area in `experiments/<area>/<name>/`, a README each (status `idea` · `prototype` · `promoted` ·
-`dropped`, and the issue or ADR it feeds). **Nothing outside the lab imports from the lab** (org rule `lab-isolation`): a
-piece that proves itself is promoted into a real package by an ADR. The site holds the motion area today: guides (one
-motion task each, played on a real app screen made of `@krizaka/ui`), the four scenarios (dashboard, chat, checkout,
-delivery) and the canvas experiments. It is **a lab, not a package or a product**: nothing here is published on npm.
+<!-- krizaka-agents-template v2: rendered from krizaka/.github docs/standards/agents-template.md (scripts/agents-md.mjs). The one AGENTS.md standard: six sections in this order, at most 150 lines, bullets and imperatives. The conformance check « agents-template » reads the headings, the length and CLAUDE.md. Detail goes to docs/ via References, not here. -->
 
-## The rules
+## Project context
 
-1. **Krizaka UI first.** A screen here is composed of `@krizaka/ui` components (Stepper, StepProgress, Button, Toast,
-   DataTable, Sparkline, NumberTicker, PageTransition, EngineFlow…), never hand-made look-alikes. A motion or a component
-   that proves itself moves into krizaka-ui (registry page, examples, stories, tests, `AGENTS.md` there), then is used here.
-2. **One motion system: @krizaka/ui's.** `MotionObserver`, `reveal`, `PageTransition`, `data-offscreen` (paused off screen),
-   `html[data-motion]` (held while the page settles), `magnetic`. No animation library, no permanent
-   `requestAnimationFrame` outside `src/core` experiments, no second conductor.
-3. **Reduced motion is designed, not dropped.** Every guide says what happens under `prefers-reduced-motion` and the page
-   still makes sense (one still frame, an instant state change). Test it.
-4. **Settings are data.** A guide's knobs (durations, easings, delays) live in its settings table and the code to copy
-   follows them; nothing magic hard-coded in the view.
-5. **Tokens only.** Colours, radii, shadows and type come from `@krizaka/tokens` / `@krizaka/tailwind`; dark **and** light
-   are first-class (check both). Marks come from `@krizaka/ui`, icons from `@krizaka/icons` — never copied.
-6. **Words in `messages/`** (`@krizaka/i18n`); the lab is English, the strings still live in the catalogue.
-7. **Accessible:** keyboard, focus visible, screen reader names, no motion that carries meaning alone.
-8. **Demo data says it is a demo.** No real person, no invented figure presented as real.
+- **Krizaka Lab**, the family's lab for UI, motion, Java, AI and data experiments (it was the motion lab; `motion.krizaka.com` answers 301 to `lab.krizaka.com`, krizaka-motion#69). Live at https://lab.krizaka.com/.
+- It is **a lab, not a package or a product**: nothing here is published on npm. Kind: `npm` · team: `krizaka` · registry entry: [repos.json](https://github.com/krizaka/.github/blob/main/repos.json).
+- Experiments live in `experiments/<area>/<name>/`, a README each (status `idea` · `prototype` · `promoted` · `dropped`, and the issue or ADR it feeds).
+- **Nothing outside the lab imports from the lab** (org rule `lab-isolation`): a piece that proves itself is promoted into a real package by an ADR.
+- The site holds the motion area today: guides (one motion task each, played on a real app screen made of `@krizaka/ui`), the four scenarios (dashboard, chat, checkout, delivery) and the canvas experiments.
+- Read this file first. `CLAUDE.md` is the one line `@AGENTS.md`: never a second copy of it.
 
-## Definition of done
+## Essential commands
 
-- `pnpm test`, `pnpm typecheck` and `pnpm build` green; CI green before merge (squash, main is protected).
-- Each change ships with its test (`tests/*.test.mjs`): a guide's settings, its reduced-motion path, its route.
-- `pnpm check:gallery` passes when the gallery changes.
-- The README's guide table still says what is true; a new guide gets its row and its address.
-- Captures before/after (dark, light, phone width) go to Bunny (`krizaka-com/scripts/pr-assets.mjs`), never committed.
-- Org standards: https://github.com/krizaka/.github (docs/standards). Commit trailer and PR body as the org asks.
+- `pnpm install --frozen-lockfile`: install (`packageManager` is `pnpm@10.34.6`).
+- `pnpm dev`: Vite dev server. `pnpm preview`: serve `dist-demo`.
+- `pnpm test`: `node --test tests/*.test.mjs`.
+- `pnpm typecheck`: `tsc --noEmit`.
+- `pnpm build`: `vite build --outDir dist-demo`, then `scripts/generate-routes.mjs` (one folder per route, `404.html` SPA fallback, `sitemap.xml`).
+- `pnpm lint` (= `pnpm format:check`, Prettier) and `pnpm format` to fix.
+- `pnpm check:gallery`: run when the gallery changes. `pnpm check:budget`: no `requestAnimationFrame` outside `src/core` and `src/native`.
+- `pnpm lint:workspace`: `krizaka-workspace-guard` from `@krizaka/config`.
+- Run them on what you changed before every push; CI runs the rest.
 
-## Before you open or update a pull request (coding agents)
+## Architecture & conventions
 
-These are the defects code review found most often on 2026-10-23. Check them yourself before you open or update a pull request:
-1. **Checks:** run the repository's full check (lint, typecheck, tests, build) and fix it. Never push a red check.
-2. **Concurrency:** any « count then insert » or « check then write » runs in one transaction with a lock, and has a concurrency test.
-3. **One gate:** a rule (limit, permission, validation) is enforced in the service, so no route can skip it. Test every route.
-4. **Errors:** a cleanup (ROLLBACK, DROP, close) never masks the original error. Rethrow it, or throw an `AggregateError` with the original first.
-5. **Validation:** validate the original input, never a truncated or pre-trimmed copy. Server and client reject the same inputs.
-6. **Accessibility:**
-   - every control has a unique label;
-   - focus rings are never clipped by `overflow`;
-   - text never overflows its box at 360 px.
-7. **Naming:** environment variables follow `<CONTEXT>_<THING>` (`APP_`, `DATABASE_`, `AUTH_`, `MEDIA_`, `MAIL_`, `PAYMENTS_`, `AI_`…) and are declared once.
-8. **Words:** every user-facing string is in `messages/en.json` (the lab is English-only, rule 6), and no colour is hard-coded.
-9. **Review threads:** answer every one. Fix it test-first, or reply with the reason, then resolve it.
+- Follow the [krizaka-engineering skill](https://github.com/krizaka/krizaka-skills/blob/main/skills/krizaka-engineering/SKILL.md); search its [packages reference](https://github.com/krizaka/krizaka-skills/blob/main/skills/krizaka-engineering/references/packages.md) before writing anything generic.
+- **Krizaka UI first.** A screen is composed of `@krizaka/ui` components (Stepper, StepProgress, Button, Toast, DataTable, Sparkline, NumberTicker, PageTransition, EngineFlow…), never hand-made look-alikes. A motion or component that proves itself moves into krizaka-ui (registry page, examples, stories, tests, its `AGENTS.md`), then is used here.
+- **One motion system: @krizaka/ui's.** `MotionObserver`, `reveal`, `PageTransition`, `data-offscreen` (paused off screen), `html[data-motion]` (held while the page settles), `magnetic`. No animation library, no permanent `requestAnimationFrame` outside `src/core` experiments, no second conductor.
+- **Settings are data.** A guide's knobs (durations, easings, delays) live in its settings table and the code to copy follows them; nothing magic hard-coded in the view.
+- **Tokens only.** Colours, radii, shadows and type come from `@krizaka/tokens` / `@krizaka/tailwind`; dark **and** light are first-class (check both). Marks come from `@krizaka/ui`, icons from `@krizaka/icons` — never copied.
+- **Words in `messages/`** (`@krizaka/i18n`): the lab is English, the strings still live in the catalogue (`messages/en.json`).
+- Take libraries first: a missing function goes into the `@krizaka/*` package first, never a local copy.
+- Name things by what they do; no `*Utils`, `*Helper`, `*Manager`.
+- A closed set is a type (enum, sealed interface, `as const` object), never a string compared by hand.
+- Use `?.` and `??` in TypeScript, not a chain of `&&` or a ternary on null.
+- Hierarchy: this root file holds the rules of the whole repository; a sub-folder with its own rules adds a local `AGENTS.md` that says only what differs there. The nearest file wins.
 
-## 9. Anti-slop (ADR-015)
+## Guard-rails & known pitfalls (read before coding)
 
-What a model tends to write and the code does not need. Each line points at the rule that refuses it
-([ADR-015](https://github.com/krizaka/krizaka-internal/blob/main/docs/adr/.github/ADR-015-ai-code-audit-measured-and-enforced.md), [docs/standards/guards.md](https://github.com/krizaka/.github/blob/main/docs/standards/guards.md)).
+- **Reduced motion is designed, not dropped.** Every guide says what happens under `prefers-reduced-motion` and the page still makes sense (one still frame, an instant state change). Test it.
+- **Accessible:** keyboard, focus visible, screen reader names, no motion that carries meaning alone. Every control has a unique label; focus rings are never clipped by `overflow`; text never overflows its box at 360 px.
+- **Demo data says it is a demo.** No real person, no invented figure presented as real.
+- A new route goes into `ROUTES` of `scripts/generate-routes.mjs`, or its static folder and sitemap entry are missing.
+- Pin `playwright` exactly (`tests/playwright-version.test.mjs` guards it); the lab Sonar guards are in `tests/lab-sonar-guards.test.mjs`.
+- The checks are the judge ([ADR-015](https://github.com/krizaka/krizaka-internal/blob/main/docs/adr/.github/ADR-015-ai-code-audit-measured-and-enforced.md), [guards](https://github.com/krizaka/.github/blob/main/docs/standards/guards.md)): never `--no-verify`, never a new `eslint-disable`, never a raised ratchet or baseline; a rule is never silenced to get green.
+- Anti-slop: no defensive null on a value the type already guarantees (`@NullMarked` Java: NullAway, ArchUnit); Java HTTP is a DTO record, `@Valid` and `ProblemDetail`, no `Map.of("error", …)`, no entity in a response.
+- Concurrency: any « count then insert » or « check then write » runs in one transaction with a lock, and has a concurrency test.
+- One gate: a rule (limit, permission, validation) is enforced in the service, so no route can skip it; test every route.
+- Errors: a cleanup (ROLLBACK, DROP, close) never masks the original error; rethrow it, or throw an `AggregateError` with the original first.
+- Validation: validate the original input, never a truncated or pre-trimmed copy; server and client reject the same inputs.
+- Environment variables follow `<CONTEXT>_<THING>` (`APP_`, `DATABASE_`, `AUTH_`, `MEDIA_`, `MAIL_`, `PAYMENTS_`, `AI_`…) and are declared once.
+- No colour is hard-coded and no user-facing string lives outside `messages/en.json`.
+- Start a fix with a failing test; every bug gets its guard.
+- Never invent a URL, a law article, a price or a figure you did not read; write `TO VALIDATE` and say who decides.
+- Never commit a secret, a capture or a log; no production data in a session, only the dev data.
+- Keep the edit hook in `.claude/settings.json`: `npx --no-install krizaka-edit-check` on `Edit|Write`.
 
-1. **No defensive null on `@NullMarked` code.** No `Objects.requireNonNull` or `if (x == null)` on a value the type already
-   guarantees. Enforced by NullAway at compile time; a new package is `@NullMarked` (ArchUnit).
-2. **A closed set is a type.** An enum, a sealed interface or an `as const` object, never a string compared by hand;
-   strategies are a `Map<Kind, Strategy>` built once at startup. Enforced by PMD / ArchUnit (Java) and `no-enum-string-compare` (ast-grep).
-3. **HTTP in Java is a DTO record, `@Valid` and `ProblemDetail`.** No `Map.of("error", …)`, no entity in a response, one
-   `@RestControllerAdvice` per service. Enforced by ArchUnit.
-4. **No `*Utils`, `*Helper` or `*Manager`.** Name the thing by what it does (§4). Enforced by ArchUnit (ADR-015 §5).
-5. **`?.` and `??` in TypeScript**, not a chain of `&&` or a ternary on null. The target rules are `@typescript-eslint/prefer-optional-chain` and `prefer-nullish-coalescing`; they are not in `@krizaka/config` yet.
-6. **The build is the judge.** Compile, lint and test before every push; `krizaka-edit-check` runs on each edit (below) and
-   NullAway and ArchUnit run at pre-push and in CI. A rule is never silenced to get green.
+## Expected validation workflow
 
-**The edit hook.** Every repository adds this to `.claude/settings.json`. After each `Edit` or `Write`, the one file is
-checked in under 10 s: ESLint with the repository's config for TypeScript, PMD with the Krizaka rules for Java (never Maven).
-A finding comes back to the agent (exit 2); a timeout is silent.
+- [ ] `pnpm test`, `pnpm typecheck`, `pnpm lint` and `pnpm build` are green; fix the cause of a red, never the guard.
+- [ ] Each change ships with its test (`tests/*.test.mjs`): a guide's settings, its reduced-motion path, its route.
+- [ ] `pnpm check:gallery` passes when the gallery changes.
+- [ ] The README's guide table still says what is true; a new guide gets its row and its address.
+- [ ] Captures before/after (dark, light, phone width) go to Bunny (`krizaka-com/scripts/pr-assets.mjs`), never committed.
+- [ ] Every review thread is answered: fix it test-first, or reply with the reason, then resolve it.
+- [ ] One issue, one small PR; CI green before merge (squash, `main` is protected).
 
-```json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [{ "type": "command", "command": "npx --yes -p @krizaka/config krizaka-edit-check", "timeout": 10 }]
-      }
-    ]
-  }
-}
-```
+## References
 
-In a TypeScript repository that already depends on `@krizaka/config`, use `npx --no-install krizaka-edit-check` (no download).
+- [README.md](README.md): the guide table and addresses.
+- [docs/adr](docs/adr): the lab's decision records index (`scripts/check-budget.mjs` cites ADR-001 §6 and ADR-008 §6).
+- [Org standards](https://github.com/krizaka/.github/tree/main/docs/standards) of krizaka/.github; the [engineering charter](https://github.com/krizaka/.github/blob/main/AGENTS.template.md).
+- [krizaka-engineering skill](https://github.com/krizaka/krizaka-skills/blob/main/skills/krizaka-engineering/SKILL.md).
