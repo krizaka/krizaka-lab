@@ -25,7 +25,7 @@
 
 ## Architecture & conventions
 
-- Follow the [krizaka-engineering skill](https://github.com/krizaka/krizaka-skills/blob/main/skills/krizaka-engineering/SKILL.md); search its [packages reference](https://github.com/krizaka/krizaka-skills/blob/main/skills/krizaka-engineering/references/packages.md) before writing anything generic.
+- Follow the [krizaka-engineering skill](https://github.com/krizaka/krizaka-agents/blob/main/plugins/krizaka-engineering/skills/krizaka-engineering/SKILL.md); search its [packages reference](https://github.com/krizaka/krizaka-agents/blob/main/plugins/krizaka-engineering/skills/krizaka-engineering/references/packages.md) before writing anything generic.
 - **Krizaka UI first.** A screen is composed of `@krizaka/ui` components (Stepper, StepProgress, Button, Toast, DataTable, Sparkline, NumberTicker, PageTransition, EngineFlow…), never hand-made look-alikes. A motion or component that proves itself moves into krizaka-ui (registry page, examples, stories, tests, its `AGENTS.md`), then is used here.
 - **One motion system: @krizaka/ui's.** `MotionObserver`, `reveal`, `PageTransition`, `data-offscreen` (paused off screen), `html[data-motion]` (held while the page settles), `magnetic`. No animation library, no permanent `requestAnimationFrame` outside `src/core` experiments, no second conductor.
 - **Settings are data.** A guide's knobs (durations, easings, delays) live in its settings table and the code to copy follows them; nothing magic hard-coded in the view.
@@ -72,4 +72,4 @@
 - [README.md](README.md): the guide table and addresses.
 - [docs/adr](docs/adr): the lab's decision records index (`scripts/check-budget.mjs` cites ADR-001 §6 and ADR-008 §6).
 - [Org standards](https://github.com/krizaka/.github/tree/main/docs/standards) of krizaka/.github; the [engineering charter](https://github.com/krizaka/.github/blob/main/AGENTS.template.md).
-- [krizaka-engineering skill](https://github.com/krizaka/krizaka-skills/blob/main/skills/krizaka-engineering/SKILL.md).
+- [krizaka-engineering skill](https://github.com/krizaka/krizaka-agents/blob/main/plugins/krizaka-engineering/skills/krizaka-engineering/SKILL.md).
