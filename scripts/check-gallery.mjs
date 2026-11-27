@@ -36,14 +36,13 @@ for (const item of ITEMS) {
   if (!declared.trim()) problems.push(`${item.id}: nothing declared by ${item.declared.join(", ")}`);
   for (const p of item.props) {
     const name =
-      p.split(/[= ]/).filter(Boolean).at(-1) === p.split(/[= ]/)[0]
-        ? p.split(/[= ]/)[0]
-        : p.split(" ").at(-1).split("=")[0];
+      p.split(/[= ]/).findLast(Boolean) === p.split(/[= ]/)[0] ? p.split(/[= ]/)[0] : p.split(" ").at(-1).split("=")[0];
     const attr = p.includes("=") ? p.split(" ").at(-1) : name;
     const prop = name.split(".").at(-1);
-    if (new RegExp(`@deprecated[^\\n]*\\n(?:[^\\n]*\\n){0,2}\\s*${prop}\\??:`).test(declared))
+    if (new RegExp(String.raw`@deprecated[^\n]*\n(?:[^\n]*\n){0,2}\s*${prop}\??:`).test(declared))
       problems.push(`${item.id}: prop « ${p} » is deprecated (does nothing)`);
-    if (!new RegExp(`\\b${prop}\\b`).test(declared)) problems.push(`${item.id}: prop « ${p} » is declared nowhere`);
+    if (!new RegExp(String.raw`\b${prop}\b`).test(declared))
+      problems.push(`${item.id}: prop « ${p} » is declared nowhere`);
     if (!source.includes(attr.includes("=") ? attr : prop))
       problems.push(`${item.id}: prop « ${p} » is listed but not used in the example`);
   }

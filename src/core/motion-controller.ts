@@ -16,9 +16,9 @@ export interface RenderLoopOptions {
 }
 
 export class MotionController {
-  private canvas: HTMLCanvasElement;
-  private onRender: (deltaTime: number, timestamp: number) => void;
-  private onResize?: (width: number, height: number, dpr: number) => void;
+  private readonly canvas: HTMLCanvasElement;
+  private readonly onRender: (deltaTime: number, timestamp: number) => void;
+  private readonly onResize?: (width: number, height: number, dpr: number) => void;
   private rafId: number | null = null;
   private lastTime = 0;
   private isRunning = false;
@@ -75,12 +75,12 @@ export class MotionController {
   public isOffscreen(): boolean {
     if (typeof document === "undefined") return false;
     const scope = this.canvas.closest("[data-offscreen]");
-    return scope !== null || this.canvas.hasAttribute("data-offscreen");
+    return scope !== null || this.canvas.dataset.offscreen !== undefined;
   }
 
   public isSettling(): boolean {
     if (typeof document === "undefined") return false;
-    return document.documentElement.getAttribute("data-motion") === "settling";
+    return document.documentElement.dataset.motion === "settling";
   }
 
   public syncSize(): { width: number; height: number; dpr: number } {
@@ -139,7 +139,7 @@ export class MotionController {
     this.onRender(0.016, performance.now());
   }
 
-  private loop = (timestamp: number): void => {
+  private readonly loop = (timestamp: number): void => {
     if (!this.isRunning) return;
 
     const deltaTime = Math.min((timestamp - this.lastTime) / 1000, 0.1);
