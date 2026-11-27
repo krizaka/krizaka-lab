@@ -32,13 +32,20 @@ export function readValues(knobs: readonly Knob[], search: string): Values {
   return out;
 }
 
+function serializeKnobValue(value: KnobValue): string {
+  if (typeof value === "boolean") {
+    return value ? "1" : "0";
+  }
+  return String(value);
+}
+
 /** The query string of the values that differ from the defaults (empty when none does). */
 export function toSearch(knobs: readonly Knob[], values: Values): string {
   const params = new URLSearchParams();
   for (const k of knobs) {
     const v = values[k.key];
     if (v === undefined || v === k.value) continue;
-    params.set(k.key, typeof v === "boolean" ? (v ? "1" : "0") : String(v));
+    params.set(k.key, serializeKnobValue(v));
   }
   const s = params.toString();
   return s ? `?${s}` : "";

@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
+import ts from "typescript";
 
 const LAB = new URL("../src/lab/", import.meta.url);
 const labAll = readdirSync(LAB)
@@ -37,4 +38,35 @@ test("knob value union is named once via KnobValue alias (S4323)", () => {
 test("uses Number.parseFloat rather than bare global parseFloat (S7773)", () => {
   const bare = labAll.filter(([, s]) => /(?<!Number\.)\bparseFloat\(/.test(s)).map(([f]) => f);
   assert.deepEqual(bare, []);
+});
+
+function hasNestedTernary(file, source) {
+  const kind = file.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS;
+  const ast = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true, kind);
+  let found = false;
+  const visit = (node, inConditional) => {
+    if (found) {
+      return;
+    }
+    if (ts.isFunctionLike(node)) {
+      ts.forEachChild(node, (child) => visit(child, false));
+      return;
+    }
+    if (ts.isConditionalExpression(node)) {
+      if (inConditional) {
+        found = true;
+        return;
+      }
+      ts.forEachChild(node, (child) => visit(child, true));
+      return;
+    }
+    ts.forEachChild(node, (child) => visit(child, inConditional));
+  };
+  visit(ast, false);
+  return found;
+}
+
+test("no nested ternary expressions in lab sources (S3358)", () => {
+  const nested = labAll.filter(([f, s]) => hasNestedTernary(f, s)).map(([f]) => f);
+  assert.deepEqual(nested, []);
 });

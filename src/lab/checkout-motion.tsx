@@ -155,9 +155,23 @@ export function CheckoutPageTransition({
   );
 }
 
-function announcementOf(phase: "idle" | "working" | "done", working: string, done: string): string | undefined {
-  if (phase === "working") return working;
+type CheckoutPhase = "idle" | "working" | "done";
+
+function announcementOf(phase: CheckoutPhase, working: string, done: string): string | undefined {
+  if (phase === "working") {
+    return working;
+  }
   return phase === "done" ? done : undefined;
+}
+
+function payStateLabel(phase: CheckoutPhase, label: string, working: string, done: string): string {
+  if (phase === "working") {
+    return working;
+  }
+  if (phase === "done") {
+    return done;
+  }
+  return label;
 }
 
 export function CheckoutPayButton({
@@ -169,7 +183,7 @@ export function CheckoutPayButton({
   disabled,
   errorId,
 }: Readonly<{
-  phase: "idle" | "working" | "done";
+  phase: CheckoutPhase;
   label: string;
   working: string;
   done: string;
@@ -192,9 +206,7 @@ export function CheckoutPayButton({
         <span className="lab-checkout-pay-reserve" aria-hidden>
           {label}
         </span>
-        <span className="lab-checkout-pay-state">
-          {phase === "working" ? working : phase === "done" ? done : label}
-        </span>
+        <span className="lab-checkout-pay-state">{payStateLabel(phase, label, working, done)}</span>
       </span>
     </Button>
   );
