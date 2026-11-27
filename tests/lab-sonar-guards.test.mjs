@@ -78,3 +78,8 @@ test("no component or JSX cell renderer defined inline inside GuidePage or Home 
   assert.doesNotMatch(home, /=>\s*(?:\(\s*props|\{\s*const to\b)/);
   assert.doesNotMatch(home, /linkAs=\{\(props/);
 });
+
+test("marginalia popover span has explicit spacing after the sentence (S6772)", () => {
+  const marginalia = readFileSync(new URL("studies/marginalia.tsx", LAB), "utf8");
+  assert.doesNotMatch(marginalia, /could not say\.\n\s*<span/);
+});
