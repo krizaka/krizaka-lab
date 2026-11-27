@@ -19,7 +19,7 @@ function* walk(dir) {
 export function rafProblems(srcDir = join(ROOT, "src"), allowed = budget.rafAllowed, root = ROOT) {
   const problems = [];
   for (const file of walk(srcDir)) {
-    const rel = relative(root, file).split("\\").join("/");
+    const rel = relative(root, file).replaceAll("\\", "/");
     if (allowed.some((a) => rel.startsWith(a))) continue;
     if (/\brequestAnimationFrame\s*\(/.test(readFileSync(file, "utf8")))
       problems.push(`${rel}: requestAnimationFrame outside ${allowed.join(", ")}`);

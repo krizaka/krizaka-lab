@@ -168,7 +168,7 @@ export function cleanSpaRedirect(loc: { pathname: string; search: string; hash?:
   const [route = "", ...rest] = loc.search.slice(2).split("&");
   const base = loc.pathname.endsWith("/") ? loc.pathname : `${loc.pathname}/`;
   const query = rest.length ? `?${rest.join("&")}` : "";
-  return `${base}${route.replace(/~and~/g, "&")}${query}${loc.hash ?? ""}`;
+  return `${base}${route.replaceAll("~and~", "&")}${query}${loc.hash ?? ""}`;
 }
 
 /** The guides (one task each, on a real screen) and the scenarios (the app screens they play on) — krizaka-ui#434. */
