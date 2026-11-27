@@ -315,7 +315,7 @@ export function Checkout({ v = {} }: ScenarioProps) {
     const css = getComputedStyle(host.current!);
     const time = css.getPropertyValue(String(settings.duration)).trim();
     setTiming({
-      duration: reduce ? 0 : parseFloat(time) * (time.endsWith("ms") ? 1 : 1000),
+      duration: reduce ? 0 : Number.parseFloat(time) * (time.endsWith("ms") ? 1 : 1000),
       easing: css.getPropertyValue(String(settings.easing)).trim(),
     });
   }, [settings.duration, settings.easing, reduce]);

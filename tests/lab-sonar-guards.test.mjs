@@ -33,3 +33,8 @@ test("knob value union is named once via KnobValue alias (S4323)", () => {
     .map(([f]) => f);
   assert.deepEqual(inlineUnion, []);
 });
+
+test("uses Number.parseFloat rather than bare global parseFloat (S7773)", () => {
+  const bare = labAll.filter(([, s]) => /(?<!Number\.)\bparseFloat\(/.test(s)).map(([f]) => f);
+  assert.deepEqual(bare, []);
+});
