@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { useInView, useReducedMotion } from "./hooks";
 import { journeyAt } from "./journey-lib";
-import { type Knob, Playground } from "./playground";
+import { type Knob, type Values, Playground } from "./playground";
 
 export const JOURNEY_KNOBS: readonly Knob[] = [
   { kind: "choice", key: "orientation", label: "orientation", options: ["vertical", "horizontal"], value: "vertical" },
@@ -23,7 +23,7 @@ const LABELS = { done: "Done", current: "In progress", upcoming: "Upcoming", err
 const NAMES = ["Uploaded", "Checked", "Transcoding", "Published"] as const;
 const DETAIL = ["1.2 GB in 48 s", "Format, rights, safety", "4K, 1080p, 720p", "Visible to your supporters"];
 
-function Job({ v }: Readonly<{ v: Record<string, string | number | boolean> }>) {
+function Job({ v }: Readonly<{ v: Values }>) {
   const host = useRef<HTMLDivElement>(null);
   const visible = useInView(host);
   const reduce = useReducedMotion();

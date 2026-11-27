@@ -7,7 +7,9 @@ export type Knob =
   | { kind: "range"; key: string; label: string; min: number; max: number; step: number; value: number; unit?: string }
   | { kind: "toggle"; key: string; label: string; value: boolean };
 
-export type Values = Record<string, string | number | boolean>;
+export type KnobValue = string | number | boolean;
+
+export type Values = Record<string, KnobValue>;
 
 /** The knobs' own defaults. */
 export function defaults(knobs: readonly Knob[]): Values {

@@ -9,7 +9,7 @@ import { Tabs } from "@krizaka/ui/tabs";
 import { useEffect, useRef, useState } from "react";
 
 import { useInView, useReducedMotion } from "./hooks";
-import { type Knob, Playground } from "./playground";
+import { type Knob, type KnobValue, type Values, Playground } from "./playground";
 
 export const DIALOG_KNOBS: readonly Knob[] = [
   {
@@ -22,12 +22,12 @@ export const DIALOG_KNOBS: readonly Knob[] = [
   { kind: "choice", key: "size", label: "size", options: ["sm", "md", "lg"], value: "md" },
 ];
 
-function dialogNoun(placement: string | number | boolean): string {
+function dialogNoun(placement: KnobValue): string {
   if (placement === "bottom") return "sheet";
   return placement === "center" ? "dialog" : "drawer";
 }
 
-function DialogDemo({ v }: Readonly<{ v: Record<string, string | number | boolean> }>) {
+function DialogDemo({ v }: Readonly<{ v: Values }>) {
   return (
     <div className="lab-overlay">
       <Dialog.Root>
@@ -67,7 +67,7 @@ export const INDICATOR_KNOBS: readonly Knob[] = [
 
 const ITEMS = ["Overview", "Runs", "Packs", "Settings"] as const;
 
-function IndicatorDemo({ v }: Readonly<{ v: Record<string, string | number | boolean> }>) {
+function IndicatorDemo({ v }: Readonly<{ v: Values }>) {
   const host = useRef<HTMLDivElement>(null);
   const visible = useInView(host);
   const reduce = useReducedMotion();
