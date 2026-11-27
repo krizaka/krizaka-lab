@@ -87,8 +87,8 @@ export interface CausticsOptions {
 }
 
 export class LiquidCausticsRenderer {
-  private canvas: HTMLCanvasElement;
-  private ctx: CanvasRenderingContext2D;
+  private readonly canvas: HTMLCanvasElement;
+  private readonly ctx: CanvasRenderingContext2D;
   private options: CausticsOptions;
   private width = 500;
   private height = 350;
@@ -96,7 +96,7 @@ export class LiquidCausticsRenderer {
 
   private time = 0;
   private ripples: CausticRipple[] = [];
-  private cursorSpring: SpringVector2D;
+  private readonly cursorSpring: SpringVector2D;
   private mousePos: Point2D = { x: -1000, y: -1000 };
   private isPointerDown = false;
   private lastEmitTime = 0;

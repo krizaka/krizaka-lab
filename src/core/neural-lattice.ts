@@ -49,8 +49,8 @@ const CLUSTER_COLORS: Record<CognitiveCluster, { primary: string; secondary: str
 };
 
 export class NeuralLatticeRenderer {
-  private canvas: HTMLCanvasElement;
-  private ctx: CanvasRenderingContext2D;
+  private readonly canvas: HTMLCanvasElement;
+  private readonly ctx: CanvasRenderingContext2D;
   private options: NeuralLatticeOptions;
   private width = 600;
   private height = 400;
@@ -60,7 +60,7 @@ export class NeuralLatticeRenderer {
   private potentials: ActionPotential[] = [];
   private time = 0;
   private mousePos: Point2D = { x: -1000, y: -1000 };
-  private cursorSpring: SpringVector2D;
+  private readonly cursorSpring: SpringVector2D;
 
   constructor(canvas: HTMLCanvasElement, options: NeuralLatticeOptions = {}) {
     this.canvas = canvas;

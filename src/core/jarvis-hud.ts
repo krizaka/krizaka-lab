@@ -41,8 +41,8 @@ function threatLevelForDistance(distanceMeters: number): TargetLock["threatLevel
 }
 
 export class JarvisHUDRenderer {
-  private canvas: HTMLCanvasElement;
-  private ctx: CanvasRenderingContext2D;
+  private readonly canvas: HTMLCanvasElement;
+  private readonly ctx: CanvasRenderingContext2D;
   private options: JarvisHUDOptions;
   private width = 600;
   private height = 600;
@@ -63,14 +63,14 @@ export class JarvisHUDRenderer {
   private targetLock: TargetLock | null = null;
 
   // Energy distribution shunts (%)
-  private energyDistribution = {
+  private readonly energyDistribution = {
     repulsors: 85,
     shields: 94,
     unibeam: 60,
     thrusters: 78,
   };
 
-  private audioSpectrum: number[] = new Array(48).fill(0);
+  private readonly audioSpectrum: number[] = new Array(48).fill(0);
 
   constructor(canvas: HTMLCanvasElement, options: JarvisHUDOptions = {}) {
     this.canvas = canvas;
