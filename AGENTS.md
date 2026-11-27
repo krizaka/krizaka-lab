@@ -21,6 +21,8 @@
 - `pnpm lint` (= `pnpm format:check`, Prettier) and `pnpm format` to fix.
 - `pnpm check:gallery`: run when the gallery changes. `pnpm check:budget`: no `requestAnimationFrame` outside `src/core` and `src/native`.
 - `pnpm lint:workspace`: `krizaka-workspace-guard` from `@krizaka/config`.
+- `pnpm exec krizaka-i18n check messages`: the catalogue is complete (CI runs it in `scripts/ci-after-build.sh`).
+- The browser checks CI runs after the build (`scripts/ci-after-build.sh`, the same file is the list): `pnpm build`, then `pnpm exec vite preview --outDir dist-demo --port 4173 --strictPort` in one shell, and in another `node scripts/check-motion.mjs`, `check-demos.mjs`, `check-cards.mjs`, `check-experiments.mjs`, `check-studies.mjs` (each `--base http://localhost:4173`) and `CHECKOUT_BASE=http://localhost:4173 node --test tests/checkout-browser.test.mjs`. Run the ones that touch what you changed.
 - Run them on what you changed before every push; CI runs the rest.
 
 ## Architecture & conventions
