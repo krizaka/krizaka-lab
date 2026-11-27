@@ -36,9 +36,7 @@ for (const item of ITEMS) {
   if (!declared.trim()) problems.push(`${item.id}: nothing declared by ${item.declared.join(", ")}`);
   for (const p of item.props) {
     const name =
-      p.split(/[= ]/).filter(Boolean).at(-1) === p.split(/[= ]/)[0]
-        ? p.split(/[= ]/)[0]
-        : p.split(" ").at(-1).split("=")[0];
+      p.split(/[= ]/).findLast(Boolean) === p.split(/[= ]/)[0] ? p.split(/[= ]/)[0] : p.split(" ").at(-1).split("=")[0];
     const attr = p.includes("=") ? p.split(" ").at(-1) : name;
     const prop = name.split(".").at(-1);
     if (new RegExp(`@deprecated[^\\n]*\\n(?:[^\\n]*\\n){0,2}\\s*${prop}\\??:`).test(declared))

@@ -115,7 +115,13 @@ function tabNamed(word: string | undefined): TabId | null {
 
 /** The last segment of a path, lower-cased. */
 function lastSegment(path: string): string | undefined {
-  return path.split("/").filter(Boolean).at(-1)?.toLowerCase();
+  const parts = path.split("/");
+  for (let i = parts.length - 1; i >= 0; i--) {
+    if (parts[i]) {
+      return parts[i].toLowerCase();
+    }
+  }
+  return undefined;
 }
 
 /** `?tab=voice`, or the GitHub Pages 404 SPA format `?/voice` and `?/krizaka-lab/voice`. */
@@ -212,9 +218,7 @@ export function resolvePage(loc: { pathname?: string; search?: string; hash?: st
     .split("/")
     .filter(Boolean)
     .filter((s) => s !== "krizaka-lab" && s !== "index.html");
-  const spa = (loc.search ?? "").startsWith("?/")
-    ? (loc.search ?? "").slice(2).split("&")[0]!.split("/").filter(Boolean).pop()
-    : undefined;
+  const spa = (loc.search ?? "").startsWith("?/") ? lastSegment((loc.search ?? "").slice(2).split("&")[0]) : undefined;
   const page =
     namedPage(segments[segments.length - 1]) ??
     namedPage(spa) ??
