@@ -49,8 +49,8 @@ const CLUSTER_COLORS: Record<CognitiveCluster, { primary: string; secondary: str
 };
 
 export class NeuralLatticeRenderer {
-  private canvas: HTMLCanvasElement;
-  private ctx: CanvasRenderingContext2D;
+  private readonly canvas: HTMLCanvasElement;
+  private readonly ctx: CanvasRenderingContext2D;
   private options: NeuralLatticeOptions;
   private width = 600;
   private height = 400;
@@ -60,7 +60,7 @@ export class NeuralLatticeRenderer {
   private potentials: ActionPotential[] = [];
   private time = 0;
   private mousePos: Point2D = { x: -1000, y: -1000 };
-  private cursorSpring: SpringVector2D;
+  private readonly cursorSpring: SpringVector2D;
 
   constructor(canvas: HTMLCanvasElement, options: NeuralLatticeOptions = {}) {
     this.canvas = canvas;
@@ -79,7 +79,7 @@ export class NeuralLatticeRenderer {
     };
 
     this.cursorSpring = new SpringVector2D(2.0, 0.75, 0.0);
-    this.initLayout(canvas.clientWidth || 600, canvas.clientHeight || 400, window.devicePixelRatio || 1);
+    this.setDimensions(canvas.clientWidth || 600, canvas.clientHeight || 400, window.devicePixelRatio || 1);
     this.setupEvents();
   }
 
@@ -92,13 +92,6 @@ export class NeuralLatticeRenderer {
   }
 
   public setDimensions(w: number, h: number, dpr: number): void {
-    this.width = w;
-    this.height = h;
-    this.dpr = dpr;
-    this.initNodes();
-  }
-
-  private initLayout(w: number, h: number, dpr: number): void {
     this.width = w;
     this.height = h;
     this.dpr = dpr;
@@ -296,30 +289,37 @@ export class NeuralLatticeRenderer {
     }
   }
 
+  private drawAxon(
+    ctx: CanvasRenderingContext2D,
+    a: SynapseNode,
+    neighbor: { nodeId: number; weight: number },
+    maxDist: number,
+  ): void {
+    const b = this.nodes[neighbor.nodeId];
+    if (!b) {
+      return;
+    }
+    const dist = Math.hypot(b.x - a.x, b.y - a.y);
+    if (dist >= maxDist) {
+      return;
+    }
+    const alpha = (1 - dist / maxDist) * 0.3 * (neighbor.weight / 1.5);
+    const isActive = a.membranePotential > 0.4 || b.membranePotential > 0.4;
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.strokeStyle = isActive ? CLUSTER_COLORS[a.cluster].primary : "rgba(142, 146, 151, 0.2)";
+    ctx.lineWidth = neighbor.weight > 1.4 ? 1.6 : 0.8;
+    ctx.globalAlpha = Math.min(1, alpha);
+    ctx.stroke();
+  }
+
   private drawAxons(ctx: CanvasRenderingContext2D): void {
     const maxDist = this.options.connectionDistance || 110;
 
     for (const a of this.nodes) {
-      const colors = CLUSTER_COLORS[a.cluster];
       for (const neighbor of a.neighbors) {
-        const b = this.nodes[neighbor.nodeId];
-        if (!b) continue;
-
-        const dx = b.x - a.x;
-        const dy = b.y - a.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist < maxDist) {
-          const alpha = (1 - dist / maxDist) * 0.3 * (neighbor.weight / 1.5);
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y);
-          ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle =
-            a.membranePotential > 0.4 || b.membranePotential > 0.4 ? colors.primary : "rgba(142, 146, 151, 0.2)";
-          ctx.lineWidth = neighbor.weight > 1.4 ? 1.6 : 0.8;
-          ctx.globalAlpha = Math.min(1, alpha);
-          ctx.stroke();
-        }
+        this.drawAxon(ctx, a, neighbor, maxDist);
       }
     }
   }

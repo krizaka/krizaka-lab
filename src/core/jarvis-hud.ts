@@ -30,9 +30,19 @@ export interface JarvisHUDOptions {
   onTargetLocked?: (target: TargetLock) => void;
 }
 
+function threatLevelForDistance(distanceMeters: number): TargetLock["threatLevel"] {
+  if (distanceMeters < 1200) {
+    return "CRITICAL";
+  }
+  if (distanceMeters < 1800) {
+    return "ELEVATED";
+  }
+  return "MINIMAL";
+}
+
 export class JarvisHUDRenderer {
-  private canvas: HTMLCanvasElement;
-  private ctx: CanvasRenderingContext2D;
+  private readonly canvas: HTMLCanvasElement;
+  private readonly ctx: CanvasRenderingContext2D;
   private options: JarvisHUDOptions;
   private width = 600;
   private height = 600;
@@ -53,14 +63,14 @@ export class JarvisHUDRenderer {
   private targetLock: TargetLock | null = null;
 
   // Energy distribution shunts (%)
-  private energyDistribution = {
+  private readonly energyDistribution = {
     repulsors: 85,
     shields: 94,
     unibeam: 60,
     thrusters: 78,
   };
 
-  private audioSpectrum: number[] = new Array(48).fill(0);
+  private readonly audioSpectrum: number[] = new Array(48).fill(0);
 
   constructor(canvas: HTMLCanvasElement, options: JarvisHUDOptions = {}) {
     this.canvas = canvas;
@@ -137,23 +147,7 @@ export class JarvisHUDRenderer {
     // Click anywhere to lock onto target
     this.canvas.addEventListener("click", (e) => {
       const rect = this.canvas.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      const clickY = e.clientY - rect.top;
-
-      const dist = Math.round(800 + Math.random() * 2400);
-      const threat = dist < 1200 ? "CRITICAL" : dist < 1800 ? "ELEVATED" : "MINIMAL";
-
-      const lock: TargetLock = {
-        x: clickX,
-        y: clickY,
-        distanceMeters: dist,
-        threatLevel: threat,
-        lockedAt: performance.now(),
-      };
-      this.targetLock = lock;
-      if (this.options.onTargetLocked) {
-        this.options.onTargetLocked(lock);
-      }
+      this.lockTargetAt(e.clientX - rect.left, e.clientY - rect.top);
     });
 
     const resetTilt = () => {
@@ -167,7 +161,7 @@ export class JarvisHUDRenderer {
   /** Locks onto a spatial coordinate */
   public lockTargetAt(x: number, y: number): TargetLock {
     const dist = Math.round(800 + Math.random() * 2400);
-    const threat = dist < 1200 ? "CRITICAL" : dist < 1800 ? "ELEVATED" : "MINIMAL";
+    const threat = threatLevelForDistance(dist);
 
     const lock: TargetLock = {
       x,

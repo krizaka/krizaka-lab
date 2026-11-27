@@ -87,8 +87,8 @@ export interface CausticsOptions {
 }
 
 export class LiquidCausticsRenderer {
-  private canvas: HTMLCanvasElement;
-  private ctx: CanvasRenderingContext2D;
+  private readonly canvas: HTMLCanvasElement;
+  private readonly ctx: CanvasRenderingContext2D;
   private options: CausticsOptions;
   private width = 500;
   private height = 350;
@@ -96,7 +96,7 @@ export class LiquidCausticsRenderer {
 
   private time = 0;
   private ripples: CausticRipple[] = [];
-  private cursorSpring: SpringVector2D;
+  private readonly cursorSpring: SpringVector2D;
   private mousePos: Point2D = { x: -1000, y: -1000 };
   private isPointerDown = false;
   private lastEmitTime = 0;
@@ -119,7 +119,7 @@ export class LiquidCausticsRenderer {
     };
 
     this.cursorSpring = new SpringVector2D(2.4, 0.65, 0.2);
-    this.initLayout(canvas.clientWidth || 500, canvas.clientHeight || 350, globalThis.devicePixelRatio || 1);
+    this.setDimensions(canvas.clientWidth || 500, canvas.clientHeight || 350, globalThis.devicePixelRatio || 1);
     this.setupEvents();
   }
 
@@ -128,12 +128,6 @@ export class LiquidCausticsRenderer {
   }
 
   public setDimensions(w: number, h: number, dpr: number): void {
-    this.width = w;
-    this.height = h;
-    this.dpr = dpr;
-  }
-
-  private initLayout(w: number, h: number, dpr: number): void {
     this.width = w;
     this.height = h;
     this.dpr = dpr;
@@ -294,7 +288,7 @@ export class LiquidCausticsRenderer {
     for (const rip of this.ripples) {
       const dx = bx - rip.x;
       const dy = by - rip.y;
-      const deltaDist = Math.sqrt(dx * dx + dy * dy) - rip.radius;
+      const deltaDist = Math.hypot(dx, dy) - rip.radius;
       if (Math.abs(deltaDist) < 45) {
         const waveProfile = Math.sin((deltaDist / 45) * Math.PI) * rip.strength * 18;
         const angle = Math.atan2(dy, dx);

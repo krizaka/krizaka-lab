@@ -115,7 +115,13 @@ function tabNamed(word: string | undefined): TabId | null {
 
 /** The last segment of a path, lower-cased. */
 function lastSegment(path: string): string | undefined {
-  return path.split("/").filter(Boolean).at(-1)?.toLowerCase();
+  const parts = path.split("/");
+  for (let i = parts.length - 1; i >= 0; i--) {
+    if (parts[i]) {
+      return parts[i].toLowerCase();
+    }
+  }
+  return undefined;
 }
 
 /** `?tab=voice`, or the GitHub Pages 404 SPA format `?/voice` and `?/krizaka-lab/voice`. */
@@ -162,7 +168,7 @@ export function cleanSpaRedirect(loc: { pathname: string; search: string; hash?:
   const [route = "", ...rest] = loc.search.slice(2).split("&");
   const base = loc.pathname.endsWith("/") ? loc.pathname : `${loc.pathname}/`;
   const query = rest.length ? `?${rest.join("&")}` : "";
-  return `${base}${route.replace(/~and~/g, "&")}${query}${loc.hash ?? ""}`;
+  return `${base}${route.replaceAll("~and~", "&")}${query}${loc.hash ?? ""}`;
 }
 
 /** The guides (one task each, on a real screen) and the scenarios (the app screens they play on) — krizaka-ui#434. */
@@ -212,11 +218,9 @@ export function resolvePage(loc: { pathname?: string; search?: string; hash?: st
     .split("/")
     .filter(Boolean)
     .filter((s) => s !== "krizaka-lab" && s !== "index.html");
-  const spa = (loc.search ?? "").startsWith("?/")
-    ? (loc.search ?? "").slice(2).split("&")[0]!.split("/").filter(Boolean).pop()
-    : undefined;
+  const spa = (loc.search ?? "").startsWith("?/") ? lastSegment((loc.search ?? "").slice(2).split("&")[0]) : undefined;
   const page =
-    namedPage(segments[segments.length - 1]) ??
+    namedPage(segments.at(-1)) ??
     namedPage(spa) ??
     namedPage((loc.hash ?? "").replace(/^#\/?/, "")) ??
     namedPage(new URLSearchParams((loc.search ?? "").replace(/^\?\/[^&]*&?/, "?")).get("tab") ?? undefined);

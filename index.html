@@ -1,25 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <title>Krizaka Lab — experiments</title>
-    <meta name="description" content="Krizaka Lab, the family's lab for UI, motion, Java, AI and data experiments: generative visuals played live, an engine's flow, light through glass. Nothing here is a product; what proves itself moves into a real package." />
+    <meta
+      name="description"
+      content="Krizaka Lab, the family's lab for UI, motion, Java, AI and data experiments: generative visuals played live, an engine's flow, light through glass. Nothing here is a product; what proves itself moves into a real package."
+    />
     <link rel="canonical" href="https://lab.krizaka.com/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Krizaka Lab" />
     <meta property="og:title" content="Krizaka Lab — experiments" />
     <meta property="og:url" content="https://lab.krizaka.com/" />
-    <meta property="og:description" content="Krizaka Lab, the family's lab: experiments played live. Nothing here is a product; what proves itself moves into a real package." />
+    <meta
+      property="og:description"
+      content="Krizaka Lab, the family's lab: experiments played live. Nothing here is a product; what proves itself moves into a real package."
+    />
     <!-- The theme before the first paint (the choice kept as kz-theme, else the system's): never a flash. -->
     <script>
+      let m;
       try {
-        var m = localStorage.getItem("kz-theme") || "system";
-        var light = m === "light" || (m === "system" && matchMedia("(prefers-color-scheme: light)").matches);
-        document.documentElement.classList.toggle("light", light);
-        document.documentElement.classList.toggle("dark", !light);
-      } catch (e) {}
+        m = localStorage.getItem("kz-theme") || "system";
+      } catch {
+        // Storage can be denied in restricted contexts: fall back to the system preference.
+        m = "system";
+      }
+      const light =
+        m === "light" ||
+        (m === "system" && typeof matchMedia === "function" && matchMedia("(prefers-color-scheme: light)").matches);
+      document.documentElement.classList.toggle("light", light);
+      document.documentElement.classList.toggle("dark", !light);
     </script>
   </head>
   <body>
