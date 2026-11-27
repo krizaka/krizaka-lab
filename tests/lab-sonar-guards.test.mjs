@@ -17,8 +17,8 @@ test("the knob control is drawn once (a copy trips the duplication gate)", () =>
   assert.match(readFileSync(new URL("GuidePage.tsx", LAB), "utf8"), /import \{ Control \} from "\.\/playground"/);
 });
 
-test("no nested template literal in the lab views (S4624)", () => {
-  const nested = sources.filter(([, s]) => /\$\{`/.test(s)).map(([f]) => f);
+test("no nested template literal in the lab sources (S4624)", () => {
+  const nested = labAll.filter(([, s]) => /\$\{[^}\n]*`/.test(s)).map(([f]) => f);
   assert.deepEqual(nested, []);
 });
 

@@ -148,7 +148,8 @@ function wallGuide(
         .filter(([, variable]) => !variable.attribute)
         .map(([name, variable]) => {
           const value = v[variable.key];
-          return `"--kz-wall-${name}": ${typeof value === "string" ? `"${value}"` : `"${value}${variable.unit ?? ""}"`}`;
+          const formatted = typeof value === "string" ? value : `${value}${variable.unit ?? ""}`;
+          return `"--kz-wall-${name}": "${formatted}"`;
         })
         .join(", ");
       const attributes = Object.values(variables)
