@@ -8,9 +8,17 @@ import { Slider } from "@krizaka/ui/slider";
 import { Switch } from "@krizaka/ui/switch";
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 
-import { type Knob, type Values, defaults, propsSnippet, readValues, writeValues } from "./playground-lib";
+import {
+  type Knob,
+  type KnobValue,
+  type Values,
+  defaults,
+  propsSnippet,
+  readValues,
+  writeValues,
+} from "./playground-lib";
 
-export type { Knob, Values } from "./playground-lib";
+export type { Knob, KnobValue, Values } from "./playground-lib";
 
 export function Control({
   knob,
@@ -18,8 +26,8 @@ export function Control({
   onChange,
 }: Readonly<{
   knob: Knob;
-  value: string | number | boolean;
-  onChange: (v: string | number | boolean) => void;
+  value: KnobValue;
+  onChange: (v: KnobValue) => void;
 }>) {
   if (knob.kind === "choice")
     return (
@@ -89,7 +97,7 @@ export function Playground({
     readValues(knobs, globalThis.window === undefined ? "" : globalThis.location.search),
   );
   useEffect(() => writeValues(knobs, values), [knobs, values]);
-  const set = (key: string) => (v: string | number | boolean) => setValues((prev) => ({ ...prev, [key]: v }));
+  const set = (key: string) => (v: KnobValue) => setValues((prev) => ({ ...prev, [key]: v }));
   const initial = useMemo(() => defaults(knobs), [knobs]);
   const code = `import { ${component} } from "${importPath}";\n\n<${component}\n${children}${propsSnippet(knobs, values, skip)}\n/>`;
   return (

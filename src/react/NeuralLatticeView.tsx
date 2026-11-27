@@ -106,12 +106,8 @@ export const NeuralLatticeView = forwardRef<NeuralLatticeViewHandle, NeuralLatti
       data-play={playing ? "" : undefined}
       style={style}
     >
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full block cursor-crosshair touch-none"
-        aria-label="Quantum Neural Synapse Lattice"
-        role="img"
-      />
+      <canvas ref={canvasRef} className="w-full h-full block cursor-crosshair touch-none" />
+      <span className="sr-only">Quantum Neural Synapse Lattice</span>
     </div>
   );
 });

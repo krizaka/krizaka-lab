@@ -6,7 +6,7 @@ import { useState, type CSSProperties } from "react";
 import type { GuideId } from "./guides";
 import { guideById } from "./guides";
 import { useLab } from "./context";
-import { defaults, type Values } from "./playground-lib";
+import { defaults, type Knob, type Values } from "./playground-lib";
 import { Screen } from "./scenarios";
 import "./wall-motions.css";
 
@@ -20,6 +20,16 @@ const VARIABLE_NAMES: Record<string, string> = {
   easing: "ease",
 };
 
+function wallVariableUnit(key: string, knob: Knob | undefined): string {
+  if (key === "amplitude") {
+    return "deg";
+  }
+  if (knob?.kind === "range") {
+    return knob.unit ?? "";
+  }
+  return "";
+}
+
 function wallStyle(motion: GuideId, values: Values): CSSProperties {
   const knobs = guideById(motion).knobs;
   const settings = { ...defaults(knobs), ...values };
@@ -28,7 +38,7 @@ function wallStyle(motion: GuideId, values: Values): CSSProperties {
     const value = settings[key];
     if (value === undefined) continue;
     const knob = knobs.find((item) => item.key === key);
-    const unit = key === "amplitude" ? "deg" : knob?.kind === "range" ? (knob.unit ?? "") : "";
+    const unit = wallVariableUnit(key, knob);
     style[`--kz-wall-${name}`] = key === "easing" ? String(value) : `${value}${unit}`;
   }
   return style as CSSProperties;

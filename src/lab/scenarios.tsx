@@ -279,9 +279,7 @@ export function Chat({ v = {} }: ScenarioProps) {
             <MessageBubble text={shown.text} time="18:02" grouped="single" />
           )}
         </div>
-        <span className="lab-visually-hidden" role="status">
-          {shown.phase === "done" ? "Answer complete" : ""}
-        </span>
+        <output className="lab-visually-hidden">{shown.phase === "done" ? "Answer complete" : ""}</output>
       </Screen>
     </div>
   );
@@ -314,8 +312,10 @@ export function Checkout({ v = {} }: ScenarioProps) {
   useLayoutEffect(() => {
     const css = getComputedStyle(host.current!);
     const time = css.getPropertyValue(String(settings.duration)).trim();
+    const factor = time.endsWith("ms") ? 1 : 1000;
+    const duration = reduce ? 0 : Number.parseFloat(time) * factor;
     setTiming({
-      duration: reduce ? 0 : parseFloat(time) * (time.endsWith("ms") ? 1 : 1000),
+      duration,
       easing: css.getPropertyValue(String(settings.easing)).trim(),
     });
   }, [settings.duration, settings.easing, reduce]);

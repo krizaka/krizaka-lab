@@ -21,8 +21,12 @@ export function Studies() {
       <ul className="lab-gallery">
         {STUDIES.map(({ id, api }) => {
           const w = s.items[id as StudyId];
-          const Live = live[`./studies/${id}.tsx`]!.Example;
-          const code = `${tsx[`./studies/${id}.tsx`]!.trimEnd()}\n\n/* ${id}.css */\n${css[`./studies/${id}.css`]!.trimEnd()}`;
+          const tsxPath = `./studies/${id}.tsx`;
+          const cssPath = `./studies/${id}.css`;
+          const Live = live[tsxPath]!.Example;
+          const tsxSource = tsx[tsxPath]!.trimEnd();
+          const cssSource = css[cssPath]!.trimEnd();
+          const code = `${tsxSource}\n\n/* ${id}.css */\n${cssSource}`;
           return (
             <li key={id} id={id} className="lab-g-item" data-study={id}>
               <div className="lab-g-live">

@@ -18,6 +18,9 @@ import { Control } from "./playground";
 import { SCENARIOS } from "./scenarios";
 import { i18n } from "./messages";
 
+const optionCell = (r: ConfigRow) => <code>{r.option}</code>;
+const typeCell = (r: ConfigRow) => <code>{r.type}</code>;
+
 export function GuidePage({ id }: Readonly<{ id: GuideId }>) {
   const { t, href, go } = useLab();
   const g = guideById(id);
@@ -109,8 +112,8 @@ export function GuidePage({ id }: Readonly<{ id: GuideId }>) {
           getRowId={(r) => r.option}
           density="compact"
           columns={[
-            { id: "option", header: "Option", value: (r) => r.option, cell: (r) => <code>{r.option}</code> },
-            { id: "type", header: "Type", value: (r) => r.type, cell: (r) => <code>{r.type}</code> },
+            { id: "option", header: "Option", value: (r) => r.option, cell: optionCell },
+            { id: "type", header: "Type", value: (r) => r.type, cell: typeCell },
             { id: "default", header: "Default", value: (r) => r.default },
             { id: "does", header: "What it does", value: (r) => r.does },
           ]}

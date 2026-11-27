@@ -107,12 +107,8 @@ export const LiquidCausticsView = forwardRef<LiquidCausticsViewHandle, LiquidCau
         data-play={playing ? "" : undefined}
         style={style}
       >
-        <canvas
-          ref={canvasRef}
-          className="w-full h-full block cursor-pointer touch-none"
-          aria-label="Liquid Glass Caustics and Chromatic Refraction"
-          role="img"
-        />
+        <canvas ref={canvasRef} className="w-full h-full block cursor-pointer touch-none" />
+        <span className="sr-only">Liquid Glass Caustics and Chromatic Refraction</span>
       </div>
     );
   },

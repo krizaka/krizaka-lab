@@ -11,13 +11,13 @@ const paragraphs = [
 
 export function Example() {
   return (
-    <div className="st-reader" tabIndex={0} role="region" aria-label="A page to read">
+    <section className="st-reader" aria-label="A page to read">
       <svg className="st-rule" viewBox="0 0 300 14" preserveAspectRatio="none" aria-hidden>
         <path pathLength="1" d="M2 8 C 40 3, 70 12, 110 7 S 190 4, 230 9 S 280 6, 298 7" />
       </svg>
       {paragraphs.map((p) => (
         <p key={p}>{p}</p>
       ))}
-    </div>
+    </section>
   );
 }

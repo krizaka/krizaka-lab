@@ -38,7 +38,7 @@ export interface Guide {
   /** What the guide's settings change on the screen. */
   knobs: readonly Knob[];
   /** The code to copy, written from the settings' current values. */
-  snippet: (v: Record<string, string | number | boolean>) => string;
+  snippet: (v: Values) => string;
   file: string;
   config: readonly ConfigRow[];
   reduced: string;
@@ -148,7 +148,8 @@ function wallGuide(
         .filter(([, variable]) => !variable.attribute)
         .map(([name, variable]) => {
           const value = v[variable.key];
-          return `"--kz-wall-${name}": ${typeof value === "string" ? `"${value}"` : `"${value}${variable.unit ?? ""}"`}`;
+          const formatted = typeof value === "string" ? value : `${value}${variable.unit ?? ""}`;
+          return `"--kz-wall-${name}": "${formatted}"`;
         })
         .join(", ");
       const attributes = Object.values(variables)

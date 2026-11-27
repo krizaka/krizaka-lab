@@ -9,7 +9,7 @@ import { VerifiedBadge } from "@krizaka/ui/verified-badge";
 import { useEffect, useRef, useState } from "react";
 
 import { useInView, useReducedMotion } from "./hooks";
-import { type Knob, Playground } from "./playground";
+import { type Knob, type Values, Playground } from "./playground";
 
 const CDN = "https://krizaka-assets.b-cdn.net/site/people/ui";
 const PEOPLE = [
@@ -44,7 +44,7 @@ const MILESTONES = [
   { eyebrow: "Milestone 03", title: "Your first auction", replaced: "Guessing what a clip is worth" },
 ] as const;
 
-function Scene({ v }: Readonly<{ v: Record<string, string | number | boolean> }>) {
+function Scene({ v }: Readonly<{ v: Values }>) {
   const host = useRef<HTMLDivElement>(null);
   const visible = useInView(host);
   const reduce = useReducedMotion();
