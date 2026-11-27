@@ -75,12 +75,12 @@ export class MotionController {
   public isOffscreen(): boolean {
     if (typeof document === "undefined") return false;
     const scope = this.canvas.closest("[data-offscreen]");
-    return scope !== null || this.canvas.hasAttribute("data-offscreen");
+    return scope !== null || this.canvas.dataset.offscreen !== undefined;
   }
 
   public isSettling(): boolean {
     if (typeof document === "undefined") return false;
-    return document.documentElement.getAttribute("data-motion") === "settling";
+    return document.documentElement.dataset.motion === "settling";
   }
 
   public syncSize(): { width: number; height: number; dpr: number } {
