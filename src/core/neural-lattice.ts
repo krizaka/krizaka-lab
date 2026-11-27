@@ -307,7 +307,7 @@ export class NeuralLatticeRenderer {
 
         const dx = b.x - a.x;
         const dy = b.y - a.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        const dist = Math.hypot(dx, dy);
 
         if (dist < maxDist) {
           const alpha = (1 - dist / maxDist) * 0.3 * (neighbor.weight / 1.5);

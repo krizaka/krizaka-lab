@@ -294,7 +294,7 @@ export class LiquidCausticsRenderer {
     for (const rip of this.ripples) {
       const dx = bx - rip.x;
       const dy = by - rip.y;
-      const deltaDist = Math.sqrt(dx * dx + dy * dy) - rip.radius;
+      const deltaDist = Math.hypot(dx, dy) - rip.radius;
       if (Math.abs(deltaDist) < 45) {
         const waveProfile = Math.sin((deltaDist / 45) * Math.PI) * rip.strength * 18;
         const angle = Math.atan2(dy, dx);
