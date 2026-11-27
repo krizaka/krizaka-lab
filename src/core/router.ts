@@ -220,7 +220,7 @@ export function resolvePage(loc: { pathname?: string; search?: string; hash?: st
     .filter((s) => s !== "krizaka-lab" && s !== "index.html");
   const spa = (loc.search ?? "").startsWith("?/") ? lastSegment((loc.search ?? "").slice(2).split("&")[0]) : undefined;
   const page =
-    namedPage(segments[segments.length - 1]) ??
+    namedPage(segments.at(-1)) ??
     namedPage(spa) ??
     namedPage((loc.hash ?? "").replace(/^#\/?/, "")) ??
     namedPage(new URLSearchParams((loc.search ?? "").replace(/^\?\/[^&]*&?/, "?")).get("tab") ?? undefined);
