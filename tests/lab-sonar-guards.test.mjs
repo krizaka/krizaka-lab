@@ -70,3 +70,11 @@ test("no nested ternary expressions in lab sources (S3358)", () => {
   const nested = labAll.filter(([f, s]) => hasNestedTernary(f, s)).map(([f]) => f);
   assert.deepEqual(nested, []);
 });
+
+test("no component or JSX cell renderer defined inline inside GuidePage or Home (S6478)", () => {
+  const guidePage = readFileSync(new URL("GuidePage.tsx", LAB), "utf8");
+  const home = readFileSync(new URL("Home.tsx", LAB), "utf8");
+  assert.doesNotMatch(guidePage, /cell:\s*\([^)]*\)\s*=>\s*</);
+  assert.doesNotMatch(home, /=>\s*(?:\(\s*props|\{\s*const to\b)/);
+  assert.doesNotMatch(home, /linkAs=\{\(props/);
+});

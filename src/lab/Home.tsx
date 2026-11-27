@@ -12,9 +12,9 @@ import { PageIndex } from "@krizaka/ui/page-index";
 import { Facts, Section } from "@krizaka/ui/page";
 import { PageHero } from "@krizaka/ui/page-hero";
 
-import { type LabPage, SCENARIO_PATHS, TAB_ORDER, type TabId } from "../core/router";
+import { SCENARIO_PATHS, TAB_ORDER, type TabId } from "../core/router";
 import { useLab } from "./context";
-import { HomeLink, PageLink } from "./home-link";
+import { HomeLink, LabLink } from "./home-link";
 import { DEMOS } from "./demos";
 import { GUIDES } from "./guides";
 import { SCENARIOS, SCENARIO_GRID_MIN } from "./scenarios";
@@ -24,7 +24,6 @@ const SETUP =
 
 export function Home() {
   const { t, href, go } = useLab();
-  const as = (to: LabPage) => (props: React.ComponentProps<"a">) => <PageLink {...props} to={to} />;
   const byScenario = SCENARIO_PATHS.map((id) => ({
     title: SCENARIOS[id].title,
     entries: GUIDES.filter((g) => g.scenario === id).map((g) => ({
@@ -47,14 +46,7 @@ export function Home() {
       </PageHero>
 
       <Section id="guides" number="§ 1" title="Guides" lead="Pick the task; each opens on its screen.">
-        <PageIndex
-          label="Guides"
-          groups={byScenario}
-          linkAs={(props: React.ComponentProps<"a">) => {
-            const to = GUIDES.find((g) => href(g.id) === props.href)?.id;
-            return to ? <PageLink {...props} to={to} /> : <a {...props} href={props.href} />;
-          }}
-        />
+        <PageIndex label="Guides" groups={byScenario} linkAs={LabLink} />
       </Section>
 
       <Section
@@ -81,7 +73,7 @@ export function Home() {
                     <View />
                   </div>
                 }
-                linkAs={as(id)}
+                linkAs={LabLink}
               />
             );
           })}
@@ -156,7 +148,7 @@ export function Experiments() {
                     />
                   </>
                 }
-                linkAs={(props: React.ComponentProps<"a">) => <PageLink {...props} to={id} />}
+                linkAs={LabLink}
               />
             );
           })}
