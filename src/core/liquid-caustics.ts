@@ -119,7 +119,7 @@ export class LiquidCausticsRenderer {
     };
 
     this.cursorSpring = new SpringVector2D(2.4, 0.65, 0.2);
-    this.initLayout(canvas.clientWidth || 500, canvas.clientHeight || 350, globalThis.devicePixelRatio || 1);
+    this.setDimensions(canvas.clientWidth || 500, canvas.clientHeight || 350, globalThis.devicePixelRatio || 1);
     this.setupEvents();
   }
 
@@ -128,12 +128,6 @@ export class LiquidCausticsRenderer {
   }
 
   public setDimensions(w: number, h: number, dpr: number): void {
-    this.width = w;
-    this.height = h;
-    this.dpr = dpr;
-  }
-
-  private initLayout(w: number, h: number, dpr: number): void {
     this.width = w;
     this.height = h;
     this.dpr = dpr;
