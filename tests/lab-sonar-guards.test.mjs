@@ -88,3 +88,23 @@ test("underline study does not put tabIndex on a non-interactive container (S684
   const underline = readFileSync(new URL("studies/underline.tsx", LAB), "utf8");
   assert.doesNotMatch(underline, /\btabIndex=/);
 });
+
+test("uses native output/section and sr-only canvas labels instead of redundant ARIA roles (S6819)", () => {
+  const scenarios = readFileSync(new URL("scenarios.tsx", LAB), "utf8");
+  const underline = readFileSync(new URL("studies/underline.tsx", LAB), "utf8");
+  const reactDir = new URL("../src/react/", import.meta.url);
+  const reactFiles = readdirSync(reactDir)
+    .filter((f) => f.endsWith(".tsx"))
+    .map((f) => [f, readFileSync(new URL(f, reactDir), "utf8")]);
+  assert.doesNotMatch(scenarios, /role="status"/);
+  assert.match(scenarios, /<output className="lab-visually-hidden">/);
+  assert.doesNotMatch(underline, /role="region"/);
+  assert.match(underline, /<section className="st-reader" aria-label="A page to read">/);
+  assert.deepEqual(
+    reactFiles.filter(([, s]) => /role="img"/.test(s)).map(([f]) => f),
+    [],
+  );
+  for (const [f, s] of reactFiles) {
+    assert.match(s, /<span className="sr-only">/, f);
+  }
+});

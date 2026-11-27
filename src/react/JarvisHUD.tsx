@@ -141,12 +141,8 @@ export const JarvisHUD = forwardRef<JarvisHUDHandle, JarvisHUDProps>(function Ja
       data-play={playing ? "" : undefined}
       style={style}
     >
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full block cursor-crosshair touch-none"
-        aria-label="Jarvis Iron Man Holographic HUD AI Core"
-        role="img"
-      />
+      <canvas ref={canvasRef} className="w-full h-full block cursor-crosshair touch-none" />
+      <span className="sr-only">Jarvis Iron Man Holographic HUD AI Core</span>
     </div>
   );
 });

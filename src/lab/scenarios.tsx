@@ -279,9 +279,7 @@ export function Chat({ v = {} }: ScenarioProps) {
             <MessageBubble text={shown.text} time="18:02" grouped="single" />
           )}
         </div>
-        <span className="lab-visually-hidden" role="status">
-          {shown.phase === "done" ? "Answer complete" : ""}
-        </span>
+        <output className="lab-visually-hidden">{shown.phase === "done" ? "Answer complete" : ""}</output>
       </Screen>
     </div>
   );
