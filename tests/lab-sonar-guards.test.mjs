@@ -83,3 +83,8 @@ test("marginalia popover span has explicit spacing after the sentence (S6772)", 
   const marginalia = readFileSync(new URL("studies/marginalia.tsx", LAB), "utf8");
   assert.doesNotMatch(marginalia, /could not say\.\n\s*<span/);
 });
+
+test("underline study does not put tabIndex on a non-interactive container (S6845)", () => {
+  const underline = readFileSync(new URL("studies/underline.tsx", LAB), "utf8");
+  assert.doesNotMatch(underline, /\btabIndex=/);
+});
